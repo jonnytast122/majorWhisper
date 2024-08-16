@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:majorwhisper/screens/auth/Login.dart';
 
-
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
 
@@ -18,6 +17,84 @@ class _MyProfileState extends State<MyProfile> {
   void initState() {
     super.initState();
     _getUsername();
+  }
+
+  Future<bool?> logoutpopscreen() async {
+    return showDialog<bool?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/logout_illustration.png', // Replace with your image path
+                  height: 250,
+                ),
+              ),
+              const Text(
+                'Oh No, You are leaving...\n Are you sure?',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter-black',
+                  color: Color(0xFF2f3036),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch, // Makes buttons full width
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF006FFD),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize:
+                        const Size(double.infinity, 50), // Full width button
+                  ),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(true); // Return true to indicate logout
+                  },
+                  child: const Text(
+                    'Yes, Log me out',
+                    style: TextStyle(
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10), // Space between the buttons
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(false); // Return false to cancel logout
+                  },
+                  child: const Text(
+                    'Nah, Just Kidding',
+                    style: TextStyle(
+                      color: Color(0xFF006FFD),
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _getUsername() async {
@@ -49,12 +126,16 @@ class _MyProfileState extends State<MyProfile> {
     // Implement the logic to delete the user's account
   }
 
-  void _logout() {
-    FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login()),
-    );
+  void _logout() async {
+    bool? shouldLogout = await logoutpopscreen();
+    if (shouldLogout == true) {
+      // Proceed with sign out and navigation if the user confirms
+      FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    }
   }
 
   @override
@@ -118,7 +199,7 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       ],
                     ),
-                    Positioned(
+                    const Positioned(
                       bottom: 90,
                       right: 0,
                       child: Icon(
@@ -277,14 +358,14 @@ class _MyProfileState extends State<MyProfile> {
                                 0.2), // Background color for the circle
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.logout_rounded,
                             color: Color(0xFF006FFD),
                             size: 28,
                           ), // Icon with a white color
                         ),
                         SizedBox(width: 13),
-                        Text(
+                        const Text(
                           "Logout",
                           style: TextStyle(
                             fontSize: 18,
@@ -294,7 +375,7 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       ],
                     ),
-                    Icon(Icons.arrow_forward_ios_rounded,
+                    const Icon(Icons.arrow_forward_ios_rounded,
                         color: Color(0xFF344046)),
                   ],
                 ),
