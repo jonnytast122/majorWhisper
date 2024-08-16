@@ -162,7 +162,7 @@ class DetailMajor extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 40), // Space between Row and TextFormField
+            const SizedBox(height: 20), // Space between Row and TextFormField
             const Text(
               "Discover Details of Major",
               style: TextStyle(
