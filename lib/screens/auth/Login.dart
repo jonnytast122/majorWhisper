@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isObscured = true;
+  bool _isChecked = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -72,18 +73,18 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'name@email.com',
-                    labelStyle: const TextStyle(
+                    labelStyle: TextStyle(
                       color: Color.fromARGB(255, 183, 184, 190),
                       fontFamily: 'Inter-regular',
                     ),
-                    focusedBorder: const OutlineInputBorder(
+                    focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide:
                           BorderSide(color: Color(0xFF006FFD), width: 1.5),
                     ),
-                    enabledBorder: const OutlineInputBorder(
+                    enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide:
                           BorderSide(color: Color(0xFFC5C6CC), width: 1.5),
@@ -144,29 +145,69 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 7.0),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Forgetpassword()),
-                      );
-                    },
-                    child: const Text(
-                      'Forgot password?',
-                      style: TextStyle(
-                        color: Color(0xFF006FFD),
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter-semibold',
+              Row(
+                children: [
+                  // "Forgot password?" button on the left
+                  Padding(
+                    padding: const EdgeInsets.only(left: 7.0),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Forgetpassword()),
+                        );
+                      },
+                      child: const Text(
+                        'Forgot password?',
+                        style: TextStyle(
+                          color: Color(0xFF006FFD),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Inter-semibold',
+                        ),
                       ),
                     ),
                   ),
-                ),
+
+                  // Spacer to push "Remember me" to the right
+                  const Spacer(),
+
+                  // "Remember me" with a checkbox
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment
+                        .center, // Aligns checkbox and text vertically
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            right: 6.0), // Space between checkbox and text
+                        child: Checkbox(
+                          value: _isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isChecked = value ?? false;
+                            });
+                          },
+                          activeColor: const Color(0xFF006FFD),
+                        ),
+                      ),
+                      Transform.translate(
+                        offset: const Offset(-14.0,
+                            0.0), // Adjust offset to move text left or right
+                        child: const Text(
+                          'Remember me',
+                          style: TextStyle(
+                            color: Color(0xFF006FFD),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter-semibold',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 14.0),
               Padding(
