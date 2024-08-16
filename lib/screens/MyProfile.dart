@@ -129,11 +129,10 @@ class _MyProfileState extends State<MyProfile> {
   void _logout() async {
     bool? shouldLogout = await logoutpopscreen();
     if (shouldLogout == true) {
-      // Proceed with sign out and navigation if the user confirms
       FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Login()),
+        (Route<dynamic> route) => false, // Removes all the routes in the stack
       );
     }
   }
