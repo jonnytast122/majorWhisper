@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:majorwhisper/screens/auth/Login.dart';
+
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -48,7 +50,11 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   void _logout() {
-    // Implement the logic to logout the user
+    FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login()),
+    );
   }
 
   @override
@@ -214,7 +220,7 @@ class _MyProfileState extends State<MyProfile> {
           Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: InkWell(
-              onTap: _myHistory,
+              onTap: _logout,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
