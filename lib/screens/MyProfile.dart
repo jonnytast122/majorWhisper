@@ -265,13 +265,6 @@ void _editUsername(BuildContext context) {
 
                               // Close the dialog
                               Navigator.of(context).pop();
-
-                              // Optionally show a success message or update UI
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content:
-                                        Text('Username updated successfully!')),
-                              );
                             }
                           }
                         },
