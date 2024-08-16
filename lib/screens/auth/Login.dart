@@ -7,6 +7,7 @@ import 'package:majorwhisper/screens/auth/Forgetpassword.dart';
 import 'package:majorwhisper/screens/Home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -23,6 +24,41 @@ class _LoginState extends State<Login> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
+   @override
+  void initState() {
+    super.initState();
+    _loadUserEmailPassword();  // Load the saved email and password on startup
+  }
+
+  Future<void> _loadUserEmailPassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    String? password = prefs.getString('password');
+    bool? isChecked = prefs.getBool('isChecked');
+
+    if (email != null && password != null && isChecked != null) {
+      setState(() {
+        _emailController.text = email;
+        _passwordController.text = password;
+        _isChecked = isChecked;
+      });
+    }
+  }
+
+  Future<void> _saveUserEmailPassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_isChecked) {
+      await prefs.setString('email', _emailController.text.trim());
+      await prefs.setString('password', _passwordController.text.trim());
+      await prefs.setBool('isChecked', _isChecked);
+    } else {
+      await prefs.remove('email');
+      await prefs.remove('password');
+      await prefs.remove('isChecked');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +208,6 @@ class _LoginState extends State<Login> {
 
                   // Spacer to push "Remember me" to the right
                   const Spacer(),
-
                   // "Remember me" with a checkbox
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -379,6 +414,7 @@ class _LoginState extends State<Login> {
           fontSize: 16.0,
         );
       } else {
+        await _saveUserEmailPassword();
         // Navigate to the home screen if the email is verified
         Navigator.pushReplacement(
           context,
