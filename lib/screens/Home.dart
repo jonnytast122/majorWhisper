@@ -99,9 +99,9 @@ class DetailMajor extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.sunny,
                             color: Colors.white,
@@ -112,7 +112,7 @@ class DetailMajor extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
-                              fontFamily: 'Inter-black',
+                              fontFamily: 'Inter-regular',
                             ),
                           ),
                         ]),
@@ -139,7 +139,7 @@ class DetailMajor extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 30,
-                              fontFamily: 'Inter-black',
+                              fontFamily: 'Inter-medium',
                             ),
                           );
                         }
@@ -168,7 +168,7 @@ class DetailMajor extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
-                fontFamily: 'Inter-black',
+                fontFamily: 'Inter-semibold',
               ),
             ),
             const SizedBox(height: 10),
@@ -207,7 +207,7 @@ class DetailMajor extends StatelessWidget {
                     style: TextStyle(
                       color: Color(0xFF006FFD),
                       fontSize: 20,
-                      fontFamily: 'Inter-black',
+                      fontFamily: 'Inter-semibold',
                     ),
                   ),
                   SizedBox(height: 5),
@@ -219,7 +219,7 @@ class DetailMajor extends StatelessWidget {
                         style: TextStyle(
                           color: Color(0xFF006FFD),
                           fontSize: 20,
-                          fontFamily: 'Inter-black',
+                          fontFamily: 'Inter-semibold',
                         ),
                       ),
                       Row(
@@ -236,7 +236,7 @@ class DetailMajor extends StatelessWidget {
                               decoration: TextDecoration.underline,
                               decorationColor: Color(0xFF006FFD),
                               fontSize: 11,
-                              fontFamily: 'Inter-black',
+                              fontFamily: 'Inter-semibold',
                             ),
                           ),
                         ],
@@ -282,7 +282,7 @@ class ExploreCategory extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
-                        fontFamily: 'Inter-black',
+                        fontFamily: 'Inter-semibold',
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -309,10 +309,10 @@ class ExploreCategory extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        'Take the Quiz',
+                        'Start Quiz',
                         style: TextStyle(
                           fontSize: 16,
-                          fontFamily: 'Inter-black',
+                          fontFamily: 'Inter-semibold',
                           color: Color(0xFF006FFD),
                         ),
                       ),
@@ -333,7 +333,7 @@ class ExploreCategory extends StatelessWidget {
             style: TextStyle(
               color: Colors.black,
               fontSize: 28,
-              fontFamily: 'Inter-black',
+              fontFamily: 'Inter-semibold',
             ),
           ),
           GridView.count(
