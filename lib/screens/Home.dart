@@ -14,12 +14,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeContent(), // Separate the home content
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeContent(), // Separate the home content
     Learning(), // Placeholder for Explore screen
-    Center(child: Text('Profile')), // Placeholder for Profile screen
-    Center(child: Text('Settings')), // Placeholder for Settings screen
-    Center(child: Text('Help')), // Placeholder for Help screen
+    const Center(child: Text('Profile')), // Placeholder for Profile screen
+    const Center(child: Text('Settings')), // Placeholder for Settings screen
+    const Center(child: Text('Help')), // Placeholder for Help screen
   ];
 
   void _onItemTapped(int index) {
