@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Learning extends StatefulWidget {
+class Career extends StatefulWidget {
   @override
-  _LearningState createState() => _LearningState();
+  _CareerState createState() => _CareerState();
 }
 
-class _LearningState extends State<Learning> {
-  String selectedDegree = 'Bachelor'; // Default selected button
+class _CareerState extends State<Career> {
+  String selectedCountry = 'Cambodia'; // Default selected button
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _LearningState extends State<Learning> {
                 padding: EdgeInsets.only(
                     left: 10.0), // Adjust the left padding as needed
                 child: Text(
-                  "Explore your major's path",
+                  "Uncover Your Career Path",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -44,7 +44,7 @@ class _LearningState extends State<Learning> {
               const Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
-                  "Search and explore your future\nlearning journey!",
+                  "Search and see where your future\nleads!",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -58,8 +58,8 @@ class _LearningState extends State<Learning> {
                   hintText: "Search Major",
                   hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
-                    fontFamily: 'Inter-regular',
                     fontSize: 18,
+                    fontFamily: 'Inter-regular',
                   ),
                   prefixIcon: const Icon(
                     Icons.search_rounded,
@@ -77,7 +77,7 @@ class _LearningState extends State<Learning> {
               const Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
-                  "Degree",
+                  "Country",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -88,13 +88,11 @@ class _LearningState extends State<Learning> {
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment:
-                MainAxisAlignment.start, // Aligns the buttons to the left
+                    MainAxisAlignment.start, // Aligns the buttons to the left
                 children: [
-                  buildDegreeButton('Bachelor'),
+                  buildCountryButton('Cambodia'),
                   SizedBox(width: 10), // Add some space between buttons
-                  buildDegreeButton('Master'),
-                  SizedBox(width: 10), // Add some space between buttons
-                  buildDegreeButton('PhD'),
+                  buildCountryButton('General'),
                 ],
               ),
             ],
@@ -104,12 +102,12 @@ class _LearningState extends State<Learning> {
     );
   }
 
-  Widget buildDegreeButton(String degree) {
-    final isSelected = selectedDegree == degree;
+  Widget buildCountryButton(String country) {
+    final isSelected = selectedCountry == country;
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          selectedDegree = degree; // Update the selected degree
+          selectedCountry = country; // Update the selected country
         });
       },
       style: ElevatedButton.styleFrom(
@@ -119,7 +117,7 @@ class _LearningState extends State<Learning> {
         ),
       ),
       child: Text(
-        degree,
+        country,
         style: TextStyle(
           color: isSelected ? Colors.white : Color(0xFF006FFD),
           fontSize: 16,

@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Learning extends StatefulWidget {
-  @override
-  _LearningState createState() => _LearningState();
-}
-
-class _LearningState extends State<Learning> {
-  String selectedDegree = 'Bachelor'; // Default selected button
-
+class Roadmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(top: 0),
-        height: 370,
+        height: 300,
         width: double.infinity,
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -32,7 +25,7 @@ class _LearningState extends State<Learning> {
                 padding: EdgeInsets.only(
                     left: 10.0), // Adjust the left padding as needed
                 child: Text(
-                  "Explore your major's path",
+                  "Unlock Your Future with a \nTailored Roadmap",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -44,7 +37,7 @@ class _LearningState extends State<Learning> {
               const Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
-                  "Search and explore your future\nlearning journey!",
+                  "Your AI-Generated Blueprint for \nSuccess",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,
@@ -55,11 +48,11 @@ class _LearningState extends State<Learning> {
               const SizedBox(height: 20),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: "Search Major",
+                  hintText: "Enter topic to generate roadmap",
                   hintStyle: TextStyle(
                     color: Colors.black.withOpacity(0.6),
-                    fontFamily: 'Inter-regular',
                     fontSize: 18,
+                    fontFamily: 'Inter-regular',
                   ),
                   prefixIcon: const Icon(
                     Icons.search_rounded,
@@ -73,57 +66,8 @@ class _LearningState extends State<Learning> {
                   fillColor: const Color(0xFFEDEDED),
                 ),
               ),
-              const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Text(
-                  "Degree",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontFamily: 'Inter-semibold',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.start, // Aligns the buttons to the left
-                children: [
-                  buildDegreeButton('Bachelor'),
-                  SizedBox(width: 10), // Add some space between buttons
-                  buildDegreeButton('Master'),
-                  SizedBox(width: 10), // Add some space between buttons
-                  buildDegreeButton('PhD'),
-                ],
-              ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildDegreeButton(String degree) {
-    final isSelected = selectedDegree == degree;
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          selectedDegree = degree; // Update the selected degree
-        });
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Color(0xFF006FFD) : Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      child: Text(
-        degree,
-        style: TextStyle(
-          color: isSelected ? Colors.white : Color(0xFF006FFD),
-          fontSize: 16,
-          fontFamily: 'Inter-semibold',
         ),
       ),
     );

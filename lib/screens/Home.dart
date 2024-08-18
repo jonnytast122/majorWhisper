@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
+import 'package:majorwhisper/screens/Roadmap.dart';
 import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
+import 'package:majorwhisper/screens/Career.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,8 +19,8 @@ class _HomeState extends State<Home> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeContent(), // Separate the home content
     Learning(), // Placeholder for Explore screen
-    const Center(child: Text('Profile')), // Placeholder for Profile screen
-    const Center(child: Text('Settings')), // Placeholder for Settings screen
+    Career(),
+    Roadmap(),
     const Center(child: Text('Help')), // Placeholder for Help screen
   ];
 
@@ -178,6 +180,7 @@ class DetailMajor extends StatelessWidget {
                 hintStyle: TextStyle(
                   color: Colors.black.withOpacity(0.6),
                   fontSize: 18,
+                  fontFamily: 'Inter-regular',
                 ),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
