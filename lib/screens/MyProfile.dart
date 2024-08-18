@@ -110,7 +110,7 @@ class _MyProfileState extends State<MyProfile> {
     }
   }
 
-void _editUsername(BuildContext context) {
+  void _editUsername(BuildContext context) {
     final _newNameController = TextEditingController();
     final _confirmNameController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
@@ -131,13 +131,13 @@ void _editUsername(BuildContext context) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Center(
+                const Center(
                   child: Text(
                     'Edit Username',
-                    style: TextStyle(fontSize: 24, fontFamily: 'Inter-medium'),
+                    style: TextStyle(fontSize: 24, fontFamily: 'Inter-regular'),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -157,10 +157,9 @@ void _editUsername(BuildContext context) {
                         decoration: InputDecoration(
                           hintText: "Enter Name",
                           hintStyle: TextStyle(
-                            color: Colors.black.withOpacity(0.6),
-                            fontSize: 15,
-                            fontFamily: 'Inter-medium'
-                          ),
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: 15,
+                              fontFamily: 'Inter-medium'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(13),
                             borderSide: BorderSide.none,
@@ -190,10 +189,9 @@ void _editUsername(BuildContext context) {
                         decoration: InputDecoration(
                           hintText: "Enter Name",
                           hintStyle: TextStyle(
-                            color: Colors.black.withOpacity(0.6),
-                            fontSize: 15,
-                            fontFamily: 'Inter-medium'
-                          ),
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: 15,
+                              fontFamily: 'Inter-medium'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(13),
                             borderSide: BorderSide.none,
@@ -308,17 +306,348 @@ void _editUsername(BuildContext context) {
     );
   }
 
+  void _changePassword(BuildContext context) {
+    final _newPasswordController = TextEditingController();
+    final _confirmPasswordController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+    bool _isPasswordVisible = false;
+    bool _isConfirmPasswordVisible = false;
 
-  void _changePassword() {
-    // Implement the logic to change the password
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        final screenWidth = MediaQuery.of(context).size.width;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                width: screenWidth * 0.9,
+                height: screenHeight * 0.5,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Center(
+                        child: Text(
+                          'Change Password',
+                          style: TextStyle(
+                              fontSize: 24, fontFamily: 'Inter-semibold'),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'New Password',
+                                style: TextStyle(
+                                    fontSize: 20, fontFamily: 'Inter-medium'),
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            TextFormField(
+                              controller: _newPasswordController,
+                              obscureText: !_isPasswordVisible,
+                              decoration: InputDecoration(
+                                hintText: "Enter Password",
+                                hintStyle: TextStyle(
+                                  color: Colors.black.withOpacity(0.6),
+                                  fontSize: 15,
+                                  fontFamily: 'Inter-medium',
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(13),
+                                  borderSide: BorderSide.none,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFFDCEDFF),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible = !_isPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter a new password';
+                                }
+                                if (value.length < 6) {
+                                  return 'Password must be at least 6 characters long';
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(height: 30),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Confirm Password',
+                                style: TextStyle(
+                                    fontSize: 20, fontFamily: 'Inter-medium'),
+                              ),
+                            ),
+                            SizedBox(height: 15),
+                            TextFormField(
+                              controller: _confirmPasswordController,
+                              obscureText: !_isConfirmPasswordVisible,
+                              decoration: InputDecoration(
+                                hintText: "Confirm Password",
+                                hintStyle: TextStyle(
+                                  color: Colors.black.withOpacity(0.6),
+                                  fontSize: 15,
+                                  fontFamily: 'Inter-medium',
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(13),
+                                  borderSide: BorderSide.none,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFFDCEDFF),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isConfirmPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isConfirmPasswordVisible =
+                                          !_isConfirmPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value != _newPasswordController.text) {
+                                  return 'Passwords do not match';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Inter-medium',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  // Save the new password in Firestore or Firebase Auth
+                                  User? user =
+                                      FirebaseAuth.instance.currentUser;
+                                  if (user != null) {
+                                    await user.updatePassword(
+                                        _newPasswordController.text);
+
+                                    // Close the dialog
+                                    Navigator.of(context).pop();
+
+                                    // Optionally show a success message or update UI
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Password updated successfully!'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 30),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'Inter-medium',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void _myHistory() {
     // Implement the logic to view the user's history
   }
 
-  void _deleteAccount() {
-    // Implement the logic to delete the user's account
+  void _deleteAccount(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/logout_illustration.png', // Replace with your image path
+                  height: 250,
+                ),
+              ),
+              const Text(
+                'Once it\'s gone, it\'s gone\n Are you sure?',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter-black',
+                  color: Color(0xFF2f3036),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch, // Makes buttons full width
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 253, 0, 0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize:
+                        const Size(double.infinity, 50), // Full width button
+                  ),
+                  onPressed: () async {
+                    // Retrieve the current user
+                    User? user = FirebaseAuth.instance.currentUser;
+
+                    if (user != null) {
+                      try {
+                        // Delete the user's document from Firestore
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.uid)
+                            .delete();
+
+                        // Delete the user's authentication record
+                        await user.delete();
+
+                        // Navigate back to the login screen
+                        Navigator.of(context).pop(); // Close the dialog
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      } catch (e) {
+                        // Handle errors (e.g., re-authentication needed)
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Error deleting account: ${e.toString()}'),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text(
+                    'Yes, Delete my Account',
+                    style: TextStyle(
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10), // Space between the buttons
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Close the dialog
+                  },
+                  child: const Text(
+                    'Just kidding, let\'s stay.',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _logout() async {
@@ -332,24 +661,37 @@ void _editUsername(BuildContext context) {
     }
   }
 
+  // Move it down a little bit
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Profile'),
-        titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 30,
-          fontFamily: 'Inter-semibold',
-        ),
-        backgroundColor: Color(0xFF006FFD),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded),
-          color: Colors.white,
-          onPressed: () {
-            Navigator.pop(
-                context); // Navigates back to the previous screen (HomeScreen)
-          },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60.0), // Adjust the height of the AppBar
+        child: AppBar(
+          title: const Padding(
+            padding: EdgeInsets.only(
+                top: 22.0), // Adjust this value to move the title down
+            child: Text(
+              'My Profile',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontFamily: 'Inter-semibold',
+              ),
+            ),
+          ),
+          backgroundColor: Color(0xFF006FFD),
+          leading: Padding(
+            padding: const EdgeInsets.only(
+                top: 21.0), // Adjust this value to move the back arrow down
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.pop(context); // Navigates back to the previous screen
+              },
+            ),
+          ),
         ),
       ),
       body: Column(
@@ -453,7 +795,7 @@ void _editUsername(BuildContext context) {
           Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: InkWell(
-              onTap: _changePassword,
+              onTap: () => _changePassword(context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
@@ -579,7 +921,7 @@ void _editUsername(BuildContext context) {
           Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: InkWell(
-              onTap: _deleteAccount,
+              onTap: () => _deleteAccount(context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(

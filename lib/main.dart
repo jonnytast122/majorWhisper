@@ -7,6 +7,7 @@ import 'package:majorwhisper/screens/auth/Login.dart';
 import 'package:majorwhisper/screens/auth/Signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
+import 'package:majorwhisper/screens/Learning.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  OnboardingScreen(), // Use OnboardingScreen instead of Onboarding
+      home:  MyProfile(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }

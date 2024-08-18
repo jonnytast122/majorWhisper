@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
+import 'package:majorwhisper/screens/Roadmap.dart';
 import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
+import 'package:majorwhisper/screens/Career.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,12 +16,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeContent(), // Separate the home content
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeContent(), // Separate the home content
     Learning(), // Placeholder for Explore screen
-    Center(child: Text('Profile')), // Placeholder for Profile screen
-    Center(child: Text('Settings')), // Placeholder for Settings screen
-    Center(child: Text('Help')), // Placeholder for Help screen
+    Career(),
+    Roadmap(),
+    const Center(child: Text('Help')), // Placeholder for Help screen
   ];
 
   void _onItemTapped(int index) {
@@ -99,9 +101,9 @@ class DetailMajor extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.sunny,
                             color: Colors.white,
@@ -112,7 +114,7 @@ class DetailMajor extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
-                              fontFamily: 'Inter-black',
+                              fontFamily: 'Inter-regular',
                             ),
                           ),
                         ]),
@@ -139,7 +141,7 @@ class DetailMajor extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 30,
-                              fontFamily: 'Inter-black',
+                              fontFamily: 'Inter-medium',
                             ),
                           );
                         }
@@ -168,7 +170,7 @@ class DetailMajor extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
-                fontFamily: 'Inter-black',
+                fontFamily: 'Inter-semibold',
               ),
             ),
             const SizedBox(height: 10),
@@ -178,6 +180,7 @@ class DetailMajor extends StatelessWidget {
                 hintStyle: TextStyle(
                   color: Colors.black.withOpacity(0.6),
                   fontSize: 18,
+                  fontFamily: 'Inter-regular',
                 ),
                 prefixIcon: const Icon(
                   Icons.search_rounded,
@@ -207,7 +210,7 @@ class DetailMajor extends StatelessWidget {
                     style: TextStyle(
                       color: Color(0xFF006FFD),
                       fontSize: 20,
-                      fontFamily: 'Inter-black',
+                      fontFamily: 'Inter-semibold',
                     ),
                   ),
                   SizedBox(height: 5),
@@ -219,7 +222,7 @@ class DetailMajor extends StatelessWidget {
                         style: TextStyle(
                           color: Color(0xFF006FFD),
                           fontSize: 20,
-                          fontFamily: 'Inter-black',
+                          fontFamily: 'Inter-semibold',
                         ),
                       ),
                       Row(
@@ -236,7 +239,7 @@ class DetailMajor extends StatelessWidget {
                               decoration: TextDecoration.underline,
                               decorationColor: Color(0xFF006FFD),
                               fontSize: 11,
-                              fontFamily: 'Inter-black',
+                              fontFamily: 'Inter-semibold',
                             ),
                           ),
                         ],
@@ -282,7 +285,7 @@ class ExploreCategory extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
-                        fontFamily: 'Inter-black',
+                        fontFamily: 'Inter-semibold',
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -309,10 +312,10 @@ class ExploreCategory extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        'Take the Quiz',
+                        'Start Quiz',
                         style: TextStyle(
                           fontSize: 16,
-                          fontFamily: 'Inter-black',
+                          fontFamily: 'Inter-semibold',
                           color: Color(0xFF006FFD),
                         ),
                       ),
@@ -333,7 +336,7 @@ class ExploreCategory extends StatelessWidget {
             style: TextStyle(
               color: Colors.black,
               fontSize: 28,
-              fontFamily: 'Inter-black',
+              fontFamily: 'Inter-semibold',
             ),
           ),
           GridView.count(
