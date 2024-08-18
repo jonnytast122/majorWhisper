@@ -546,8 +546,108 @@ class _MyProfileState extends State<MyProfile> {
     // Implement the logic to view the user's history
   }
 
-  void _deleteAccount() {
-    // Implement the logic to delete the user's account
+  void _deleteAccount(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/logout_illustration.png', // Replace with your image path
+                  height: 250,
+                ),
+              ),
+              const Text(
+                'Once it\'s gone, it\'s gone\n Are you sure?',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter-black',
+                  color: Color(0xFF2f3036),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.stretch, // Makes buttons full width
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 253, 0, 0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize:
+                        const Size(double.infinity, 50), // Full width button
+                  ),
+                  onPressed: () async {
+                    // Retrieve the current user
+                    User? user = FirebaseAuth.instance.currentUser;
+
+                    if (user != null) {
+                      try {
+                        // Delete the user's document from Firestore
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.uid)
+                            .delete();
+
+                        // Delete the user's authentication record
+                        await user.delete();
+
+                        // Navigate back to the login screen
+                        Navigator.of(context).pop(); // Close the dialog
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      } catch (e) {
+                        // Handle errors (e.g., re-authentication needed)
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text('Error deleting account: ${e.toString()}'),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text(
+                    'Yes, Delete my Account',
+                    style: TextStyle(
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10), // Space between the buttons
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Close the dialog
+                  },
+                  child: const Text(
+                    'Just kidding, let\'s stay.',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _logout() async {
@@ -821,7 +921,7 @@ class _MyProfileState extends State<MyProfile> {
           Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: InkWell(
-              onTap: _deleteAccount,
+              onTap: () => _deleteAccount(context),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
