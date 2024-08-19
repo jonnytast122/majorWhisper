@@ -12,7 +12,7 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   String? _username;
-  String _profileImage = 'assets/icon/profile_boy_1.png'; // Default path
+  String _profileImage = 'assets/icon/profile_holder.png'; // Default path
 
   @override
   void initState() {
@@ -110,13 +110,13 @@ class _MyProfileState extends State<MyProfile> {
         setState(() {
           _username = userDoc['username'] ?? 'Unknown User';
           _profileImage =
-              userDoc['profile_picture'] ?? 'assets/icon/profile_boy_1.png';
+              userDoc['profile_picture'] ?? 'assets/icon/profile_holder.png';
         });
       }
     } catch (e) {
       print('Error fetching user data: $e');
       setState(() {
-        _profileImage = 'assets/icon/profile_boy_1.png'; // Fallback image
+        _profileImage = 'assets/icon/profile_holder.png'; // Fallback image
       });
     }
   }

@@ -57,11 +57,23 @@ class HomeContent extends StatelessWidget {
     return null;
   }
 
+  Future<String?> _getProfile() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      return userDoc['profile_picture'] as String?;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DetailMajor(getUsername: _getUsername),
+        DetailMajor(getUsername: _getUsername, getProfile: _getProfile),
         const Expanded(child: ExploreCategory()),
       ],
     );
@@ -70,8 +82,11 @@ class HomeContent extends StatelessWidget {
 
 class DetailMajor extends StatelessWidget {
   final Future<String?> Function() getUsername;
+  final Future<String?> Function() getProfile;
 
-  const DetailMajor({Key? key, required this.getUsername}) : super(key: key);
+  const DetailMajor(
+      {Key? key, required this.getUsername, required this.getProfile})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +104,12 @@ class DetailMajor extends StatelessWidget {
           ),
         ),
         child: Column(
-          
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: 50,),
+            SizedBox(
+              height: 50,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +138,8 @@ class DetailMajor extends StatelessWidget {
                     FutureBuilder<String?>(
                       future: getUsername(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return const Text('Error loading username');
@@ -153,13 +170,45 @@ class DetailMajor extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const MyProfile()),
+                      MaterialPageRoute(
+                          builder: (context) => const MyProfile()),
                     );
                   },
-                  child: Image.asset(
-                    'assets/icon/profile_boy_1.png',
-                    width: 75,
-                    height: 75,
+                  child: FutureBuilder<String?>(
+                    future: getProfile(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Loading indicator
+                      } else if (snapshot.hasError) {
+                        return Image.asset(
+                          'assets/icon/profile_holder.png', // Fallback image on error
+                          width: 75,
+                          height: 75,
+                        );
+                      } else if (snapshot.hasData) {
+                        String? imagePath = snapshot.data;
+                        if (imagePath != null) {
+                          return Image.asset(
+                            imagePath, // Use network image if URL is provided
+                            width: 75,
+                            height: 75,
+                            fit: BoxFit.cover,
+                          );
+                        } else {
+                          return Image.asset(
+                            'assets/icon/profile_holder.png', // Fallback image if no path is returned
+                            width: 75,
+                            height: 75,
+                          );
+                        }
+                      } else {
+                        return Image.asset(
+                          'assets/icon/profile_holder.png', // Fallback image if no data
+                          width: 75,
+                          height: 75,
+                        );
+                      }
+                    },
                   ),
                 ),
               ],
@@ -343,8 +392,10 @@ class ExploreCategory extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            shrinkWrap: true, // This makes GridView take only the space it needs
-            physics: const NeverScrollableScrollPhysics(), // Disables GridView's scrolling
+            shrinkWrap:
+                true, // This makes GridView take only the space it needs
+            physics:
+                const NeverScrollableScrollPhysics(), // Disables GridView's scrolling
             children: const [
               CategoryCard(
                 title: "Business",
