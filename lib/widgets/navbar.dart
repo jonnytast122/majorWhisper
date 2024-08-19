@@ -32,35 +32,40 @@ class BottomNavBar extends StatelessWidget {
           topLeft: Radius.circular(25),
           topRight: Radius.circular(25),
         ),
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: onTap,
-          backgroundColor: Color(0xFF006FFD), // Transparent to show custom container background
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white.withOpacity(0.5),
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.book_rounded),
-              label: 'Learning',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business_center),
-              label: 'Career',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.assistant_rounded),
-              label: 'Roadmap',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Chatbot',
-            ),
-          ],
+        child: SizedBox(
+          height: 75
+          , // Height of the BottomNavigationBar
+          child: BottomNavigationBar(
+            currentIndex: currentIndex,
+            onTap: onTap,
+            backgroundColor: Color(0xFF006FFD), // Transparent to show custom container background
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(0.5),
+            iconSize: 30, // Adjust the icon size here
+            type: BottomNavigationBarType.fixed,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.book_rounded),
+                label: 'Learning',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.business_center),
+                label: 'Career',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.assistant_rounded),
+                label: 'Roadmap',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: 'Chatbot',
+              ),
+            ],
+          ),
         ),
       ),
     );
