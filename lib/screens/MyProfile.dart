@@ -12,6 +12,7 @@ class MyProfile extends StatefulWidget {
 
 class _MyProfileState extends State<MyProfile> {
   String? _username;
+  String _profileImage = 'assets/icon/profile_boy_1.png'; // Default path
 
   @override
   void initState() {
@@ -98,213 +99,207 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future<void> _getUsername() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        setState(() {
+          _username = userDoc['username'] ?? 'Unknown User';
+          _profileImage =
+              userDoc['profile_picture'] ?? 'assets/icon/profile_boy_1.png';
+        });
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
       setState(() {
-        _username = userDoc['username'];
+        _profileImage = 'assets/icon/profile_boy_1.png'; // Fallback image
       });
     }
   }
 
-  void _editUsername(BuildContext context) {
-    final _newNameController = TextEditingController();
-    final _confirmNameController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
+  Future<void> _editUsername(BuildContext context) async {
+  final _newNameController = TextEditingController();
+  final _confirmNameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            width:
-                MediaQuery.of(context).size.width * 0.9, // 80% of screen width
-            height: MediaQuery.of(context).size.height *
-                0.5, // 40% of screen height
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Center(
-                  child: Text(
-                    'Edit Username',
-                    style: TextStyle(fontSize: 24, fontFamily: 'Inter-regular'),
-                  ),
+  // Show the dialog and wait for user action
+  bool? usernameUpdated = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
+          height: MediaQuery.of(context).size.height * 0.5, // 50% of screen height
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Center(
+                child: Text(
+                  'Edit Username',
+                  style: TextStyle(fontSize: 24, fontFamily: 'Inter-regular'),
                 ),
-                const SizedBox(height: 30),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'New Name',
-                          style: TextStyle(
-                              fontSize: 20, fontFamily: 'Inter-medium'),
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      TextFormField(
-                        controller: _newNameController,
-                        decoration: InputDecoration(
-                          hintText: "Enter Name",
-                          hintStyle: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                              fontSize: 15,
-                              fontFamily: 'Inter-medium'),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFFDCEDFF),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a new name';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 30),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Confirm Name',
-                          style: TextStyle(
-                              fontSize: 20, fontFamily: 'Inter-medium'),
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                      TextFormField(
-                        controller: _confirmNameController,
-                        decoration: InputDecoration(
-                          hintText: "Enter Name",
-                          hintStyle: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                              fontSize: 15,
-                              fontFamily: 'Inter-medium'),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(13),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xFFDCEDFF),
-                        ),
-                        validator: (value) {
-                          if (value != _newNameController.text) {
-                            return 'Names do not match';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              const SizedBox(height: 30),
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 4), // Adjust padding as needed
-                          decoration: BoxDecoration(
-                            color: Colors
-                                .red, // Set your desired background color here
-                            borderRadius: BorderRadius.circular(
-                                8), // Optional: to give rounded corners
-                          ),
-                          alignment: Alignment
-                              .center, // Center the text within the container
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Inter-medium',
-                              color: Colors
-                                  .white, // Set your desired text color here
-                            ),
-                          ),
-                        ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'New Name',
+                        style: TextStyle(
+                            fontSize: 20, fontFamily: 'Inter-medium'),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            // Save the new name in Firestore
-                            User? user = FirebaseAuth.instance.currentUser;
-                            if (user != null) {
-                              await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(user.uid)
-                                  .update(
-                                      {'username': _newNameController.text});
-
-                              // Close the dialog
-                              Navigator.of(context).pop();
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: _newNameController,
+                      decoration: InputDecoration(
+                        hintText: "Enter Name",
+                        hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.6),
+                            fontSize: 15,
+                            fontFamily: 'Inter-medium'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(13),
+                          borderSide: BorderSide.none,
                         ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 30), // Adjust padding as needed
-                          decoration: BoxDecoration(
-                            color: Colors
-                                .blue, // Set your desired background color here
-                            borderRadius: BorderRadius.circular(
-                                8), // Optional: to give rounded corners
-                          ),
-                          alignment: Alignment
-                              .center, // Center the text within the container
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'Inter-medium',
-                              color: Colors
-                                  .white, // Set your desired text color here
-                            ),
-                          ),
-                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFDCEDFF),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a new name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Confirm Name',
+                        style: TextStyle(
+                            fontSize: 20, fontFamily: 'Inter-medium'),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: _confirmNameController,
+                      decoration: InputDecoration(
+                        hintText: "Enter Name",
+                        hintStyle: TextStyle(
+                            color: Colors.black.withOpacity(0.6),
+                            fontSize: 15,
+                            fontFamily: 'Inter-medium'),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(13),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFDCEDFF),
+                      ),
+                      validator: (value) {
+                        if (value != _newNameController.text) {
+                          return 'Names do not match';
+                        }
+                        return null;
+                      },
                     ),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false); // Pass false to indicate cancel
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 4),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Inter-medium',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          // Save the new username in Firestore
+                          User? user = FirebaseAuth.instance.currentUser;
+                          if (user != null) {
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .update({'username': _newNameController.text});
+
+                            Navigator.of(context).pop(true); // Pass true to indicate success
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Inter-medium',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
-        );
-      },
-    );
+        ),
+      );
+    },
+  );
+
+  // Only update the username if the dialog indicates success
+  if (usernameUpdated == true) {
+    await _getUsername(); // Fetch updated user data
   }
+}
+
 
   void _changePassword(BuildContext context) {
     final _newPasswordController = TextEditingController();
@@ -661,6 +656,125 @@ class _MyProfileState extends State<MyProfile> {
     }
   }
 
+  Future<void> _changeProfile(BuildContext context) async {
+    String? selectedProfile;
+
+    bool? profileUpdated = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Text(
+                    'Change Profile Picture',
+                    style: TextStyle(fontSize: 24, fontFamily: 'Inter-medium'),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      List<String> imagePaths = [
+                        'assets/icon/profile_boy_1.png',
+                        'assets/icon/profile_boy_2.png',
+                        'assets/icon/profile_girl_1.png',
+                        'assets/icon/profile_girl_2.png'
+                      ];
+
+                      return GestureDetector(
+                        onTap: () {
+                          selectedProfile = imagePaths[index];
+                          (context as Element).markNeedsBuild();
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 200),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: selectedProfile == imagePaths[index]
+                                ? Colors.blue.withOpacity(0.1)
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: selectedProfile == imagePaths[index]
+                                  ? Colors.blue
+                                  : Colors.transparent,
+                              width: 3,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Image.asset(imagePaths[index]),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (selectedProfile != null) {
+                      User? user = FirebaseAuth.instance.currentUser;
+                      if (user != null) {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.uid)
+                            .update({'profile_picture': selectedProfile});
+                        Navigator.of(context)
+                            .pop(true); // Pass a result indicating success
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text('Please select a profile picture.')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 30),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Inter-medium',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // Only update the profile if the dialog indicates success
+    if (profileUpdated == true) {
+      await _getUsername(); // Fetch updated user data
+    }
+  }
+
   // Move it down a little bit
   @override
   Widget build(BuildContext context) {
@@ -711,8 +825,9 @@ class _MyProfileState extends State<MyProfile> {
               ),
               alignment: Alignment.center,
               child: GestureDetector(
-                onTap: () {
-                  // Handle the tap event here
+                onTap: () async {
+                  // Call functions and wait for them to complete
+                  _changeProfile(context);
                 },
                 child: Stack(
                   children: [
@@ -720,7 +835,7 @@ class _MyProfileState extends State<MyProfile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/icon/profile_boy_1.png',
+                          _profileImage,
                           width: 150,
                           height: 150,
                         ),
