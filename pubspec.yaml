@@ -84,6 +84,9 @@ flutter:
   - assets/images/cloud_illustration.png
   - assets/icon/profile_boy_1.png
   - assets/images/logout_illustration.png
+  - assets/icon/profile_boy_2.png
+  - assets/icon/profile_girl_1.png
+  - assets/icon/profile_girl_2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
