@@ -596,12 +596,13 @@ class _MyProfileState extends State<MyProfile> {
                             .delete();
 
                         // Delete the user's authentication record
-                        await user.delete();
-
+                        await FirebaseAuth.instance.currentUser!.delete();
+                        
                         // Navigate back to the login screen
                         Navigator.of(context).pop(); // Close the dialog
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Login()),
+                        Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => Login()),
+                          (Route<dynamic> route) => false, // Clear all previous routes
                         );
                       } catch (e) {
                         // Handle errors (e.g., re-authentication needed)

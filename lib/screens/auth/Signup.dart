@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -130,38 +132,61 @@ class _SignupState extends State<Signup> {
   }
 
   Future<void> _sendVerificationEmail() async {
-    try {
-      // Register user with Firebase Authentication
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+  try {
+    // Register user with Firebase Authentication
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
 
-      // Get the newly registered user
-      User? user = userCredential.user;
+    // Get the newly registered user
+    User? user = userCredential.user;
 
-      if (user != null) {
-        // Send email verification
-        await user.sendEmailVerification();
+    if (user != null) {
+      // Send email verification
+      await user.sendEmailVerification();
 
-        // Save user information to Firestore
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      // Reference to the user's Firestore document
+      DocumentReference userDoc =
+          FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+      // Get the user document
+      DocumentSnapshot docSnapshot = await userDoc.get();
+
+      // If the document doesn't exist, it means it's the first login
+      if (!docSnapshot.exists) {
+        // Define the list of image paths
+        List<String> imagePaths = [
+          'assets/icon/profile_boy_1.png',
+          'assets/icon/profile_boy_2.png',
+          'assets/icon/profile_girl_1.png',
+          'assets/icon/profile_girl_2.png'
+        ];
+
+        // Randomly select an image path
+        String randomImagePath =
+            imagePaths[Random().nextInt(imagePaths.length)];
+
+        // Save user information along with the random profile picture to Firestore
+        await userDoc.set({
           'uid': user.uid,
           'username': _usernameController.text,
           'email': _emailController.text,
+          'profile_picture': randomImagePath, // Save the random image path
         });
       }
-    } catch (e) {
-      // Handle registration error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
     }
+  } catch (e) {
+    // Handle registration error
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error: ${e.toString()}'),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
