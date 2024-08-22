@@ -16,19 +16,19 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home: const OnboardingScreen(),
+      home: const Onboarding(),
     );
   }
 }
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+class Onboarding extends StatefulWidget {
+  const Onboarding({super.key});
 
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends State<Onboarding> {
   int currentIndex = 0;
   late PageController _pageController;
 

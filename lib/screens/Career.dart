@@ -65,6 +65,21 @@ class _CareerState extends State<Career> {
                     Icons.search_rounded,
                     color: Color(0xFF000000),
                   ),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(
+                        right:
+                            10), // Move the entire IconButton, not just the icon
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.send_rounded,
+                        color: Color(0xFF000000),
+                      ),
+                      onPressed: () {
+                        // Add the action you want to perform when the send icon is pressed
+                        print("Send icon pressed");
+                      },
+                    ),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
                     borderSide: BorderSide.none,
