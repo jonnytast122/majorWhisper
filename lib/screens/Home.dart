@@ -7,6 +7,7 @@ import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
 import 'package:majorwhisper/screens/Career.dart';
+import 'package:majorwhisper/screens/Quiz.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -348,8 +349,17 @@ class ExploreCategory extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        // Button press logic here (currently does nothing)
+                      onPressed: () async {
+                        bool? shouldNavigate =
+                            await Quizpopscreen(context); // Show the dialog
+
+                        if (shouldNavigate == true) {
+                          // Navigate to Quiz if confirmed
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Quiz()),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
@@ -392,10 +402,8 @@ class ExploreCategory extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            shrinkWrap:
-                true, // This makes GridView take only the space it needs
-            physics:
-                const NeverScrollableScrollPhysics(), // Disables GridView's scrolling
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             children: const [
               CategoryCard(
                 title: "Business",
@@ -419,4 +427,88 @@ class ExploreCategory extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool?> Quizpopscreen(BuildContext context) {
+  return showDialog<bool?>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Image.asset(
+                'assets/images/logout_illustration.png', // Replace with your image path
+                height: 250,
+              ),
+            ),
+            const Text(
+              'You\'re about to start the quiz. Are you sure?',
+              style: TextStyle(
+                fontSize: 24,
+                fontFamily: 'Inter-black',
+                color: Color(0xFF2f3036),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'You have to complete 10 questions',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Inter-regular',
+                color: Color(0xFF71727A),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF006FFD),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(true); // Return true
+                },
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(
+                    fontFamily: 'Inter-semibold',
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false); // Return false
+                },
+                child: const Text(
+                  'No',
+                  style: TextStyle(
+                    color: Color(0xFF006FFD),
+                    fontFamily: 'Inter-semibold',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
 }

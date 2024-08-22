@@ -88,6 +88,9 @@ flutter:
   - assets/icon/profile_girl_1.png
   - assets/icon/profile_girl_2.png
   - assets/icon/profile_holder.png
+  - assets/icon/arrow.png
+  - assets/images/box.png
+  - assets/images/verify.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -138,6 +141,14 @@ flutter:
       - family: Inter-medium
         fonts:
           - asset: assets/fonts/Inter/static/Inter_18pt-Medium.ttf
+
+      - family: Inter-bold
+        fonts:
+          - asset: assets/fonts/Inter/static/Inter_18pt-Bold.ttf
+
+      - family: Inter-ExtraBold
+        fonts:
+          - asset: assets/fonts/Inter/static/Inter_18pt-Extrabold.ttf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

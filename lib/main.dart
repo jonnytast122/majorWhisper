@@ -8,6 +8,10 @@ import 'package:majorwhisper/screens/auth/Signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
 import 'package:majorwhisper/screens/Learning.dart';
+import 'package:majorwhisper/screens/Career.dart';
+import 'package:majorwhisper/screens/Quiz.dart';
+import 'package:majorwhisper/screens/Listmajors.dart';
+import 'package:majorwhisper/screens/Quiz_Finished.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +30,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  OnboardingScreen(), // Use OnboardingScreen instead of Onboarding
+      home:  QuizFinished(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }
