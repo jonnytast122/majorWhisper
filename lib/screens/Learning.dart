@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:majorwhisper/screens/LearningResult.dart'; // Import the new screen
 
 class Learning extends StatefulWidget {
   @override
@@ -7,6 +8,7 @@ class Learning extends StatefulWidget {
 
 class _LearningState extends State<Learning> {
   String selectedDegree = 'Bachelor'; // Default selected button
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,7 @@ class _LearningState extends State<Learning> {
             children: [
               const SizedBox(height: 70),
               const Padding(
-                padding: EdgeInsets.only(
-                    left: 10.0), // Adjust the left padding as needed
+                padding: EdgeInsets.only(left: 10.0),
                 child: Text(
                   "Explore your major's path",
                   style: TextStyle(
@@ -54,6 +55,7 @@ class _LearningState extends State<Learning> {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _searchController,
                 decoration: InputDecoration(
                   hintText: "Search Major",
                   hintStyle: TextStyle(
@@ -72,6 +74,7 @@ class _LearningState extends State<Learning> {
                   filled: true,
                   fillColor: const Color(0xFFEDEDED),
                 ),
+                onFieldSubmitted: (value) => _search(),
               ),
               const SizedBox(height: 20),
               const Padding(
@@ -87,13 +90,12 @@ class _LearningState extends State<Learning> {
               ),
               const SizedBox(height: 10),
               Row(
-                mainAxisAlignment:
-                MainAxisAlignment.start, // Aligns the buttons to the left
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   buildDegreeButton('Bachelor'),
-                  SizedBox(width: 10), // Add some space between buttons
+                  SizedBox(width: 10),
                   buildDegreeButton('Master'),
-                  SizedBox(width: 10), // Add some space between buttons
+                  SizedBox(width: 10),
                   buildDegreeButton('PhD'),
                 ],
               ),
@@ -109,7 +111,7 @@ class _LearningState extends State<Learning> {
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          selectedDegree = degree; // Update the selected degree
+          selectedDegree = degree;
         });
       },
       style: ElevatedButton.styleFrom(
@@ -125,6 +127,16 @@ class _LearningState extends State<Learning> {
           fontSize: 16,
           fontFamily: 'Inter-semibold',
         ),
+      ),
+    );
+  }
+
+  void _search() {
+    final majorName = _searchController.text;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LearningResult(majorName: majorName),
       ),
     );
   }
