@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:majorwhisper/screens/LearningResult.dart'; // Import the new screen
 
 class Learning extends StatefulWidget {
   @override
