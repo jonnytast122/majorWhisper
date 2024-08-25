@@ -3,29 +3,29 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-class LearningResult extends StatefulWidget {
+class CareerResult extends StatefulWidget {
   final String majorName;
-  final String degree;
+  final String country;
 
-  LearningResult({required this.majorName, required this.degree});
+  CareerResult({required this.majorName, required this.country});
 
   @override
-  _LearningResultState createState() => _LearningResultState();
+  _CareerResultState createState() => _CareerResultState();
 }
 
-class _LearningResultState extends State<LearningResult> {
-  Future<Map<String, dynamic>>? _learningPathData;
+class _CareerResultState extends State<CareerResult> {
+  Future<Map<String, dynamic>>? _CareerPathData;
 
   @override
   void initState() {
     super.initState();
-    _learningPathData = fetchLearningPath(widget.majorName);
+    _CareerPathData = fetchCareerPath(widget.majorName);
   }
 
-  Future<Map<String, dynamic>> fetchLearningPath(String majorName) async {
+  Future<Map<String, dynamic>> fetchCareerPath(String majorName) async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.1.94.136:5000/bachelor-degree-learning-path'),
+        Uri.parse('http://10.1.94.136:5000/bachelor-degree-Career-path'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -37,7 +37,7 @@ class _LearningResultState extends State<LearningResult> {
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        return {'error': 'Failed to load learning path'}; // Error message if API call fails
+        return {'error': 'Failed to load Career path'}; // Error message if API call fails
       }
     } catch (e) {
       return {'error': 'An error occurred'}; // Error message if exception occurs
@@ -55,7 +55,7 @@ class _LearningResultState extends State<LearningResult> {
 
     return Scaffold(
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _learningPathData,
+        future: _CareerPathData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -64,7 +64,7 @@ class _LearningResultState extends State<LearningResult> {
           } else {
             final data = snapshot.data!;
             final imageUrl = data['image_url'] ?? ''; // Use the image_url from the API response
-            final learningPath = data['bachelor_degree_learning_path'] ?? 'No data available';
+            final CareerPath = data['bachelor_degree_Career_path'] ?? 'No data available';
 
             return Stack(
               children: [
@@ -130,7 +130,7 @@ class _LearningResultState extends State<LearningResult> {
                         ],
                       ),
                       child: Markdown(
-                        data: learningPath,
+                        data: CareerPath,
                         styleSheet: MarkdownStyleSheet(
                           p: TextStyle(
                             fontSize: 20,

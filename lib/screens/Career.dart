@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:majorwhisper/screens/CareerResult.dart';
 
 class Career extends StatefulWidget {
   @override
@@ -7,6 +8,7 @@ class Career extends StatefulWidget {
 
 class _CareerState extends State<Career> {
   String selectedCountry = 'Cambodia'; // Default selected button
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,7 @@ class _CareerState extends State<Career> {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: _searchController,
                 decoration: InputDecoration(
                   hintText: "Search Major",
                   hintStyle: TextStyle(
@@ -76,7 +79,7 @@ class _CareerState extends State<Career> {
                       ),
                       onPressed: () {
                         // Add the action you want to perform when the send icon is pressed
-                        print("Send icon pressed");
+                        _search(_searchController.text, selectedCountry);
                       },
                     ),
                   ),
@@ -87,6 +90,7 @@ class _CareerState extends State<Career> {
                   filled: true,
                   fillColor: const Color(0xFFEDEDED),
                 ),
+                onFieldSubmitted: (value) => _search(value, selectedCountry),
               ),
               const SizedBox(height: 20),
               const Padding(
@@ -126,7 +130,7 @@ class _CareerState extends State<Career> {
         });
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Color(0xFF006FFD) : Colors.white,
+        backgroundColor: isSelected ? Colors.white : Colors.white.withOpacity(0.5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -134,11 +138,21 @@ class _CareerState extends State<Career> {
       child: Text(
         country,
         style: TextStyle(
-          color: isSelected ? Colors.white : Color(0xFF006FFD),
+          color: isSelected ? Color(0xFF006FFD) : Colors.white,
           fontSize: 16,
           fontFamily: 'Inter-semibold',
         ),
       ),
     );
   }
+
+void _search(String majorName, String country) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CareerResult(majorName: majorName, country: country),
+      ),
+    );
+  }
+
 }

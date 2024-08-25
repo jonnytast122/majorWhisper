@@ -71,10 +71,24 @@ class _LearningState extends State<Learning> {
                     borderRadius: BorderRadius.circular(40),
                     borderSide: BorderSide.none,
                   ),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(
+                        right:
+                            10), // Move the entire IconButton, not just the icon
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.send_rounded,
+                        color: Color(0xFF000000),
+                      ),
+                      onPressed: () {
+                        _search(_searchController.text, selectedDegree);
+                      },
+                    ),
+                  ),
                   filled: true,
                   fillColor: const Color(0xFFEDEDED),
                 ),
-                onFieldSubmitted: (value) => _search(),
+                onFieldSubmitted: (value) => _search(value, selectedDegree),
               ),
               const SizedBox(height: 20),
               const Padding(
@@ -115,7 +129,7 @@ class _LearningState extends State<Learning> {
         });
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Color(0xFF006FFD) : Colors.white,
+        backgroundColor: isSelected ? Colors.white : Colors.white.withOpacity(0.5),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -123,7 +137,7 @@ class _LearningState extends State<Learning> {
       child: Text(
         degree,
         style: TextStyle(
-          color: isSelected ? Colors.white : Color(0xFF006FFD),
+          color: isSelected ? Color(0xFF006FFD) : Colors.white,
           fontSize: 16,
           fontFamily: 'Inter-semibold',
         ),
@@ -131,12 +145,11 @@ class _LearningState extends State<Learning> {
     );
   }
 
-  void _search() {
-    final majorName = _searchController.text;
+  void _search(String majorName, String degree) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LearningResult(majorName: majorName),
+        builder: (context) => LearningResult(majorName: majorName, degree: degree),
       ),
     );
   }
