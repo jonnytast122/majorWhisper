@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
+import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'quiz_finished.dart'; // Ensure you have this import
 
 class Quiz extends StatefulWidget {
   @override
@@ -6,10 +12,143 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  List<dynamic> questions = [];
+  int currentQuestionIndex = 0;
   String? selectedChoice;
+  String? userUUID;
+  int quizAttemptCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    userUUID = getCurrentUserUID();
+    fetchQuestions();
+    fetchQuizAttemptCount();
+  }
+
+  String? getCurrentUserUID() {
+    User? user = FirebaseAuth.instance.currentUser;
+    return user?.uid;
+  }
+
+  Future<void> fetchQuestions() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('major_recommendations_temp')
+          .doc('questions')
+          .get();
+
+      setState(() {
+        questions = snapshot.get('questions');
+      });
+    } catch (e) {
+      print('Error fetching questions: $e');
+    }
+  }
+
+  Future<void> fetchQuizAttemptCount() async {
+  if (userUUID == null) return;
+
+  try {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('user_answers')
+        .doc(userUUID)
+        .collection('attempts')
+        .get();
+
+    setState(() {
+      quizAttemptCount = snapshot.docs.length;
+    });
+    } catch (e) {
+      print('Error fetching quiz attempt count: $e');
+    }
+  }
+
+  void storeAnswer(String questionText, String selectedChoice) async {
+  if (userUUID == null) {
+    print('User is not logged in.');
+    return;
+  }
+
+  try {
+    // Ensure the document for this attempt exists
+    String attemptDoc = 'attempt${quizAttemptCount + 1}';
+
+    await FirebaseFirestore.instance
+        .collection('user_answers')
+        .doc(userUUID)
+        .collection('attempts')
+        .doc(attemptDoc)
+        .collection('answers')
+        .doc(questionText)
+        .set({
+          'question_text': questionText,
+          'options': questions[currentQuestionIndex]['options'],
+          'selected_choice': selectedChoice,
+        });
+
+      print('Answer stored successfully in $attemptDoc');
+    } catch (e) {
+      print('Error storing answer: $e');
+    }
+  }
+
+  void goToNextQuestion() {
+    if (selectedChoice == null) {
+      DelightToastBar(
+        position: DelightSnackbarPosition.top, // Set the position here
+        autoDismiss: true,
+        snackbarDuration: Duration(seconds: 2),
+        builder: (context) => const ToastCard(
+          leading: Icon(
+            Icons.error,
+            size: 28,
+            color: Color.fromARGB(255, 244, 164, 74),
+          ),
+          title: Text(
+            "Please select one of the choices.",
+            style: TextStyle(
+              fontFamily: "Inter-semibold",
+              fontSize: 14,
+              color: Color.fromARGB(255, 244, 164, 74),
+            ),
+          ),
+        ),
+      ).show(context);
+      return;
+    }
+
+    storeAnswer(questions[currentQuestionIndex]['question_text'], selectedChoice!);
+
+    if (currentQuestionIndex < questions.length - 1) {
+      setState(() {
+        currentQuestionIndex++;
+        selectedChoice = null; // Reset the selected choice for the next question
+      });
+    } else {
+      // Navigate to the Quiz Finished screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QuizFinished(), // Adjust if needed
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (questions.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    var question = questions[currentQuestionIndex];
+    var options = question['options'];
+
     return Scaffold(
       body: Stack(
         children: [
@@ -50,7 +189,7 @@ class _QuizState extends State<Quiz> {
                       ),
                       SizedBox(height: 30),
                       Text(
-                        'Question 3 of 10',
+                        'Question ${currentQuestionIndex + 1} of ${questions.length}',
                         style: TextStyle(
                           fontSize: 24,
                           color: Colors.white,
@@ -59,10 +198,10 @@ class _QuizState extends State<Quiz> {
                       ),
                       SizedBox(height: 10),
                       LinearProgressIndicator(
-                        value: 0.1, // 30% progress
+                        value: (currentQuestionIndex + 1) / questions.length,
                         backgroundColor: Colors.white.withOpacity(0.3),
                         valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFFFFC107)), // Yellow color
+                            AlwaysStoppedAnimation<Color>(Color(0xFFFFC107)),
                       ),
                     ],
                   ),
@@ -81,34 +220,35 @@ class _QuizState extends State<Quiz> {
                       right: 35.0,
                       child: Column(
                         children: [
-                          buildChoiceButton('A', 'Maths'),
-                          buildChoiceButton('B', 'English'),
-                          buildChoiceButton('C', 'Science'),
-                          buildChoiceButton('D', 'Arts'),
-                          SizedBox(
-                              height: 20), // Spacing before the "Next" button
+                          for (int i = 0; i < options.length; i++)
+                            buildChoiceButton(
+                                String.fromCharCode(65 + i), options[i]),
+                          SizedBox(height: 20),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              minimumSize: Size(250, 50), // Adjust width and height
-                              backgroundColor: Color(0xFF006FFD),
+                              minimumSize: Size(250, 50),
+                              backgroundColor:
+                                  currentQuestionIndex == questions.length - 1
+                                      ? Color(0xFFFFC107) // Yellow for Submit
+                                      : Color(0xFF006FFD), // Blue for Next
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10), // Adjust padding
+                                  horizontal: 20, vertical: 10),
                             ),
-                            onPressed: () {
-                              // Handle "Next" button press
-                            },
+                            onPressed: goToNextQuestion,
                             child: Text(
-                              'Next',
+                              currentQuestionIndex == questions.length - 1
+                                  ? 'Submit'
+                                  : 'Next',
                               style: TextStyle(
-                                fontSize: 18, // Adjust font size
+                                fontSize: 18,
                                 color: Colors.white,
                                 fontFamily: "Inter-semibold",
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -117,7 +257,6 @@ class _QuizState extends State<Quiz> {
               ),
             ],
           ),
-          // Positioned white rectangle in the middle
           Positioned(
             left: MediaQuery.of(context).size.width * 0.07,
             right: MediaQuery.of(context).size.width * 0.07,
@@ -139,7 +278,7 @@ class _QuizState extends State<Quiz> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 30), // Move "Question" down or up
+                    SizedBox(height: 30),
                     Text(
                       'Question',
                       style: TextStyle(
@@ -147,13 +286,11 @@ class _QuizState extends State<Quiz> {
                           color: Color(0xFF006FFD),
                           fontFamily: "Inter-medium"),
                     ),
-                    SizedBox(
-                        height:
-                            22), // Adjust this value to move the next text closer or farther
+                    SizedBox(height: 22),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Text(
-                        'What aspect of your education experience do you enjoy most?',
+                        question['question_text'],
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.black,

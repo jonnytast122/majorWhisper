@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:majorwhisper/screens/Home.dart';
 
 class QuizFinished extends StatefulWidget {
   @override
@@ -68,7 +69,10 @@ class _QuizFinishedState extends State<QuizFinished> {
                     horizontal: 20, vertical: 10), // Adjust padding
               ),
               onPressed: () {
-                // Handle "Next" button press
+                  Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()), // Adjust if needed
+                );
               },
               child: Text(
                 'Next',
