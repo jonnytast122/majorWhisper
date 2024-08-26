@@ -63,22 +63,35 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: PreferredSize(
+  preferredSize: Size.fromHeight(200), // Set the desired height here
+  child: AppBar(
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+    flexibleSpace: Stack(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 40.0), // Adjust the top padding as needed
+            child: Image.asset(
+              'assets/images/login_illustration.png', // Replace with your image path
+              height: 350, // Adjust height as needed
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
+
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(
-                child: Image.asset(
-                  'assets/images/login_illustration.png', // Replace with your image path
-                  height: 300,
-                ),
-              ),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(

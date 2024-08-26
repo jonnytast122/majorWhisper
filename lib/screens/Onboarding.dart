@@ -76,7 +76,7 @@ class _OnboardingScreenState extends State<Onboarding> {
               ],
             ),
           ),
-          const SizedBox(height: 116),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(3, (index) {
@@ -96,7 +96,7 @@ class _OnboardingScreenState extends State<Onboarding> {
           ),
           const SizedBox(height: 24),
           SizedBox(
-            width: 400, // Makes the button as wide as the screen
+            width: 300, // Makes the button as wide as the screen
             child: ElevatedButton(
               onPressed: () {
                 if (currentIndex < 2) {
@@ -170,38 +170,40 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 148),
-          Image.asset(
-            imagePath,
-            height: 300,
-          ),
-          const SizedBox(height: 24),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 34,
-              fontFamily: 'Inter-black',
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF006FFD),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 80),
+            Image.asset(
+              imagePath,
+              height: MediaQuery.of(context).size.height * 0.3,
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 16,
-              fontFamily: 'Inter-regular',
-              color: Color.fromARGB(255, 116, 116, 116),
+            const SizedBox(height: 24),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 34,
+                fontFamily: 'Inter-black',
+                fontWeight: FontWeight.w900,
+                color: Color(0xFF006FFD),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                fontFamily: 'Inter-regular',
+                color: Color.fromARGB(255, 116, 116, 116),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
