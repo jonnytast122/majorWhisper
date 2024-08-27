@@ -8,6 +8,7 @@ import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
 import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
+import 'package:majorwhisper/screens/MajorDetail.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -84,9 +85,9 @@ class HomeContent extends StatelessWidget {
 class DetailMajor extends StatelessWidget {
   final Future<String?> Function() getUsername;
   final Future<String?> Function() getProfile;
+  final TextEditingController _searchController = TextEditingController();
 
-  const DetailMajor(
-      {Key? key, required this.getUsername, required this.getProfile})
+  DetailMajor({Key? key, required this.getUsername, required this.getProfile})
       : super(key: key);
 
   @override
@@ -225,6 +226,7 @@ class DetailMajor extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             TextFormField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: "Search Major",
                 hintStyle: TextStyle(
@@ -243,7 +245,19 @@ class DetailMajor extends StatelessWidget {
                 filled: true,
                 fillColor: const Color(0xFFEDEDED),
               ),
+              onFieldSubmitted: (value) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Majordetail(majorName: value),
+                  ),
+                );
+              },
+              onChanged: (value) {
+                // Optionally handle input changes
+              },
             ),
+
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16),
@@ -469,7 +483,7 @@ class ExploreCategory extends StatelessWidget {
                 title: "Linguistics and Language",
                 imagePath: "assets/images/language_vector.jpg",
               ),
-                            CategoryCard(
+              CategoryCard(
                 title: "Robotics and Automation",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
@@ -481,7 +495,7 @@ class ExploreCategory extends StatelessWidget {
                 title: "Ethnic and Philosphy",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
-               CategoryCard(
+              CategoryCard(
                 title: "Religious and Theological Studies",
                 imagePath: "assets/images/religion_vector.jpg",
               ),
