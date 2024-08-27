@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Listmajors extends StatefulWidget {
+  final String title;
+
+  const Listmajors({Key? key, required this.title}) : super(key: key);
+
   @override
   _ListmajorsState createState() => _ListmajorsState();
 }
@@ -9,6 +13,30 @@ class _ListmajorsState extends State<Listmajors> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize:
+            Size.fromHeight(kToolbarHeight), // Use default toolbar height
+        child: AppBar(
+          backgroundColor: const Color(0xFF006FFD), // Blue background color
+          elevation: 0,
+          iconTheme: const IconThemeData(
+            color: Colors.white, // Set the icon color to white
+          ),
+          title: Padding(
+            padding: const EdgeInsets.only(
+                top: 10.0), // Add padding to the top of the title
+            child: Text(
+              widget.title, // Use the title passed from the CategoryCard
+              style: const TextStyle(
+                fontSize: 28,
+                fontFamily: "Inter-bold",
+                color: Colors.white,
+              ),
+            ),
+          ),
+          centerTitle: true, // Center the title horizontally
+        ),
+      ),
       body: Stack(
         children: [
           Container(
@@ -17,22 +45,13 @@ class _ListmajorsState extends State<Listmajors> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(top: 50.0),
+              padding: const EdgeInsets.only(top: 20.0),
               child: Column(
                 children: [
                   const Text(
-                    'Science', // Title text
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontFamily: "Inter-bold",
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  const Text(
                     'Discover Your Path', // Subtitle text
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 30,
                       fontFamily: "Inter-semibold",
                       color: Colors.white,
                     ),
@@ -44,7 +63,7 @@ class _ListmajorsState extends State<Listmajors> {
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.only(top: 150.0, left: 60),
+              padding: const EdgeInsets.only(top: 70.0, left: 50),
               child: Column(
                 children: [
                   const Text(
@@ -62,7 +81,8 @@ class _ListmajorsState extends State<Listmajors> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.75, // Height of the white container
+              height: MediaQuery.of(context).size.height *
+                  0.75, // Height of the white container
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -73,13 +93,13 @@ class _ListmajorsState extends State<Listmajors> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ListView.builder(
-                  itemCount: 1, // Number of items
+                  itemCount: 5, // Number of items
                   itemBuilder: (context, index) {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16.0),
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 111, 174, 255),
+                        color: const Color.fromARGB(255, 111, 174, 255),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Row(
@@ -89,8 +109,9 @@ class _ListmajorsState extends State<Listmajors> {
                             width: 70.0,
                             height: 70.0,
                             decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/box.png'), // Path to your image
+                              image: const DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/box.png'), // Path to your image
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(10.0),
@@ -101,7 +122,7 @@ class _ListmajorsState extends State<Listmajors> {
                                 style: const TextStyle(
                                   fontSize: 30,
                                   color: Colors.white,
-                                  fontFamily: "Inter-black"
+                                  fontFamily: "Inter-black",
                                 ),
                               ),
                             ),
