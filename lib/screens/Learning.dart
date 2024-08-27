@@ -15,7 +15,7 @@ class _LearningState extends State<Learning> {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(top: 0),
-        height: 370,
+        height: 380,
         width: double.infinity,
         child: Container(
           padding: const EdgeInsets.all(16),

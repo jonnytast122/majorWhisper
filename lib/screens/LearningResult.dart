@@ -76,7 +76,7 @@ class _LearningResultState extends State<LearningResult> {
             final imageUrl = data['image_url'] ??
                 ''; // Use the image_url from the API response
             final learningPath =
-                data['bachelor_degree_learning_path'] ?? 'No data available';
+                data[widget.degree.toLowerCase()+ '_degree_learning_path'] ?? 'No data available';
 
             return Stack(
               children: [
