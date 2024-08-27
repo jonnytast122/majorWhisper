@@ -8,6 +8,7 @@ import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
 import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
+import 'package:majorwhisper/screens/Recent.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -252,19 +253,28 @@ class DetailMajor extends StatelessWidget {
                 color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Recent Quiz",
-                    style: TextStyle(
-                      color: Color(0xFF006FFD),
-                      fontSize: 18,
-                      fontFamily: 'Inter-semibold',
+                  GestureDetector(
+                    onTap: () {
+                      // Handle button press here
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Recent()),
+                      );
+                    },
+                    child: Text(
+                      'Recent Quiz',
+                      style: TextStyle(
+                        color: Color(0xFF006FFD),
+                        fontSize: 18,
+                        fontFamily: 'Inter-semibold',
+                      ),
                     ),
                   ),
-                  SizedBox(height: 5),
-                  Row(
+                  const SizedBox(height: 5),
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -469,7 +479,7 @@ class ExploreCategory extends StatelessWidget {
                 title: "Linguistics and Language",
                 imagePath: "assets/images/language_vector.jpg",
               ),
-                            CategoryCard(
+              CategoryCard(
                 title: "Robotics and Automation",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
@@ -481,7 +491,7 @@ class ExploreCategory extends StatelessWidget {
                 title: "Ethnic and Philosphy",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
-               CategoryCard(
+              CategoryCard(
                 title: "Religious and Theological Studies",
                 imagePath: "assets/images/religion_vector.jpg",
               ),

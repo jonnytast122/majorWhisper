@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.3.2
   flutter_markdown: ^0.7.3+1
   delightful_toast: ^1.1.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

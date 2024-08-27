@@ -5,6 +5,15 @@ import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'quiz_finished.dart'; // Ensure you have this import
+import 'package:intl/intl.dart';
+
+String formatTimestamp(DateTime dateTime) {
+  final DateFormat formatter = DateFormat('dd MMM yyyy');
+  return formatter.format(dateTime);
+}
+
+// In your storeQuizAttempt method:
+String timestamp = formatTimestamp(DateTime.now());
 
 class Quiz extends StatefulWidget {
   @override
@@ -16,14 +25,14 @@ class _QuizState extends State<Quiz> {
   int currentQuestionIndex = 0;
   String? selectedChoice;
   String? userUUID;
-  int quizAttemptCount = 0;
+  List<Map<String, dynamic>> currentAnswers =
+      []; // Track current attempt answers
 
   @override
   void initState() {
     super.initState();
     userUUID = getCurrentUserUID();
     fetchQuestions();
-    fetchQuizAttemptCount();
   }
 
   String? getCurrentUserUID() {
@@ -46,57 +55,85 @@ class _QuizState extends State<Quiz> {
     }
   }
 
-  Future<void> fetchQuizAttemptCount() async {
-  if (userUUID == null) return;
-
-  try {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('user_answers')
-        .doc(userUUID)
-        .collection('attempts')
-        .get();
-
-    setState(() {
-      quizAttemptCount = snapshot.docs.length;
-    });
-    } catch (e) {
-      print('Error fetching quiz attempt count: $e');
+  void storeQuizAttempt(List<Map<String, dynamic>> answers) async {
+    if (userUUID == null) {
+      print('User is not logged in.');
+      return;
     }
-  }
 
-  void storeAnswer(String questionText, String selectedChoice) async {
-  if (userUUID == null) {
-    print('User is not logged in.');
-    return;
-  }
+    try {
+      DocumentReference userAnswersRef =
+          FirebaseFirestore.instance.collection('user_answers').doc(userUUID);
 
-  try {
-    // Ensure the document for this attempt exists
-    String attemptDoc = 'attempt${quizAttemptCount + 1}';
+      DocumentSnapshot snapshot = await userAnswersRef.get();
 
-    await FirebaseFirestore.instance
-        .collection('user_answers')
-        .doc(userUUID)
-        .collection('attempts')
-        .doc(attemptDoc)
-        .collection('answers')
-        .doc(questionText)
-        .set({
-          'question_text': questionText,
-          'options': questions[currentQuestionIndex]['options'],
-          'selected_choice': selectedChoice,
+      int nextQuizNumber = 1;
+
+      if (snapshot.exists) {
+        Map<String, dynamic> existingData =
+            snapshot.data() as Map<String, dynamic>;
+
+        // Find the highest quiz number in the existing data
+        List<int> quizNumbers = existingData.keys
+            .where((key) => key.startsWith('quiz'))
+            .map((key) => int.parse(key.replaceAll('quiz', '')))
+            .toList();
+
+        if (quizNumbers.isNotEmpty) {
+          nextQuizNumber = quizNumbers.reduce((a, b) => a > b ? a : b) + 1;
+        }
+      }
+
+      String currentAttemptKey = 'quiz$nextQuizNumber';
+
+      // Get the current timestamp with the desired format
+      String timestamp = formatTimestamp(DateTime.now());
+
+      // Store the current attempt answers with timestamp
+      await userAnswersRef.update({
+        currentAttemptKey: {
+          'timestamp': timestamp,
+          'answers': answers,
+        },
+      }).catchError((error) async {
+        // If the document does not exist, create it with the first attempt
+        await userAnswersRef.set({
+          currentAttemptKey: {
+            'timestamp': timestamp,
+            'answers': answers,
+          },
         });
+      });
 
-      print('Answer stored successfully in $attemptDoc');
+      print('Quiz attempt stored successfully');
     } catch (e) {
-      print('Error storing answer: $e');
+      print('Error storing quiz attempt: $e');
     }
+  }
+
+  void storeAnswer(
+      String questionText, String selectedChoice, List<String> options) {
+    // Prepare the options map in the specified format
+    Map<String, dynamic> optionsMap = {};
+    for (int i = 0; i < options.length; i++) {
+      optionsMap[i.toString()] = options[i];
+    }
+
+    // Prepare the answer map
+    Map<String, dynamic> answer = {
+      'question_text': questionText,
+      'selected_choice': selectedChoice,
+      'options': optionsMap,
+    };
+
+    // Add the answer to the current attempt's list
+    currentAnswers.add(answer);
   }
 
   void goToNextQuestion() {
     if (selectedChoice == null) {
       DelightToastBar(
-        position: DelightSnackbarPosition.top, // Set the position here
+        position: DelightSnackbarPosition.top,
         autoDismiss: true,
         snackbarDuration: Duration(seconds: 2),
         builder: (context) => const ToastCard(
@@ -118,14 +155,22 @@ class _QuizState extends State<Quiz> {
       return;
     }
 
-    storeAnswer(questions[currentQuestionIndex]['question_text'], selectedChoice!);
+    var question = questions[currentQuestionIndex];
+    var options =
+        List<String>.from(question['options']); // Convert to List<String>
+
+    storeAnswer(question['question_text'], selectedChoice!, options);
 
     if (currentQuestionIndex < questions.length - 1) {
       setState(() {
         currentQuestionIndex++;
-        selectedChoice = null; // Reset the selected choice for the next question
+        selectedChoice =
+            null; // Reset the selected choice for the next question
       });
     } else {
+      // Store the entire quiz attempt
+      storeQuizAttempt(currentAnswers);
+
       // Navigate to the Quiz Finished screen
       Navigator.pushReplacement(
         context,
