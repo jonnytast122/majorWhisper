@@ -93,6 +93,24 @@ flutter:
   - assets/icon/arrow.png
   - assets/images/box.png
   - assets/images/verify.png
+  - assets/images/art_vector.jpg
+  - assets/images/education_vector.jpg
+  - assets/images/engineering_vector.jpg
+  - assets/images/health_science_vector.jpg
+  - assets/images/humanity_vector.jpg
+  - assets/images/natural_science_vector.jpg
+  - assets/images/social_science_vector.jpg
+  - assets/images/law_vector.jpg
+  - assets/images/agriculture_vector.jpg
+  - assets/images/architect_vector.jpg
+  - assets/images/language_vector.jpg
+  - assets/images/media_vector.jpg
+  - assets/images/robotic_vector.jpg
+  - assets/images/sport_vector.jpg
+  - assets/images/technology_vector.jpg
+  - assets/images/ethnic_vector.jpg
+  - assets/images/food_vector.jpg
+  - assets/images/religion_vector.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

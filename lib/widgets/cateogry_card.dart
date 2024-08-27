@@ -27,16 +27,18 @@ class CategoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            child: Image.asset(
-              imagePath,
-              width: double.infinity,
-              height: 130,
-              fit: BoxFit.cover,
+          SizedBox(
+            height: 100, // Set a fixed height for the image
+            width: double.infinity,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Padding(
@@ -48,16 +50,16 @@ class CategoryCard extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 16,
+                    fontSize: 14,
                     fontFamily: 'Inter-black',
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Text(
                   "See Majors",
                   style: TextStyle(
                     color: Color(0xFF727272), // Change this to your desired color
-                    fontSize: 14,
+                    fontSize: 10,
                     fontFamily: 'Inter-regular',
                     decoration: TextDecoration.underline, // Underline the text
                   ),

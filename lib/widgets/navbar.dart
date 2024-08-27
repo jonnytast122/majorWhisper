@@ -33,8 +33,7 @@ class BottomNavBar extends StatelessWidget {
           topRight: Radius.circular(25),
         ),
         child: SizedBox(
-          height: 75
-          , // Height of the BottomNavigationBar
+          height: 75, // Height of the BottomNavigationBar
           child: BottomNavigationBar(
             currentIndex: currentIndex,
             onTap: onTap,

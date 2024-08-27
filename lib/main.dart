@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:majorwhisper/screens/Onboarding.dart'; 
 import 'package:majorwhisper/screens/Home.dart'; // Correct import for OnboardingScreen
 import 'package:majorwhisper/screens/auth/Login.dart';
-// Correct import for OnboardingScreen
-// import 'package:major_whisper/screens/auth/Registration.dart';
 import 'package:majorwhisper/screens/auth/Signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  Quiz(), // Use OnboardingScreen instead of Onboarding
+      home:  Home(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }

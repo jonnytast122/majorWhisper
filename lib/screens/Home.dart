@@ -259,7 +259,7 @@ class DetailMajor extends StatelessWidget {
                     "Recent Quiz",
                     style: TextStyle(
                       color: Color(0xFF006FFD),
-                      fontSize: 20,
+                      fontSize: 18,
                       fontFamily: 'Inter-semibold',
                     ),
                   ),
@@ -271,7 +271,7 @@ class DetailMajor extends StatelessWidget {
                         "Complete",
                         style: TextStyle(
                           color: Color(0xFF006FFD),
-                          fontSize: 20,
+                          fontSize: 15,
                           fontFamily: 'Inter-semibold',
                         ),
                       ),
@@ -334,8 +334,8 @@ class ExploreCategory extends StatelessWidget {
                       "Discover your Future",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Inter-semibold',
+                        fontSize: 17,
+                        fontFamily: 'Inter-black',
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -343,7 +343,7 @@ class ExploreCategory extends StatelessWidget {
                       "Take the quiz and let us match you \nwith your perfect majors!",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 10,
                         fontFamily: 'Inter-regular',
                       ),
                     ),
@@ -383,7 +383,7 @@ class ExploreCategory extends StatelessWidget {
                 ),
                 Image.asset(
                   'assets/images/cloud_illustration.png',
-                  width: 150,
+                  width: 130,
                   height: 100,
                 ),
               ],
@@ -414,12 +414,76 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/science_vector.jpg",
               ),
               CategoryCard(
-                title: "History",
-                imagePath: "assets/images/business_vector.jpg",
+                title: "Engineering",
+                imagePath: "assets/images/engineering_vector.jpg",
               ),
               CategoryCard(
-                title: "Geography",
-                imagePath: "assets/images/business_vector.jpg",
+                title: "Art",
+                imagePath: "assets/images/art_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Humanity",
+                imagePath: "assets/images/humanity_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Technology",
+                imagePath: "assets/images/technology_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Natural Science",
+                imagePath: "assets/images/natural_science_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Social Science",
+                imagePath: "assets/images/social_science_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Education",
+                imagePath: "assets/images/education_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Law",
+                imagePath: "assets/images/law_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Health Science",
+                imagePath: "assets/images/health_science_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Sport Science",
+                imagePath: "assets/images/sport_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Agriculture and Environmental ",
+                imagePath: "assets/images/agriculture_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Architecture and Design",
+                imagePath: "assets/images/architect_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Media and Communication",
+                imagePath: "assets/images/media_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Linguistics and Language",
+                imagePath: "assets/images/language_vector.jpg",
+              ),
+                            CategoryCard(
+                title: "Robotics and Automation",
+                imagePath: "assets/images/robotic_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Food Science and Nutrition",
+                imagePath: "assets/images/food_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Ethnic and Philosphy",
+                imagePath: "assets/images/ethnic_vector.jpg",
+              ),
+               CategoryCard(
+                title: "Religious and Theological Studies",
+                imagePath: "assets/images/religion_vector.jpg",
               ),
             ],
           ),
