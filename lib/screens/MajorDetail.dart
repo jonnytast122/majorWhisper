@@ -3,33 +3,27 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-class LearningResult extends StatefulWidget {
+class Majordetail extends StatefulWidget {
   final String majorName;
-  final String degree;
-
-  LearningResult({required this.majorName, required this.degree});
+  Majordetail({required this.majorName});
 
   @override
-  _LearningResultState createState() => _LearningResultState();
+  _MajordetailState createState() => _MajordetailState();
 }
 
-class _LearningResultState extends State<LearningResult> {
-  Future<Map<String, dynamic>>? _learningPathData;
+class _MajordetailState extends State<Majordetail> {
+  Future<Map<String, dynamic>>? _MajorDetailData;
 
   @override
   void initState() {
     super.initState();
-    _learningPathData = fetchLearningPath(widget.majorName);
+    _MajorDetailData = fetchMajorDetail(widget.majorName);
   }
 
-  Future<Map<String, dynamic>> fetchLearningPath(String majorName) async {
+  Future<Map<String, dynamic>> fetchMajorDetail(String majorName) async {
     try {
-      final String url = "http://192.168.216.231:5000/";
-      final String api =
-          url + widget.degree.toLowerCase() + "-degree-learning-path";
-      print("api : " + api);
       final response = await http.post(
-        Uri.parse(api),
+        Uri.parse("http://10.1.90.31:5000/major-detail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -37,11 +31,12 @@ class _LearningResultState extends State<LearningResult> {
           'major_name': majorName,
         }),
       );
+
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
         return {
-          'error': 'Failed to load learning path'
+          'error': 'Failed to load Career path'
         }; // Error message if API call fails
       }
     } catch (e) {
@@ -53,17 +48,17 @@ class _LearningResultState extends State<LearningResult> {
 
   @override
   Widget build(BuildContext context) {
-    // String capitalize(String text) {
-    //   return text
-    //       .split(' ')
-    //       .map(
-    //           (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-    //       .join(' ');
-    // }
+    String capitalize(String text) {
+      return text
+          .split(' ')
+          .map(
+              (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+          .join(' ');
+    }
 
     return Scaffold(
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _learningPathData,
+        future: _MajorDetailData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -75,8 +70,9 @@ class _LearningResultState extends State<LearningResult> {
             final data = snapshot.data!;
             final imageUrl = data['image_url'] ??
                 ''; // Use the image_url from the API response
-            final learningPath =
-                data[widget.degree.toLowerCase()+ '_degree_learning_path'] ?? 'No data available';
+            print(data['image_url']);
+            final MajorDetail =
+                data['major_detail'] ?? 'No data available';
 
             return Stack(
               children: [
@@ -105,7 +101,7 @@ class _LearningResultState extends State<LearningResult> {
                         },
                       ),
                       title: Text(
-                       widget.majorName,
+                        capitalize(widget.majorName),
                         style: TextStyle(
                           fontSize: 30, // Increase font size
                           fontWeight: FontWeight.bold,
@@ -144,7 +140,7 @@ class _LearningResultState extends State<LearningResult> {
                         ],
                       ),
                       child: Markdown(
-                        data: learningPath,
+                        data: MajorDetail,
                         styleSheet: MarkdownStyleSheet(
                           p: TextStyle(
                             fontSize: 13,

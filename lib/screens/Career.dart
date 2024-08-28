@@ -15,7 +15,7 @@ class _CareerState extends State<Career> {
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(top: 0),
-        height: 370,
+        height: 380,
         width: double.infinity,
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -111,7 +111,7 @@ class _CareerState extends State<Career> {
                 children: [
                   buildCountryButton('Cambodia'),
                   SizedBox(width: 10), // Add some space between buttons
-                  buildCountryButton('General'),
+                  buildCountryButton('Global'),
                 ],
               ),
             ],

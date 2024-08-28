@@ -24,23 +24,30 @@ class _CareerResultState extends State<CareerResult> {
 
   Future<Map<String, dynamic>> fetchCareerPath(String majorName) async {
     try {
+      final String url = "http://10.1.90.31:5000/";
+      final String api = url + "career-path-" + widget.country.toLowerCase();
+      print("api : " + api);
       final response = await http.post(
-        Uri.parse('http://10.1.94.136:5000/bachelor-degree-Career-path'),
+        Uri.parse(api),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'major_name': majorName,
+          'career_name': majorName,
         }),
       );
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
-        return {'error': 'Failed to load Career path'}; // Error message if API call fails
+        return {
+          'error': 'Failed to load Career path'
+        }; // Error message if API call fails
       }
     } catch (e) {
-      return {'error': 'An error occurred'}; // Error message if exception occurs
+      return {
+        'error': 'An error occurred'
+      }; // Error message if exception occurs
     }
   }
 
@@ -49,7 +56,8 @@ class _CareerResultState extends State<CareerResult> {
     String capitalize(String text) {
       return text
           .split(' ')
-          .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+          .map(
+              (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
           .join(' ');
     }
 
@@ -60,11 +68,15 @@ class _CareerResultState extends State<CareerResult> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError || !snapshot.hasData) {
-            return Center(child: Text('Error: ${snapshot.error ?? "Failed to load data"}'));
+            return Center(
+                child:
+                    Text('Error: ${snapshot.error ?? "Failed to load data"}'));
           } else {
             final data = snapshot.data!;
-            final imageUrl = data['image_url'] ?? ''; // Use the image_url from the API response
-            final CareerPath = data['bachelor_degree_Career_path'] ?? 'No data available';
+            final imageUrl = data['image_url'] ??
+                ''; // Use the image_url from the API response
+            final CareerPath =
+                data['career_path_' + widget.country.toLowerCase()] ?? 'No data available';
 
             return Stack(
               children: [
@@ -100,14 +112,16 @@ class _CareerResultState extends State<CareerResult> {
                           color: Colors.white, // Bold text
                         ),
                       ),
-                      backgroundColor: Colors.transparent, // Make the AppBar background transparent
+                      backgroundColor: Colors
+                          .transparent, // Make the AppBar background transparent
                       elevation: 0, // Remove the shadow if not needed
                     ),
                   ),
                 ),
                 // Body content
                 Positioned(
-                  top: 230, // Position body content to overlap slightly with AppBar
+                  top:
+                      230, // Position body content to overlap slightly with AppBar
                   left: 0,
                   right: 0,
                   bottom: 0,
@@ -133,7 +147,7 @@ class _CareerResultState extends State<CareerResult> {
                         data: CareerPath,
                         styleSheet: MarkdownStyleSheet(
                           p: TextStyle(
-                            fontSize: 20,
+                            fontSize: 13,
                             fontFamily: 'Inter-regular',
                           ),
                         ),
