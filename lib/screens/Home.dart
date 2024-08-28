@@ -496,7 +496,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
               CategoryCard(
-                title: "Religious and Theological Studies",
+                title: "Religious",
                 imagePath: "assets/images/religion_vector.jpg",
               ),
             ],

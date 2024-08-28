@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:majorwhisper/screens/MajorDetail.dart';
 
 class Listmajors extends StatefulWidget {
   final String title;
@@ -10,6 +13,37 @@ class Listmajors extends StatefulWidget {
 }
 
 class _ListmajorsState extends State<Listmajors> {
+  List<String> majorNames = [];
+  List<String> majorDescriptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchMajors();
+  }
+
+  Future<void> fetchMajors() async {
+    final response = await http.post(
+      Uri.parse('http://192.168.12.231:5000/major-base-on-category'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'category': widget.title}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      setState(() {
+        majorNames = List<String>.from(data['major_name']);
+        majorDescriptions = List<String>.from(data['major_description']);
+        print(majorNames);
+        print(majorDescriptions);
+      });
+    } else {
+      // Handle errors
+      print('Failed to load majors');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,11 +58,11 @@ class _ListmajorsState extends State<Listmajors> {
           ),
           title: Padding(
             padding: const EdgeInsets.only(
-                top: 10.0), // Add padding to the top of the title
+                top: 0), // Add padding to the top of the title
             child: Text(
               widget.title, // Use the title passed from the CategoryCard
               style: const TextStyle(
-                fontSize: 28,
+                fontSize: 23,
                 fontFamily: "Inter-bold",
                 color: Colors.white,
               ),
@@ -51,7 +85,7 @@ class _ListmajorsState extends State<Listmajors> {
                   const Text(
                     'Discover Your Path', // Subtitle text
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 20,
                       fontFamily: "Inter-semibold",
                       color: Colors.white,
                     ),
@@ -63,7 +97,7 @@ class _ListmajorsState extends State<Listmajors> {
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.only(top: 70.0, left: 50),
+              padding: const EdgeInsets.only(top: 60.0, left: 98),
               child: Column(
                 children: [
                   const Text(
@@ -93,7 +127,7 @@ class _ListmajorsState extends State<Listmajors> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ListView.builder(
-                  itemCount: 5, // Number of items
+                  itemCount: majorNames.length, // Number of items
                   itemBuilder: (context, index) {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16.0),
@@ -106,8 +140,8 @@ class _ListmajorsState extends State<Listmajors> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: 70.0,
-                            height: 70.0,
+                            width: 60.0,
+                            height: 60.0,
                             decoration: BoxDecoration(
                               image: const DecorationImage(
                                 image: AssetImage(
@@ -120,7 +154,7 @@ class _ListmajorsState extends State<Listmajors> {
                               child: Text(
                                 '${index + 1}',
                                 style: const TextStyle(
-                                  fontSize: 30,
+                                  fontSize: 25,
                                   color: Colors.white,
                                   fontFamily: "Inter-black",
                                 ),
@@ -131,20 +165,21 @@ class _ListmajorsState extends State<Listmajors> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
-                                  'Pharmacy', // Placeholder for major name
-                                  style: TextStyle(
-                                    fontSize: 18,
+                                  majorNames[index], // Major name from API
+                                  style: const TextStyle(
+                                    fontSize: 15,
                                     fontFamily: "Inter-semibold",
                                     color: Colors.black,
                                   ),
                                 ),
-                                SizedBox(height: 4.0),
+                                const SizedBox(height: 4.0),
                                 Text(
-                                  'Pharmacy is the field of healthcare dedicated to the preparation ...',
-                                  style: TextStyle(
-                                    fontSize: 14,
+                                  majorDescriptions[
+                                      index], // Description from API
+                                  style: const TextStyle(
+                                    fontSize: 11,
                                     color: Colors.black54,
                                     fontFamily: "Inter-regular",
                                   ),
@@ -154,7 +189,13 @@ class _ListmajorsState extends State<Listmajors> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // Handle button press here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Majordetail(majorName: majorNames[index]),
+                                ),
+                              );
                             },
                             child: Image.asset(
                               'assets/icon/arrow.png', // Path to your custom icon
