@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'quiz_finished.dart'; // Ensure you have this import
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http; // Import the HTTP package
+import 'dart:convert'; // Import for JSON encoding and decoding
 
 String formatTimestamp(DateTime dateTime) {
   final DateFormat formatter = DateFormat('dd MMM yyyy');
@@ -25,19 +27,59 @@ class _QuizState extends State<Quiz> {
   int currentQuestionIndex = 0;
   String? selectedChoice;
   String? userUUID;
-  List<Map<String, dynamic>> currentAnswers =
-      []; // Track current attempt answers
+  List<Map<String, dynamic>> currentAnswers = []; // Track current attempt answers
+  bool isLoading = true; // Add a loading flag
 
   @override
   void initState() {
     super.initState();
     userUUID = getCurrentUserUID();
-    fetchQuestions();
+    generateQuiz(); // Generate quiz when screen loads
   }
 
   String? getCurrentUserUID() {
     User? user = FirebaseAuth.instance.currentUser;
     return user?.uid;
+  }
+
+  Future<void> generateQuiz() async {
+    if (userUUID == null) {
+      print('User is not logged in.');
+      return;
+    }
+
+    // Display loading screen until API response is back
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Make a POST request to the API
+      final response = await http.post(
+        Uri.parse('http://10.1.90.31:5000/question-generation'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'uuid': userUUID}),
+      );
+      print('User UUID: $userUUID');
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        print("Response data: $responseData");
+        if (responseData['message'] == 'Questions successfully generated and saved.') {
+          // Fetch the questions after generating them
+          await fetchQuestions();
+        } else {
+          print('Failed to generate quiz: ${responseData['message']}');
+        }
+      } else {
+        print('Failed to call API: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error generating quiz: $e');
+    } finally {
+      setState(() {
+        isLoading = false; // Stop showing the loading screen
+      });
+    }
   }
 
   Future<void> fetchQuestions() async {
@@ -111,8 +153,7 @@ class _QuizState extends State<Quiz> {
     }
   }
 
-  void storeAnswer(
-      String questionText, String selectedChoice, List<String> options) {
+  void storeAnswer(String questionText, String selectedChoice, List<String> options) {
     // Prepare the options map in the specified format
     Map<String, dynamic> optionsMap = {};
     for (int i = 0; i < options.length; i++) {
@@ -156,16 +197,14 @@ class _QuizState extends State<Quiz> {
     }
 
     var question = questions[currentQuestionIndex];
-    var options =
-        List<String>.from(question['options']); // Convert to List<String>
+    var options = List<String>.from(question['options']); // Convert to List<String>
 
     storeAnswer(question['question_text'], selectedChoice!, options);
 
     if (currentQuestionIndex < questions.length - 1) {
       setState(() {
         currentQuestionIndex++;
-        selectedChoice =
-            null; // Reset the selected choice for the next question
+        selectedChoice = null; // Reset the selected choice for the next question
       });
     } else {
       // Store the entire quiz attempt
@@ -208,10 +247,18 @@ class _QuizState extends State<Quiz> {
 
   @override
   Widget build(BuildContext context) {
-    if (questions.isEmpty) {
+    if (isLoading) {
       return Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (questions.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Text('No questions available.'),
         ),
       );
     }
