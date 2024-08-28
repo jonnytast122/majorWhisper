@@ -12,6 +12,7 @@ import 'package:majorwhisper/screens/Listmajors.dart';
 import 'package:majorwhisper/screens/Quiz_Finished.dart';
 import 'package:majorwhisper/screens/Recent.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
