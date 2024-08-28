@@ -44,7 +44,7 @@ class _QuizState extends State<Quiz> {
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('major_recommendations_temp')
-          .doc('questions')
+          .doc(userUUID)
           .get();
 
       setState(() {
@@ -130,7 +130,7 @@ class _QuizState extends State<Quiz> {
     currentAnswers.add(answer);
   }
 
-  void goToNextQuestion() {
+  Future<void> goToNextQuestion() async {
     if (selectedChoice == null) {
       DelightToastBar(
         position: DelightSnackbarPosition.top,
@@ -170,6 +170,31 @@ class _QuizState extends State<Quiz> {
     } else {
       // Store the entire quiz attempt
       storeQuizAttempt(currentAnswers);
+
+      // Compare UUID and delete the questions document if matched
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('major_recommendations_temp')
+          .doc(userUUID)
+          .get();
+      if (snapshot.exists) {
+        String? storedUUID = snapshot.get('uid');
+
+        if (storedUUID == userUUID) {
+          await FirebaseFirestore.instance
+              .collection('major_recommendations_temp')
+              .doc(userUUID)
+              .delete()
+              .then((_) {
+            print('Questions document removed successfully');
+          }).catchError((error) {
+            print('Failed to remove questions document: $error');
+          });
+        } else {
+          print('UUID does not match, document not deleted.');
+        }
+      } else {
+        print('Document does not exist.');
+      }
 
       // Navigate to the Quiz Finished screen
       Navigator.pushReplacement(
