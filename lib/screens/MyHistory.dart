@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:majorwhisper/screens/Home.dart';
 
-class Recent extends StatefulWidget {
+class Myhistory extends StatefulWidget {
   @override
-  _RecentState createState() => _RecentState();
+  _MyhistoryState createState() => _MyhistoryState();
 }
 
-class _RecentState extends State<Recent> {
+class _MyhistoryState extends State<Myhistory> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? userId;
   List<Map<String, dynamic>> quizzes = [];
@@ -82,7 +83,10 @@ class _RecentState extends State<Recent> {
             icon: const Icon(Icons.arrow_back_ios_rounded),
             color: const Color.fromARGB(255, 0, 0, 0),
             onPressed: () {
-              Navigator.pop(context); // Navigates back to the previous screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+              );
             },
           ),
         ),
@@ -101,7 +105,8 @@ class _RecentState extends State<Recent> {
                     itemBuilder: (context, index) {
                       var quizEntry = quizzes[index];
                       String quizKey = quizEntry['key'];
-                      String quizTitle = formatQuizTitle(quizKey); // Format the title as 'Q' + number
+                      String quizTitle = formatQuizTitle(
+                          quizKey); // Format the title as 'Q' + number
                       String formattedDate = '';
 
                       // Extract timestamp and handle formatting
@@ -113,10 +118,12 @@ class _RecentState extends State<Recent> {
                       } else if (timestamp is String) {
                         quizDate = DateFormat('dd MMM yyyy').parse(timestamp);
                       } else {
-                        quizDate = DateTime.now(); // Fallback to current date/time
+                        quizDate =
+                            DateTime.now(); // Fallback to current date/time
                       }
 
-                      formattedDate = DateFormat('dd-MMM-yyyy').format(quizDate);
+                      formattedDate =
+                          DateFormat('dd-MMM-yyyy').format(quizDate);
 
                       return Container(
                         margin: const EdgeInsets.only(bottom: 16.0),
@@ -160,12 +167,14 @@ class _RecentState extends State<Recent> {
                                   ),
                                   const SizedBox(height: 8.0),
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Icon(
                                         size: 20.0,
                                         Icons.calendar_today,
-                                        color: Color.fromARGB(255, 255, 255, 255),
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
                                       ),
                                       const SizedBox(width: 10.0),
                                       Expanded(

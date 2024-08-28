@@ -8,6 +8,7 @@ import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
 import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
+import 'package:majorwhisper/screens/Recent.dart';
 import 'package:majorwhisper/screens/MajorDetail.dart';
 
 class Home extends StatefulWidget {
@@ -266,19 +267,28 @@ class DetailMajor extends StatelessWidget {
                 color: const Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Recent Quiz",
-                    style: TextStyle(
-                      color: Color(0xFF006FFD),
-                      fontSize: 18,
-                      fontFamily: 'Inter-semibold',
+                  GestureDetector(
+                    onTap: () {
+                      // Handle button press here
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Recent()),
+                      );
+                    },
+                    child: Text(
+                      'Recent Quiz',
+                      style: TextStyle(
+                        color: Color(0xFF006FFD),
+                        fontSize: 18,
+                        fontFamily: 'Inter-semibold',
+                      ),
                     ),
                   ),
-                  SizedBox(height: 5),
-                  Row(
+                  const SizedBox(height: 5),
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(

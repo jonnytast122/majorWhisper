@@ -10,6 +10,8 @@ import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
 import 'package:majorwhisper/screens/Listmajors.dart';
 import 'package:majorwhisper/screens/Quiz_Finished.dart';
+import 'package:majorwhisper/screens/Recent.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  Login(), // Use OnboardingScreen instead of Onboarding
+      home:  Home(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }
