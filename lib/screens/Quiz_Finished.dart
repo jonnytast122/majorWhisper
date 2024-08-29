@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:majorwhisper/screens/Home.dart';
+import 'package:majorwhisper/screens/MajorRecom.dart';
 
 class QuizFinished extends StatefulWidget {
   @override
@@ -71,7 +71,7 @@ class _QuizFinishedState extends State<QuizFinished> {
               onPressed: () {
                   Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()), // Adjust if needed
+                  MaterialPageRoute(builder: (context) => Majorrecom()), // Adjust if needed
                 );
               },
               child: Text(
