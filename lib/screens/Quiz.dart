@@ -8,6 +8,7 @@ import 'quiz_finished.dart'; // Ensure you have this import
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http; // Import the HTTP package
 import 'dart:convert'; // Import for JSON encoding and decoding
+import 'package:rive/rive.dart';
 
 String formatTimestamp(DateTime dateTime) {
   final DateFormat formatter = DateFormat('dd MMM yyyy');
@@ -27,7 +28,8 @@ class _QuizState extends State<Quiz> {
   int currentQuestionIndex = 0;
   String? selectedChoice;
   String? userUUID;
-  List<Map<String, dynamic>> currentAnswers = []; // Track current attempt answers
+  List<Map<String, dynamic>> currentAnswers =
+      []; // Track current attempt answers
   bool isLoading = true; // Add a loading flag
 
   @override
@@ -64,7 +66,8 @@ class _QuizState extends State<Quiz> {
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         print("Response data: $responseData");
-        if (responseData['message'] == 'Questions successfully generated and saved.') {
+        if (responseData['message'] ==
+            'Questions successfully generated and saved.') {
           // Fetch the questions after generating them
           await fetchQuestions();
         } else {
@@ -153,7 +156,11 @@ class _QuizState extends State<Quiz> {
     }
   }
 
-  void storeAnswer(String questionText, String selectedChoice, List<String> options) {
+  void storeAnswer(
+      String questionText, String selectedChoiceLabel, List<String> options) {
+    // Find the index of the selected choice label ('A', 'B', 'C', 'D')
+    int selectedIndex = selectedChoiceLabel.codeUnitAt(0) - 65;
+
     // Prepare the options map in the specified format
     Map<String, dynamic> optionsMap = {};
     for (int i = 0; i < options.length; i++) {
@@ -163,7 +170,8 @@ class _QuizState extends State<Quiz> {
     // Prepare the answer map
     Map<String, dynamic> answer = {
       'question_text': questionText,
-      'selected_choice': selectedChoice,
+      'selected_choice':
+          options[selectedIndex], // Store the actual answer text here
       'options': optionsMap,
     };
 
@@ -197,14 +205,17 @@ class _QuizState extends State<Quiz> {
     }
 
     var question = questions[currentQuestionIndex];
-    var options = List<String>.from(question['options']); // Convert to List<String>
+    var options =
+        List<String>.from(question['options']); // Convert to List<String>
 
+    // Store the actual text of the selected answer instead of the label
     storeAnswer(question['question_text'], selectedChoice!, options);
 
     if (currentQuestionIndex < questions.length - 1) {
       setState(() {
         currentQuestionIndex++;
-        selectedChoice = null; // Reset the selected choice for the next question
+        selectedChoice =
+            null; // Reset the selected choice for the next question
       });
     } else {
       // Store the entire quiz attempt
