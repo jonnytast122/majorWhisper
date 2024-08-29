@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:majorwhisper/screens/Home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 
 class Majorrecom extends StatefulWidget {
   @override
@@ -6,21 +11,122 @@ class Majorrecom extends StatefulWidget {
 }
 
 class _MajorrecomState extends State<Majorrecom> {
+  List<Map<String, dynamic>> recommendedMajors = [];
+  String? userId; // To store the current user ID
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCurrentUser(); // Fetch the current user ID
+  }
+
+  // Step 1: Fetch current user ID from Firebase Auth
+  void fetchCurrentUser() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      userId = user.uid;
+      requestMajorRecommendation(userId!); // Call the API with the current user ID
+    } else {
+      print('No user is currently signed in.');
+    }
+  }
+
+  // Step 2: Request major recommendation from the API
+  Future<void> requestMajorRecommendation(String userId) async {
+    final url = Uri.parse('http://10.1.90.31:5000/major-recommendation');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"uuid": userId}),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        if (responseBody['message'] == "Majore successfully recommended and saved.") {
+          fetchLatestQuizFromFirestore(userId); // Fetch latest quiz data from Firestore
+        } else {
+          print("Unexpected response from API: ${responseBody['message']}");
+        }
+      } else {
+        print('Failed to fetch major recommendation. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error generating quiz: $e');
+    }
+  }
+
+  // Step 3: Fetch the latest quiz data from Firestore
+  Future<void> fetchLatestQuizFromFirestore(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('user_answers')
+          .doc(userId)
+          .get();
+
+      if (snapshot.exists) {
+        final data = snapshot.data()!;
+        List<Map<String, dynamic>> quizzes = [];
+
+        // Extract all quizzes into a list
+        data.forEach((key, value) {
+          if (key.startsWith('quiz')) {
+            quizzes.add({
+              'name': key,
+              'data': value,
+            });
+          }
+        });
+
+        // Sort quizzes by their name or index if they are sequential
+        quizzes.sort((a, b) {
+          // Extract the number from the quiz name (e.g., 'quiz1' -> 1)
+          final numA = int.parse(a['name'].replaceAll(RegExp(r'^\D+'), ''));
+          final numB = int.parse(b['name'].replaceAll(RegExp(r'^\D+'), ''));
+          return numB.compareTo(numA); // Sort quizzes by number descending
+        });
+
+        if (quizzes.isNotEmpty) {
+          final latestQuiz = quizzes.first['data']; // Get the latest quiz data
+          final List<dynamic> recommendedMajorsList = latestQuiz['recommended_major'];
+
+          // Step 4: Extract majors and reasons and display them
+          List<Map<String, dynamic>> majors = recommendedMajorsList.map((majorData) {
+            return {
+              'major': majorData['major'],
+              'reason': majorData['reason'],
+            };
+          }).toList();
+
+          setState(() {
+            recommendedMajors = majors;
+          });
+        }
+      } else {
+        print('No document found for user ID: $userId');
+      }
+    } catch (e) {
+      print('Error fetching user answers from Firestore: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0), // Adjust the height of the AppBar
+        preferredSize: Size.fromHeight(70.0),
         child: AppBar(
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: Padding(
-            padding: const EdgeInsets.only(
-                top: 21.0), // Adjust this value to move the back arrow down
+            padding: const EdgeInsets.only(top: 21.0),
             child: IconButton(
               icon: const Icon(Icons.arrow_back_ios_rounded),
               color: const Color.fromARGB(255, 0, 0, 0),
               onPressed: () {
-                Navigator.pop(context); // Navigates back to the previous screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => Home()),
+                );
               },
             ),
           ),
@@ -29,45 +135,42 @@ class _MajorrecomState extends State<Majorrecom> {
       body: Stack(
         children: [
           Container(
-            color: Colors.white, // Blue background color
+            color: Colors.white,
           ),
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Column(
-                mainAxisSize: MainAxisSize
-                    .min, // Adjust the column's height to its content
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Center the texts horizontally
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text(
-                    'Explore Your Future!', // Existing subtitle text
+                    'Explore Your Future!',
                     style: TextStyle(
                       fontSize: 28,
                       fontFamily: "Inter-semibold",
                       color: Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
-                  const SizedBox(height: 1.0), // Space between texts
+                  const SizedBox(height: 1.0),
                   const Text(
-                    'Discover the Best Fit for Your Future', // New text
+                    'Discover the Best Fit for Your Future',
                     style: TextStyle(
                       fontSize: 14,
                       fontFamily: "Inter-medium",
-                      color: Color.fromARGB(
-                          255, 100, 100, 100), // Adjust color if needed
+                      color: Color.fromARGB(255, 100, 100, 100),
                     ),
-                    textAlign: TextAlign.center, // Center-align the new text
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16.0), // Space between text and button
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
                       // Add your onPressed logic here
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF006FFD), // Text color
+                      backgroundColor: Color(0xFF006FFD),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -100,8 +203,11 @@ class _MajorrecomState extends State<Majorrecom> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ListView.builder(
-                  itemCount: 3, // Number of items
+                  itemCount: recommendedMajors.length,
                   itemBuilder: (context, index) {
+                    final major = recommendedMajors[index]['major']!;
+                    final reason = recommendedMajors[index]['reason']!;
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16.0),
                       padding: const EdgeInsets.all(14.0),
@@ -117,8 +223,7 @@ class _MajorrecomState extends State<Majorrecom> {
                             height: 150.0,
                             decoration: BoxDecoration(
                               image: const DecorationImage(
-                                image: AssetImage(
-                                    'assets/images/Data_Science_vector.png'), // Path to your image
+                                image: AssetImage('assets/images/Data_Science_vector.png'),
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(10.0),
@@ -129,18 +234,18 @@ class _MajorrecomState extends State<Majorrecom> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Data Science', // Major name from API
-                                  style: TextStyle(
+                                Text(
+                                  major, // Major name from Firestore
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontFamily: "Inter-bold",
                                     color: Colors.black,
                                   ),
                                 ),
                                 const SizedBox(height: 8.0),
-                                const Text(
-                                  'You enjoy solving puzzles or math problems (Q1), prefer working independently (Q2), and like to spend your free time reading or researching (Q3). Computer Science involves problem-solving, working with data, and often requires independent work. Your interest in technology and STEM subjects (Q6) aligns well with this major.', // Major description from API
-                                  style: TextStyle(
+                                Text(
+                                  reason, // Major description from Firestore
+                                  style: const TextStyle(
                                     fontSize: 9,
                                     fontFamily: "Inter-regular",
                                     color: Color(0xFF898A8D),
@@ -153,14 +258,12 @@ class _MajorrecomState extends State<Majorrecom> {
                                   },
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
-                                    backgroundColor:
-                                        Color(0xFF006FFD), // Text color
+                                    backgroundColor: Color(0xFF006FFD),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
-                                    padding: EdgeInsets.zero, // Remove padding
-                                    minimumSize: Size(
-                                        60, 23), // Set minimum width and height
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size(60, 23),
                                   ),
                                   child: const Text(
                                     'Learn More',
