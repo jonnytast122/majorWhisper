@@ -235,7 +235,6 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       ),
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 4),
                         alignment: Alignment.center,
                         child: Text(
                           'Cancel',
@@ -272,7 +271,7 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       ),
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                        padding: EdgeInsets.symmetric(vertical: 7),
                         alignment: Alignment.center,
                         child: Text(
                           'Save',
@@ -457,7 +456,6 @@ class _MyProfileState extends State<MyProfile> {
                                 ),
                               ),
                               child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.red,
                                   borderRadius: BorderRadius.circular(8),
@@ -507,7 +505,7 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                               child: Container(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 30),
+                                    vertical: 7),
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(8),
@@ -676,8 +674,8 @@ class _MyProfileState extends State<MyProfile> {
               children: [
                 Center(
                   child: Text(
-                    'Change Profile Picture',
-                    style: TextStyle(fontSize: 24, fontFamily: 'Inter-medium'),
+                    'Select Profile Picture',
+                    style: TextStyle(fontSize: 22, fontFamily: 'Inter-medium'),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -790,7 +788,7 @@ class _MyProfileState extends State<MyProfile> {
               'My Profile',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 30,
+                fontSize: 25,
                 fontFamily: 'Inter-semibold',
               ),
             ),
@@ -813,7 +811,7 @@ class _MyProfileState extends State<MyProfile> {
         children: [
           Container(
             padding: const EdgeInsets.only(top: 0),
-            height: 310,
+            height: 270,
             width: double.infinity,
             child: Container(
               padding: const EdgeInsets.all(16),
@@ -837,22 +835,22 @@ class _MyProfileState extends State<MyProfile> {
                       children: [
                         Image.asset(
                           _profileImage,
-                          width: 150,
-                          height: 150,
+                          width: 130,
+                          height: 130,
                         ),
                         const SizedBox(height: 10),
                         Text(
                           _username ?? "Loading...",
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 28,
+                            fontSize: 26,
                             fontFamily: 'Inter-black',
                           ),
                         ),
                       ],
                     ),
                     const Positioned(
-                      bottom: 90,
+                      bottom: 80,
                       right: 0,
                       child: Icon(
                         Icons.autorenew,
