@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:majorwhisper/screens/Chatbot.dart';
 import 'package:majorwhisper/screens/Onboarding.dart'; 
 import 'package:majorwhisper/screens/Home.dart'; // Correct import for OnboardingScreen
 import 'package:majorwhisper/screens/auth/Login.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  Onboarding(), // Use OnboardingScreen instead of Onboarding
+      home:  Chatbot(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }

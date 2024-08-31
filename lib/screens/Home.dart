@@ -12,6 +12,7 @@ import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
 import 'package:majorwhisper/screens/Recent.dart';
 import 'package:majorwhisper/screens/MajorDetail.dart';
+import 'package:majorwhisper/screens/Chatbot.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -26,6 +27,7 @@ class _HomeState extends State<Home> {
     Learning(), // Placeholder for Explore screen
     Career(),
     Roadmap(),
+    Chatbot(),
     const Center(child: Text('Help')), // Placeholder for Help screen
   ];
 
