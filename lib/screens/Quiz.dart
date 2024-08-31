@@ -7,8 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'quiz_finished.dart'; // Ensure you have this import
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http; // Import the HTTP package
-import 'dart:convert'; // Import for JSON encoding and decoding
-import 'package:rive/rive.dart';
+import 'dart:convert';
+import 'package:lottie/lottie.dart';
+// Import for JSON encoding and decoding
 
 String formatTimestamp(DateTime dateTime) {
   final DateFormat formatter = DateFormat('dd MMM yyyy');
@@ -261,7 +262,27 @@ class _QuizState extends State<Quiz> {
     if (isLoading) {
       return Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                'assets/icon/quiz_loading.json', // Path to your Lottie animation file
+                width: 800,
+                height: 300,
+                fit: BoxFit.fill,
+              ),
+              Text(
+                'Quiz in Progress... \nAlmost Ready!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: 'Inter-semibold',
+                  color: Color(0xFF006FFD),
+                  // Customize the color to fit your app's theme
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -283,7 +304,7 @@ class _QuizState extends State<Quiz> {
           Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.48, // Top half
+                height: MediaQuery.of(context).size.height * 0.45, // Top half
                 decoration: BoxDecoration(
                   color: Color(0xFF006FFD),
                   borderRadius: BorderRadius.only(
@@ -293,7 +314,7 @@ class _QuizState extends State<Quiz> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 65.0), // Adjust padding
+                      horizontal: 20.0, vertical: 50.0), // Adjust padding
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -301,25 +322,25 @@ class _QuizState extends State<Quiz> {
                       Text(
                         'Quiz',
                         style: TextStyle(
-                            fontSize: 36,
+                            fontSize: 28,
                             color: Colors.white,
                             fontFamily: "Inter-bold"),
                       ),
-                      SizedBox(height: 15),
+                      SizedBox(height: 10),
                       Text(
                         '“Think deeply, choose wisely!\nEach question guides you\ncloser to your perfect major.”',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           color: Colors.white,
                           fontFamily: "Inter-bold",
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30),
+                      SizedBox(height: 15),
                       Text(
                         'Question ${currentQuestionIndex + 1} of ${questions.length}',
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 20,
                           color: Colors.white,
                           fontFamily: "Inter-bold",
                         ),
@@ -363,7 +384,7 @@ class _QuizState extends State<Quiz> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
+                                  horizontal: 20, vertical: 5),
                             ),
                             onPressed: goToNextQuestion,
                             child: Text(
@@ -388,9 +409,9 @@ class _QuizState extends State<Quiz> {
           Positioned(
             left: MediaQuery.of(context).size.width * 0.07,
             right: MediaQuery.of(context).size.width * 0.07,
-            top: MediaQuery.of(context).size.height * 0.33,
+            top: MediaQuery.of(context).size.height * 0.30,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.18,
+              height: MediaQuery.of(context).size.height * 0.2,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -406,21 +427,21 @@ class _QuizState extends State<Quiz> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 30),
+                    SizedBox(height: 25),
                     Text(
                       'Question',
                       style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 22,
                           color: Color(0xFF006FFD),
                           fontFamily: "Inter-medium"),
                     ),
-                    SizedBox(height: 22),
+                    SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Text(
                         question['question_text'],
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             color: Colors.black,
                             fontFamily: "Inter-Extrabold"),
                         textAlign: TextAlign.center,
@@ -440,7 +461,7 @@ class _QuizState extends State<Quiz> {
     bool isSelected = selectedChoice == label;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 7.0),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0),
@@ -476,7 +497,7 @@ class _QuizState extends State<Quiz> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   fontFamily: "Inter-medium",
                   color: Color(0xFF5B1CAE), // Purple for label
                 ),
@@ -486,7 +507,7 @@ class _QuizState extends State<Quiz> {
                 child: Text(
                   text,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontFamily: "Inter-semibold",
                   ),
                   textAlign: TextAlign.left,

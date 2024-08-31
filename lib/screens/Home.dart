@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:majorwhisper/screens/MyHistory.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
+import 'package:majorwhisper/screens/QuizHistory.dart';
 import 'package:majorwhisper/screens/Roadmap.dart';
 import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
@@ -275,7 +277,7 @@ class DetailMajor extends StatelessWidget {
                       // Handle button press here
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => Recent()),
+                        MaterialPageRoute(builder: (context) => Myhistory()),
                       );
                     },
                     child: Text(
@@ -478,35 +480,35 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/sport_vector.jpg",
               ),
               CategoryCard(
-                title: "Agriculture and Environmental ",
+                title: "Agriculture Science",
                 imagePath: "assets/images/agriculture_vector.jpg",
               ),
               CategoryCard(
-                title: "Architecture and Design",
+                title: "Architecture",
                 imagePath: "assets/images/architect_vector.jpg",
               ),
               CategoryCard(
-                title: "Media and Communication",
+                title: "Media",
                 imagePath: "assets/images/media_vector.jpg",
               ),
               CategoryCard(
-                title: "Linguistics and Language",
+                title: "Linguistics",
                 imagePath: "assets/images/language_vector.jpg",
               ),
               CategoryCard(
-                title: "Robotics and Automation",
+                title: "Robotics",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
               CategoryCard(
-                title: "Food Science and Nutrition",
+                title: "Food Technology",
                 imagePath: "assets/images/food_vector.jpg",
               ),
               CategoryCard(
-                title: "Ethnic and Philosphy",
+                title: "Ethnic ",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
               CategoryCard(
-                title: "Religious",
+                title: "Religious Studies",
                 imagePath: "assets/images/religion_vector.jpg",
               ),
             ],

@@ -66,28 +66,20 @@ class _MajorrecomState extends State<Majorrecom> {
 
       if (snapshot.exists) {
         final data = snapshot.data()!;
-        List<Map<String, dynamic>> quizzes = [];
+        List<dynamic> quizzes = [];
 
-        // Extract all quizzes into a list
+        // Extract all quizzes into a list and sort by timestamp
         data.forEach((key, value) {
           if (key.startsWith('quiz')) {
-            quizzes.add({
-              'name': key,
-              'data': value,
-            });
+            quizzes.add(value);
           }
         });
 
-        // Sort quizzes by their name or index if they are sequential
-        quizzes.sort((a, b) {
-          // Extract the number from the quiz name (e.g., 'quiz1' -> 1)
-          final numA = int.parse(a['name'].replaceAll(RegExp(r'^\D+'), ''));
-          final numB = int.parse(b['name'].replaceAll(RegExp(r'^\D+'), ''));
-          return numB.compareTo(numA); // Sort quizzes by number descending
-        });
+        // Sort quizzes by the order of keys (e.g., quiz1, quiz2) or by another logic if needed
+        quizzes.sort((a, b) => a.toString().compareTo(b.toString())); // Sort by key or custom logic
 
         if (quizzes.isNotEmpty) {
-          final latestQuiz = quizzes.first['data']; // Get the latest quiz data
+          final latestQuiz = quizzes.last; // Get the latest quiz
           final List<dynamic> recommendedMajorsList = latestQuiz['recommended_major'];
 
           // Step 4: Extract majors and reasons and display them
@@ -205,8 +197,26 @@ class _MajorrecomState extends State<Majorrecom> {
                 child: ListView.builder(
                   itemCount: recommendedMajors.length,
                   itemBuilder: (context, index) {
-                    final major = recommendedMajors[index]['major']!;
-                    final reason = recommendedMajors[index]['reason']!;
+                    final major = recommendedMajors[index]['major'];
+                    final reason = recommendedMajors[index]['reason'];
+
+                    // Check if 'major' and 'reason' are strings or lists
+                    String majorText;
+                    String reasonText;
+
+                    // Convert 'major' to a string if it's a list
+                    if (major is List<dynamic>) {
+                      majorText = major.join(', '); // Join list elements with a comma
+                    } else {
+                      majorText = major.toString(); // Convert to string if it's not a list
+                    }
+
+                    // Convert 'reason' to a string if it's a list
+                    if (reason is List<dynamic>) {
+                      reasonText = reason.join(', '); // Join list elements with a comma
+                    } else {
+                      reasonText = reason.toString(); // Convert to string if it's not a list
+                    }
 
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16.0),
@@ -235,7 +245,7 @@ class _MajorrecomState extends State<Majorrecom> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  major, // Major name from Firestore
+                                  majorText, // Use 'majorText' which is now guaranteed to be a string
                                   style: const TextStyle(
                                     fontSize: 14,
                                     fontFamily: "Inter-bold",
@@ -244,7 +254,7 @@ class _MajorrecomState extends State<Majorrecom> {
                                 ),
                                 const SizedBox(height: 8.0),
                                 Text(
-                                  reason, // Major description from Firestore
+                                  reasonText, // Use 'reasonText' which is now guaranteed to be a string
                                   style: const TextStyle(
                                     fontSize: 9,
                                     fontFamily: "Inter-regular",
@@ -263,7 +273,7 @@ class _MajorrecomState extends State<Majorrecom> {
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
                                     padding: EdgeInsets.zero,
-                                    minimumSize: Size(60, 23),
+                                    minimumSize: const Size(60, 20),
                                   ),
                                   child: const Text(
                                     'Learn More',
