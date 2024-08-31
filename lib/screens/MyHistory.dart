@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:majorwhisper/screens/Home.dart';
+import 'package:majorwhisper/screens/QuizHistory.dart'; // Import your QuizHistory screen
 
 class Myhistory extends StatefulWidget {
   @override
@@ -125,84 +126,96 @@ class _MyhistoryState extends State<Myhistory> {
                       formattedDate =
                           DateFormat('dd-MMM-yyyy').format(quizDate);
 
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16.0),
-                        padding: const EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF006FFD),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 70.0,
-                              height: 70.0,
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                borderRadius: BorderRadius.circular(10.0),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Quizhistory(
+                                quizData: quizEntry['value'],
                               ),
-                              child: Center(
-                                child: Text(
-                                  quizTitle,
-                                  style: const TextStyle(
-                                    fontSize: 30,
-                                    color: Color(0xFF006FFD),
-                                    fontFamily: "Inter-black",
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 16.0),
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF006FFD),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 70.0,
+                                height: 70.0,
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    quizTitle,
+                                    style: const TextStyle(
+                                      fontSize: 30,
+                                      color: Color(0xFF006FFD),
+                                      fontFamily: "Inter-black",
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 20.0),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Complete', // Placeholder for quiz status
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "Inter-semibold",
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        size: 20.0,
-                                        Icons.calendar_today,
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
+                              const SizedBox(width: 20.0),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Complete', // Placeholder for quiz status
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: "Inter-semibold",
+                                        color: Color.fromARGB(255, 255, 255, 255),
                                       ),
-                                      const SizedBox(width: 10.0),
-                                      Expanded(
-                                        child: Text(
-                                          formattedDate,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xFFDFDFDF),
-                                            fontFamily: "Inter-regular",
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          size: 20.0,
+                                          Icons.calendar_today,
+                                          color:
+                                              Color.fromARGB(255, 255, 255, 255),
+                                        ),
+                                        const SizedBox(width: 10.0),
+                                        Expanded(
+                                          child: Text(
+                                            formattedDate,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Color(0xFFDFDFDF),
+                                              fontFamily: "Inter-regular",
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                // Handle button press here
-                              },
-                              child: Image.asset(
-                                'assets/icon/arrow.png', // Path to your custom icon
-                                width: 40.0,
-                                height: 30.0,
+                              GestureDetector(
+                                onTap: () {
+                                  // Handle button press here
+                                },
+                                child: Image.asset(
+                                  'assets/icon/arrow.png', // Path to your custom icon
+                                  width: 40.0,
+                                  height: 30.0,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
