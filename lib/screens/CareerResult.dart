@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:lottie/lottie.dart';
 
 class CareerResult extends StatefulWidget {
   final String majorName;
@@ -66,17 +67,41 @@ class _CareerResultState extends State<CareerResult> {
         future: _CareerPathData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/icon/career_loading.json', // Path to your Lottie animation file
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.fill,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Career Path is Generating \nAlmost Ready!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Inter-semibold',
+                      color: Color(
+                          0xFF006FFD), // Customize the color to fit your app's theme
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
           } else if (snapshot.hasError || !snapshot.hasData) {
             return Center(
                 child:
                     Text('Error: ${snapshot.error ?? "Failed to load data"}'));
           } else {
             final data = snapshot.data!;
-            final imageUrl = data['image_url'] ??
-                ''; // Use the image_url from the API response
+            final imageUrl =
+                data['image_url']; // Use the image_url from the API response
             final CareerPath =
-                data['career_path_' + widget.country.toLowerCase()] ?? 'No data available';
+                data['career_path_' + widget.country.toLowerCase()] ??
+                    'No data available';
 
             return Stack(
               children: [
@@ -89,7 +114,11 @@ class _CareerResultState extends State<CareerResult> {
                     height: 300, // Height of AppBar
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(imageUrl),
+                        image: imageUrl != null && imageUrl.isNotEmpty
+                            ? NetworkImage(
+                                imageUrl) // Load from URL if available
+                            : AssetImage('assets/icon/profile_holder.png')
+                                as ImageProvider, // Load from assets if URL is not available
                         fit: BoxFit.cover,
                       ),
                     ),

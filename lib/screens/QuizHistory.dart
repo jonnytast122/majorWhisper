@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:majorwhisper/screens/Home.dart';
+import 'package:majorwhisper/screens/MyHistory.dart';
 
 class Quizhistory extends StatefulWidget {
+  final Map<String, dynamic> quizData;
+
+  Quizhistory({required this.quizData});
+
   @override
   _QuizhistoryState createState() => _QuizhistoryState();
 }
@@ -9,10 +13,12 @@ class Quizhistory extends StatefulWidget {
 class _QuizhistoryState extends State<Quizhistory> {
   @override
   Widget build(BuildContext context) {
+    final answers = widget.quizData['answers'] as List<dynamic>;
+
     return Scaffold(
       appBar: AppBar(
         title: const Padding(
-          padding: EdgeInsets.only(top: 22.0), // Adjust this value to move the title down
+          padding: EdgeInsets.only(top: 22.0),
           child: Text(
             'Quiz History',
             style: TextStyle(
@@ -23,26 +29,46 @@ class _QuizhistoryState extends State<Quizhistory> {
           ),
         ),
         leading: Padding(
-          padding: const EdgeInsets.only(top: 21.0), // Adjust this value to move the back arrow down
+          padding: const EdgeInsets.only(top: 21.0),
           child: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
             color: const Color.fromARGB(255, 0, 0, 0),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => Myhistory()),
               );
             },
           ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Add space below AppBar
+        padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: 1, // Number of quizzes
+          itemCount: answers.length,
           itemBuilder: (context, index) {
+            final question = answers[index] as Map<String, dynamic>;
+            final questionText = question['question_text'];
+            final selectedChoice = question['selected_choice'];
+            final options = question['options'] as Map<String, dynamic>;
+
+            // List of alphabet indices
+            final alphaIndices = ['A', 'B', 'C', 'D'];
+
+            // Mapping options to their respective alpha indices
+            final optionEntries = options.entries.toList();
+            final indexedOptions = optionEntries.asMap().map((i, entry) {
+              final alpha = alphaIndices[i];
+              return MapEntry(alpha, entry.value);
+            });
+
+            // Find the alpha index for the selected choice
+            final selectedAlpha = indexedOptions.entries
+                .firstWhere((entry) => entry.value == selectedChoice)
+                .key;
+
             return Container(
-              margin: const EdgeInsets.only(bottom: 16.0),
+              margin: const EdgeInsets.only(bottom: 26.0),
               padding: const EdgeInsets.all(22.0),
               decoration: BoxDecoration(
                 color: Color(0xFF006FFD),
@@ -51,9 +77,9 @@ class _QuizhistoryState extends State<Quizhistory> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center( // Centering the white question container
+                  Center(
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.85, // 80% of screen width
+                      width: MediaQuery.of(context).size.width * 0.85,
                       padding: const EdgeInsets.all(28.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -72,52 +98,61 @@ class _QuizhistoryState extends State<Quizhistory> {
                           ),
                           SizedBox(height: 16.0),
                           Text(
-                            'What is your favourite subject?',
+                            questionText,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18.0,
                               fontFamily: 'Inter-ExtraBold',
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Answer',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
+                  SizedBox(height: 20.0),
+                  Center(
+                    child: Text(
+                      'Answer',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontFamily: "Inter-bold",
+                      ),
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  SizedBox(height: 20.0),
                   Container(
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.yellow, width: 2.0),
+                      borderRadius: BorderRadius.circular(15.0),
+                      border: Border.all(color: Color(0xFFFFC71E), width: 5.0),
                     ),
-                    child: Row(
-                      children: [
-                        Text(
-                          'A',
-                          style: TextStyle(
-                            color: Colors.purple,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$selectedAlpha   ',
+                              style: TextStyle(
+                                color: Color(0xFF5B1CAE), // Change this to your desired color
+                                fontSize: 18.0,
+                                fontFamily: "Inter-medium",
+                              ),
+                            ),
+                            TextSpan(
+                              text: selectedChoice,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18.0,
+                                fontFamily: "Inter-semibold",
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 8.0),
-                        Text(
-                          'Maths',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ],

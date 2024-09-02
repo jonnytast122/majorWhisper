@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:majorwhisper/screens/MyHistory.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
+import 'package:majorwhisper/screens/QuizHistory.dart';
 import 'package:majorwhisper/screens/Roadmap.dart';
 import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
@@ -10,6 +12,7 @@ import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
 import 'package:majorwhisper/screens/Recent.dart';
 import 'package:majorwhisper/screens/MajorDetail.dart';
+import 'package:majorwhisper/screens/Chatbot.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -24,6 +27,7 @@ class _HomeState extends State<Home> {
     Learning(), // Placeholder for Explore screen
     Career(),
     Roadmap(),
+    Chatbot(),
     const Center(child: Text('Help')), // Placeholder for Help screen
   ];
 
@@ -275,7 +279,7 @@ class DetailMajor extends StatelessWidget {
                       // Handle button press here
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => Recent()),
+                        MaterialPageRoute(builder: (context) => Myhistory()),
                       );
                     },
                     child: Text(
@@ -478,7 +482,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/sport_vector.jpg",
               ),
               CategoryCard(
-                title: "Agriculture",
+                title: "Agriculture and Environmental ",
                 imagePath: "assets/images/agriculture_vector.jpg",
               ),
               CategoryCard(
@@ -494,7 +498,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/language_vector.jpg",
               ),
               CategoryCard(
-                title: "Automation",
+                title: "Robotics and Automation",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
               CategoryCard(
@@ -502,11 +506,11 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/food_vector.jpg",
               ),
               CategoryCard(
-                title: "Philosphy",
+                title: "Ethnic and Philosphy",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
               CategoryCard(
-                title: "Religious",
+                title: "Religious Studies",
                 imagePath: "assets/images/religion_vector.jpg",
               ),
             ],

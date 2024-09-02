@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:lottie/lottie.dart';
 
 class LearningResult extends StatefulWidget {
   final String majorName;
@@ -24,7 +25,7 @@ class _LearningResultState extends State<LearningResult> {
 
   Future<Map<String, dynamic>> fetchLearningPath(String majorName) async {
     try {
-      final String url = "http://192.168.0.102:5000/";
+      final String url = "http://192.168.216.231:5000/";
       final String api =
           url + widget.degree.toLowerCase() + "-degree-learning-path";
       print("api : " + api);
@@ -66,18 +67,42 @@ class _LearningResultState extends State<LearningResult> {
         future: _learningPathData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/icon/learning_loading.json', // Path to your Lottie animation file
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.fill,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Learning Path is Generating \nAlmost Ready!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Inter-semibold',
+                      color: Color(
+                          0xFF006FFD), // Customize the color to fit your app's theme
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
           } else if (snapshot.hasError || !snapshot.hasData) {
             return Center(
                 child:
                     Text('Error: ${snapshot.error ?? "Failed to load data"}'));
           } else {
             final data = snapshot.data!;
-            final imageUrl = data['image_url'] ??
-                ''; // Use the image_url from the API response
+            final imageUrl = data['image_url'];
+            ; // Use the image_url from the API response
             final learningPath =
-                data[widget.degree.toLowerCase()+ '_degree_learning_path'] ?? 'No data available';
-
+                data[widget.degree.toLowerCase() + '_degree_learning_path'] ??
+                    'Sorry something weng wrong! \nNo data available';
+            print(data['image_url']);
             return Stack(
               children: [
                 // Background Image in AppBar
@@ -89,7 +114,11 @@ class _LearningResultState extends State<LearningResult> {
                     height: 300, // Height of AppBar
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(imageUrl),
+                        image: imageUrl != null && imageUrl.isNotEmpty
+                            ? NetworkImage(
+                                imageUrl) // Load from URL if available
+                            : AssetImage('assets/icon/profile_holder.png')
+                                as ImageProvider, // Load from assets if URL is not available
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -105,7 +134,7 @@ class _LearningResultState extends State<LearningResult> {
                         },
                       ),
                       title: Text(
-                       widget.majorName,
+                        widget.majorName,
                         style: TextStyle(
                           fontSize: 30, // Increase font size
                           fontWeight: FontWeight.bold,

@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:majorwhisper/screens/Chatbot.dart';
 import 'package:majorwhisper/screens/Onboarding.dart'; 
 import 'package:majorwhisper/screens/Home.dart'; // Correct import for OnboardingScreen
 import 'package:majorwhisper/screens/auth/Login.dart';
 import 'package:majorwhisper/screens/auth/Signup.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:majorwhisper/screens/MyProfile.dart';
-import 'package:majorwhisper/screens/Learning.dart';
-import 'package:majorwhisper/screens/Career.dart';
-import 'package:majorwhisper/screens/Quiz.dart';
-import 'package:majorwhisper/screens/Listmajors.dart';
-import 'package:majorwhisper/screens/Quiz_Finished.dart';
-import 'package:majorwhisper/screens/Recent.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +23,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  Login(), // Use OnboardingScreen instead of Onboarding
+      home:  Home(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }

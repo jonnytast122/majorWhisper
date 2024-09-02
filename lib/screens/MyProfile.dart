@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:majorwhisper/screens/auth/Login.dart';
+import 'package:majorwhisper/screens/MyHistory.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -951,7 +952,13 @@ class _MyProfileState extends State<MyProfile> {
           Card(
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: InkWell(
-              onTap: _logout,
+              onTap: () {
+                      // Handle button press here
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Myhistory()),
+                      );
+                    },
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
