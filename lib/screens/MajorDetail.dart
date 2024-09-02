@@ -23,7 +23,7 @@ class _MajordetailState extends State<Majordetail> {
   Future<Map<String, dynamic>> fetchMajorDetail(String majorName) async {
     try {
       final response = await http.post(
-        Uri.parse("http://10.1.90.31:5000/major-detail"),
+        Uri.parse("http://192.168.0.102:5000/major-detail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

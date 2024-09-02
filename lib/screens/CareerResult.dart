@@ -24,7 +24,7 @@ class _CareerResultState extends State<CareerResult> {
 
   Future<Map<String, dynamic>> fetchCareerPath(String majorName) async {
     try {
-      final String url = "http://10.1.90.31:5000/";
+      final String url = "http://192.168.0.102:5000/";
       final String api = url + "career-path-" + widget.country.toLowerCase();
       print("api : " + api);
       final response = await http.post(
