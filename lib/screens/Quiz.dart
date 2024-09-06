@@ -267,7 +267,7 @@ class _QuizState extends State<Quiz> {
             children: [
               Lottie.asset(
                 'assets/icon/quiz_loading.json', // Path to your Lottie animation file
-                width: 800,
+                width: 300,
                 height: 300,
                 fit: BoxFit.fill,
               ),

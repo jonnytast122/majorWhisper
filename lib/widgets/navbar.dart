@@ -48,20 +48,20 @@ class BottomNavBar extends StatelessWidget {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.book_rounded),
-                label: 'Learning',
+                icon: Icon(Icons.video_library),
+                label: 'Course',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.business_center),
-                label: 'Career',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.assistant_rounded),
-                label: 'Roadmap',
+                icon: Icon(Icons.school_rounded),
+                label: 'University',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.chat),
                 label: 'Chatbot',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
               ),
             ],
           ),
