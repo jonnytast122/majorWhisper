@@ -151,6 +151,16 @@ class DetailMajor extends StatelessWidget {
     );
   }
 
+  void _showLearningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissal by tapping outside
+      builder: (BuildContext context) {
+        return Learning(); // Your Learning dialog widget
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -348,12 +358,7 @@ class DetailMajor extends StatelessWidget {
               children: [
                 // Button 1
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Learning()),
-                    );
-                  },
+                  onPressed: () => _showLearningDialog(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
