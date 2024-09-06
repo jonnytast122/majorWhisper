@@ -482,7 +482,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/sport_vector.jpg",
               ),
               CategoryCard(
-                title: "Agriculture Science",
+                title: "Agriculture and Environmental ",
                 imagePath: "assets/images/agriculture_vector.jpg",
               ),
               CategoryCard(
@@ -498,7 +498,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/language_vector.jpg",
               ),
               CategoryCard(
-                title: "Robotics",
+                title: "Robotics and Automation",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
               CategoryCard(
@@ -506,7 +506,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/food_vector.jpg",
               ),
               CategoryCard(
-                title: "Ethnic ",
+                title: "Ethnic and Philosphy",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
               CategoryCard(

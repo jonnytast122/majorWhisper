@@ -25,7 +25,7 @@ class _LearningResultState extends State<LearningResult> {
 
   Future<Map<String, dynamic>> fetchLearningPath(String majorName) async {
     try {
-      final String url = "http://10.1.90.31:5000/";
+      final String url = "http://192.168.216.231:5000/";
       final String api =
           url + widget.degree.toLowerCase() + "-degree-learning-path";
       print("api : " + api);
