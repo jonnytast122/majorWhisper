@@ -161,6 +161,16 @@ class DetailMajor extends StatelessWidget {
     );
   }
 
+  void _showCareerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissal by tapping outside
+      builder: (BuildContext context) {
+        return Career(); // Your Learning dialog widget
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -354,7 +364,7 @@ class DetailMajor extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Button 1
                 ElevatedButton(
@@ -390,12 +400,7 @@ class DetailMajor extends StatelessWidget {
                 ),
                 // Button 2
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Career()),
-                    );
-                  },
+                  onPressed: () => _showCareerDialog(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -415,7 +420,7 @@ class DetailMajor extends StatelessWidget {
                       SizedBox(height: 8), // Add space between icon and text
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 4.0),
+                            horizontal: 7.0, vertical: 4.0),
                         child: Text(
                           'Career\nPath',
                           textAlign: TextAlign.center,
