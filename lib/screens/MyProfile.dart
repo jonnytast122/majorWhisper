@@ -123,183 +123,187 @@ class _MyProfileState extends State<MyProfile> {
   }
 
   Future<void> _editUsername(BuildContext context) async {
-  final _newNameController = TextEditingController();
-  final _confirmNameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+    final _newNameController = TextEditingController();
+    final _confirmNameController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
 
-  // Show the dialog and wait for user action
-  bool? usernameUpdated = await showDialog<bool>(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          width: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
-          height: MediaQuery.of(context).size.height * 0.5, // 50% of screen height
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Center(
-                child: Text(
-                  'Edit Username',
-                  style: TextStyle(fontSize: 24, fontFamily: 'Inter-regular'),
+    // Show the dialog and wait for user action
+    bool? usernameUpdated = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            width:
+                MediaQuery.of(context).size.width * 0.9, // 90% of screen width
+            height: MediaQuery.of(context).size.height *
+                0.5, // 50% of screen height
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Center(
+                  child: Text(
+                    'Edit Username',
+                    style: TextStyle(fontSize: 24, fontFamily: 'Inter-regular'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 30),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'New Name',
+                          style: TextStyle(
+                              fontSize: 20, fontFamily: 'Inter-medium'),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      TextFormField(
+                        controller: _newNameController,
+                        decoration: InputDecoration(
+                          hintText: "Enter Name",
+                          hintStyle: TextStyle(
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: 15,
+                              fontFamily: 'Inter-medium'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(13),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFDCEDFF),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a new name';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 30),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Confirm Name',
+                          style: TextStyle(
+                              fontSize: 20, fontFamily: 'Inter-medium'),
+                        ),
+                      ),
+                      SizedBox(height: 15),
+                      TextFormField(
+                        controller: _confirmNameController,
+                        decoration: InputDecoration(
+                          hintText: "Enter Name",
+                          hintStyle: TextStyle(
+                              color: Colors.black.withOpacity(0.6),
+                              fontSize: 15,
+                              fontFamily: 'Inter-medium'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(13),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: const Color(0xFFDCEDFF),
+                        ),
+                        validator: (value) {
+                          if (value != _newNameController.text) {
+                            return 'Names do not match';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'New Name',
-                        style: TextStyle(
-                            fontSize: 20, fontFamily: 'Inter-medium'),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: _newNameController,
-                      decoration: InputDecoration(
-                        hintText: "Enter Name",
-                        hintStyle: TextStyle(
-                            color: Colors.black.withOpacity(0.6),
-                            fontSize: 15,
-                            fontFamily: 'Inter-medium'),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13),
-                          borderSide: BorderSide.none,
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pop(false); // Pass false to indicate cancel
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                        filled: true,
-                        fillColor: const Color(0xFFDCEDFF),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a new name';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 30),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Confirm Name',
-                        style: TextStyle(
-                            fontSize: 20, fontFamily: 'Inter-medium'),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: _confirmNameController,
-                      decoration: InputDecoration(
-                        hintText: "Enter Name",
-                        hintStyle: TextStyle(
-                            color: Colors.black.withOpacity(0.6),
-                            fontSize: 15,
-                            fontFamily: 'Inter-medium'),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(13),
-                          borderSide: BorderSide.none,
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Inter-medium',
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        filled: true,
-                        fillColor: const Color(0xFFDCEDFF),
                       ),
-                      validator: (value) {
-                        if (value != _newNameController.text) {
-                          return 'Names do not match';
-                        }
-                        return null;
-                      },
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            // Save the new username in Firestore
+                            User? user = FirebaseAuth.instance.currentUser;
+                            if (user != null) {
+                              await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(user.uid)
+                                  .update(
+                                      {'username': _newNameController.text});
+
+                              Navigator.of(context)
+                                  .pop(true); // Pass true to indicate success
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 7),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Inter-medium',
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
-                ),
-              ),
-              SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(false); // Pass false to indicate cancel
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Cancel',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Inter-medium',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          // Save the new username in Firestore
-                          User? user = FirebaseAuth.instance.currentUser;
-                          if (user != null) {
-                            await FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(user.uid)
-                                .update({'username': _newNameController.text});
-
-                            Navigator.of(context).pop(true); // Pass true to indicate success
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 7),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'Inter-medium',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
 
-  // Only update the username if the dialog indicates success
-  if (usernameUpdated == true) {
-    await _getUsername(); // Fetch updated user data
+    // Only update the username if the dialog indicates success
+    if (usernameUpdated == true) {
+      await _getUsername(); // Fetch updated user data
+    }
   }
-}
-
 
   void _changePassword(BuildContext context) {
     final _newPasswordController = TextEditingController();
@@ -505,8 +509,7 @@ class _MyProfileState extends State<MyProfile> {
                                 ),
                               ),
                               child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 7),
+                                padding: EdgeInsets.symmetric(vertical: 7),
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
                                   borderRadius: BorderRadius.circular(8),
@@ -596,12 +599,13 @@ class _MyProfileState extends State<MyProfile> {
 
                         // Delete the user's authentication record
                         await FirebaseAuth.instance.currentUser!.delete();
-                        
+
                         // Navigate back to the login screen
                         Navigator.of(context).pop(); // Close the dialog
                         Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => Login()),
-                          (Route<dynamic> route) => false, // Clear all previous routes
+                          MaterialPageRoute(builder: (context) => Login()),
+                          (Route<dynamic> route) =>
+                              false, // Clear all previous routes
                         );
                       } catch (e) {
                         // Handle errors (e.g., re-authentication needed)
@@ -779,98 +783,124 @@ class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60.0), // Adjust the height of the AppBar
-        child: AppBar(
-          title: const Padding(
-            padding: EdgeInsets.only(
-                top: 22.0), // Adjust this value to move the title down
-            child: Text(
-              'My Profile',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontFamily: 'Inter-semibold',
-              ),
-            ),
-          ),
-          backgroundColor: Color(0xFF006FFD),
-          leading: Padding(
-            padding: const EdgeInsets.only(
-                top: 21.0), // Adjust this value to move the back arrow down
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_rounded),
-              color: Colors.white,
-              onPressed: () {
-                Navigator.pop(context); // Navigates back to the previous screen
-              },
-            ),
-          ),
-        ),
-      ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.only(top: 0),
-            height: 270,
+            height: 330,
             width: double.infinity,
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
                 color: Color(0xFF006FFD),
                 borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50),
                 ),
               ),
               alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: () async {
-                  // Call functions and wait for them to complete
-                  _changeProfile(context);
-                },
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          _profileImage,
-                          width: 130,
-                          height: 130,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          _username ?? "Loading...",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontFamily: 'Inter-black',
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Positioned(
-                      bottom: 80,
-                      right: 0,
-                      child: Icon(
-                        Icons.autorenew,
-                        size: 50,
+              child: Stack(
+                children: [
+                  // Title text at top left with padding
+                  Positioned(
+                    top:
+                        50, // Adjust this value to set the padding from the top
+                    left: 20,
+                    child: Text(
+                      "Profile",
+                      style: const TextStyle(
                         color: Colors.white,
+                        fontSize: 20,
+                        fontFamily: 'Inter-black',
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  // Content of the container with padding
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 100), // Adjust padding from the top
+                        child: Column(
+                          mainAxisSize:
+                              MainAxisSize.min, // To fit the content size
+                          children: [
+                            Image.asset(
+                              _profileImage,
+                              width: 130,
+                              height: 130,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              _username ?? "Loading...",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontFamily: 'Inter-black',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           const SizedBox(height: 20),
           Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+            child: InkWell(
+              onTap: () {
+                // Handle button press here
+                _changeProfile(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF0055FF).withOpacity(
+                                0.2), // Background color for the circle
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            color: Color(0xFF006FFD),
+                            size: 25,
+                          ), // Icon with a white color
+                        ),
+                        SizedBox(width: 15),
+                        Text(
+                          "Change Profile",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                            fontFamily: 'Inter-regular',
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios_rounded,
+                        color: Color(0xFF344046)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Card(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () => _editUsername(context),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -886,14 +916,14 @@ class _MyProfileState extends State<MyProfile> {
                           child: Icon(
                             Icons.edit_rounded,
                             color: Color(0xFF006FFD),
-                            size: 28,
+                            size: 25,
                           ), // Icon with a white color
                         ),
-                        SizedBox(width: 13),
+                        SizedBox(width: 15),
                         Text(
                           "Edit Username",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black,
                             fontFamily: 'Inter-regular',
                           ),
@@ -908,11 +938,11 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () => _changePassword(context),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -928,14 +958,14 @@ class _MyProfileState extends State<MyProfile> {
                           child: Icon(
                             Icons.lock_rounded,
                             color: Color(0xFF006FFD),
-                            size: 28,
+                            size: 25,
                           ), // Icon with a white color
                         ),
                         SizedBox(width: 13),
                         Text(
                           "Change Password",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black,
                             fontFamily: 'Inter-regular',
                           ),
@@ -950,59 +980,11 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: InkWell(
-              onTap: () {
-                      // Handle button press here
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Myhistory()),
-                      );
-                    },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF0055FF).withOpacity(
-                                0.2), // Background color for the circle
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.history,
-                            color: Color(0xFF006FFD),
-                            size: 28,
-                          ), // Icon with a white color
-                        ),
-                        SizedBox(width: 13),
-                        Text(
-                          "My History",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.black,
-                            fontFamily: 'Inter-regular',
-                          ),
-                        ),
-                      ],
-                    ),
-                    Icon(Icons.arrow_forward_ios_rounded,
-                        color: Color(0xFF344046)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: _logout,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1018,14 +1000,14 @@ class _MyProfileState extends State<MyProfile> {
                           child: const Icon(
                             Icons.logout_rounded,
                             color: Color(0xFF006FFD),
-                            size: 28,
+                            size: 25,
                           ), // Icon with a white color
                         ),
-                        SizedBox(width: 13),
+                        SizedBox(width: 15),
                         const Text(
                           "Logout",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black,
                             fontFamily: 'Inter-regular',
                           ),
@@ -1040,11 +1022,11 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () => _deleteAccount(context),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1060,14 +1042,14 @@ class _MyProfileState extends State<MyProfile> {
                           child: Icon(
                             Icons.delete,
                             color: Color.fromARGB(255, 253, 0, 0),
-                            size: 28,
+                            size: 25,
                           ), // Icon with a white color
                         ),
-                        SizedBox(width: 13),
+                        SizedBox(width: 15),
                         Text(
                           "Delete Account",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black,
                             fontFamily: 'Inter-regular',
                           ),

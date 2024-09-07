@@ -26,9 +26,8 @@ class _HomeState extends State<Home> {
     const HomeContent(), // Separate the home content
     Learning(), // Placeholder for Explore screen
     Career(),
-    Roadmap(),
     Chatbot(),
-    const Center(child: Text('Help')), // Placeholder for Help screen
+    MyProfile(),
   ];
 
   void _onItemTapped(int index) {
@@ -95,6 +94,83 @@ class DetailMajor extends StatelessWidget {
   DetailMajor({Key? key, required this.getUsername, required this.getProfile})
       : super(key: key);
 
+  void _showOptionsDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allows for scrollable content if needed
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.vertical(top: Radius.circular(15)), // Smaller radius
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.history, color: Colors.blue),
+                title: Text('Quiz History'),
+                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                onTap: () {
+                  // Handle Quiz History option tap
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.bookmark, color: Colors.blue),
+                title: Text('Saved Major Detail'),
+                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                onTap: () {
+                  // Handle Saved Major Detail option tap
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.school, color: Colors.blue),
+                title: Text('Saved Learning Path'),
+                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                onTap: () {
+                  // Handle Saved Learning Path option tap
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.business_center, color: Colors.blue),
+                title: Text('Saved Career Path'),
+                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                onTap: () {
+                  // Handle Saved Career Path option tap
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showLearningDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissal by tapping outside
+      builder: (BuildContext context) {
+        return Learning(); // Your Learning dialog widget
+      },
+    );
+  }
+
+  void _showCareerDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissal by tapping outside
+      builder: (BuildContext context) {
+        return Career(); // Your Learning dialog widget
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -121,122 +197,144 @@ class DetailMajor extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.sunny,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "GOOD MORNING",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontFamily: 'Inter-regular',
-                            ),
-                          ),
-                        ]),
-                    const SizedBox(height: 5),
-                    FutureBuilder<String?>(
-                      future: getUsername(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return const Text('Error loading username');
-                        } else if (snapshot.hasData) {
-                          return Text(
-                            "${snapshot.data},",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontFamily: 'Inter-black',
-                            ),
-                          );
-                        } else {
-                          return const Text(
-                            "John Doe,",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontFamily: 'Inter-medium',
-                            ),
-                          );
-                        }
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MyProfile()),
+                        );
                       },
+                      child: FutureBuilder<String?>(
+                        future: getProfile(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator(); // Loading indicator
+                          } else if (snapshot.hasError) {
+                            return Image.asset(
+                              'assets/icon/profile_holder.png', // Fallback image on error
+                              width: 75,
+                              height: 75,
+                            );
+                          } else if (snapshot.hasData) {
+                            String? imagePath = snapshot.data;
+                            if (imagePath != null) {
+                              return Image.asset(
+                                imagePath, // Use network image if URL is provided
+                                width: 75,
+                                height: 75,
+                                fit: BoxFit.cover,
+                              );
+                            } else {
+                              return Image.asset(
+                                'assets/icon/profile_holder.png', // Fallback image if no path is returned
+                                width: 75,
+                                height: 75,
+                              );
+                            }
+                          } else {
+                            return Image.asset(
+                              'assets/icon/profile_holder.png', // Fallback image if no data
+                              width: 75,
+                              height: 75,
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        const Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.sunny,
+                                color: Colors.white,
+                                size: 15,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "GOOD MORNING",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontFamily: 'Inter-regular',
+                                ),
+                              ),
+                            ]),
+                        const SizedBox(height: 5),
+                        FutureBuilder<String?>(
+                          future: getUsername(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return const Text('Error loading username');
+                            } else if (snapshot.hasData) {
+                              return Text(
+                                "${snapshot.data},",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: 'Inter-black',
+                                ),
+                              );
+                            } else {
+                              return const Text(
+                                "John Doe,",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: 'Inter-medium',
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyProfile()),
-                    );
-                  },
-                  child: FutureBuilder<String?>(
-                    future: getProfile(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator(); // Loading indicator
-                      } else if (snapshot.hasError) {
-                        return Image.asset(
-                          'assets/icon/profile_holder.png', // Fallback image on error
-                          width: 75,
-                          height: 75,
-                        );
-                      } else if (snapshot.hasData) {
-                        String? imagePath = snapshot.data;
-                        if (imagePath != null) {
-                          return Image.asset(
-                            imagePath, // Use network image if URL is provided
-                            width: 75,
-                            height: 75,
-                            fit: BoxFit.cover,
-                          );
-                        } else {
-                          return Image.asset(
-                            'assets/icon/profile_holder.png', // Fallback image if no path is returned
-                            width: 75,
-                            height: 75,
-                          );
-                        }
-                      } else {
-                        return Image.asset(
-                          'assets/icon/profile_holder.png', // Fallback image if no data
-                          width: 75,
-                          height: 75,
-                        );
-                      }
-                    },
+                IconButton(
+                  onPressed: () => _showOptionsDialog(context),
+                  icon: const Icon(
+                    Icons
+                        .dehaze_rounded, // Use an appropriate icon from Icons or a custom one
+                    color: Colors.white,
                   ),
+                  iconSize: 35, // Adjust the icon size as needed
+                  padding: const EdgeInsets.all(8.0), // Add padding if needed
                 ),
               ],
             ),
-            const SizedBox(height: 20), // Space between Row and TextFormField
+            const SizedBox(height: 30), // Space between Row and TextFormField
             const Text(
-              "Discover Details of Major",
+              "Discover and Find Your Future",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 15,
                 fontFamily: 'Inter-semibold',
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             TextFormField(
               controller: _searchController,
               decoration: InputDecoration(
                 hintText: "Search Major",
                 hintStyle: TextStyle(
                   color: Colors.black.withOpacity(0.6),
-                  fontSize: 18,
+                  fontSize: 15,
                   fontFamily: 'Inter-regular',
                 ),
                 prefixIcon: const Icon(
@@ -244,11 +342,13 @@ class DetailMajor extends StatelessWidget {
                   color: Color(0xFF000000),
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
                 fillColor: const Color(0xFFEDEDED),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 13.0), // Adjust the vertical padding
               ),
               onFieldSubmitted: (value) {
                 Navigator.push(
@@ -262,71 +362,117 @@ class DetailMajor extends StatelessWidget {
                 // Optionally handle input changes
               },
             ),
-
             const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Handle button press here
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => Myhistory()),
-                      );
-                    },
-                    child: Text(
-                      'Recent Quiz',
-                      style: TextStyle(
-                        color: Color(0xFF006FFD),
-                        fontSize: 18,
-                        fontFamily: 'Inter-semibold',
-                      ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Button 1
+                ElevatedButton(
+                  onPressed: () => _showLearningDialog(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    minimumSize: const Size(
+                        100, 100), // Set uniform size for all buttons
                   ),
-                  const SizedBox(height: 5),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.school, // Replace with your desired icon
+                        color: Color(0xFF006FFD),
+                        size: 30,
+                      ),
+                      SizedBox(height: 8), // Add space between icon and text
                       Text(
-                        "Complete",
+                        'Learning\nPath',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Color(0xFF006FFD),
-                          fontSize: 15,
+                          fontSize: 12,
                           fontFamily: 'Inter-semibold',
                         ),
                       ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.history_rounded,
+                    ],
+                  ),
+                ),
+                // Button 2
+                ElevatedButton(
+                  onPressed: () => _showCareerDialog(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize: const Size(
+                        100, 100), // Set uniform size for all buttons
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.business_center, // Replace with your desired icon
+                        color: Color(0xFF006FFD),
+                        size: 30,
+                      ),
+                      SizedBox(height: 8), // Add space between icon and text
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 7.0, vertical: 4.0),
+                        child: Text(
+                          'Career\nPath',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
                             color: Color(0xFF006FFD),
+                            fontSize: 12,
+                            fontFamily: 'Inter-semibold',
                           ),
-                          SizedBox(width: 5),
-                          Text(
-                            "View History",
-                            style: TextStyle(
-                              color: Color(0xFF006FFD),
-                              decoration: TextDecoration.underline,
-                              decorationColor: Color(0xFF006FFD),
-                              fontSize: 11,
-                              fontFamily: 'Inter-semibold',
-                            ),
-                          ),
-                        ],
+                        ),
                       )
                     ],
-                  )
-                ],
-              ),
-            ),
+                  ),
+                ),
+                // Button 3
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Roadmap()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize: const Size(
+                        100, 100), // Set uniform size for all buttons
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.assistant, // Replace with your desired icon
+                        color: Color(0xFF006FFD),
+                        size: 30,
+                      ),
+                      SizedBox(height: 8), // Add space between icon and text
+                      Text(
+                        'Generate\nRoadmap',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFF006FFD),
+                          fontSize: 12,
+                          fontFamily: 'Inter-semibold',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -362,13 +508,13 @@ class ExploreCategory extends StatelessWidget {
                       "Discover your Future",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 17,
+                        fontSize: 16,
                         fontFamily: 'Inter-black',
                       ),
                     ),
                     const SizedBox(height: 5),
                     const Text(
-                      "Take the quiz and let us match you \nwith your perfect majors!",
+                      "take the quiz and let us match\nyou with your perfect majors!",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -393,7 +539,7 @@ class ExploreCategory extends StatelessWidget {
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                            horizontal: 20, vertical: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -401,7 +547,7 @@ class ExploreCategory extends StatelessWidget {
                       child: const Text(
                         'Start Quiz',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontFamily: 'Inter-semibold',
                           color: Color(0xFF006FFD),
                         ),
@@ -411,8 +557,8 @@ class ExploreCategory extends StatelessWidget {
                 ),
                 Image.asset(
                   'assets/images/cloud_illustration.png',
-                  width: 130,
-                  height: 100,
+                  width: 150,
+                  height: 110,
                 ),
               ],
             ),
@@ -422,7 +568,7 @@ class ExploreCategory extends StatelessWidget {
             "Explore Categories",
             style: TextStyle(
               color: Colors.black,
-              fontSize: 28,
+              fontSize: 25,
               fontFamily: 'Inter-semibold',
             ),
           ),
@@ -482,7 +628,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/sport_vector.jpg",
               ),
               CategoryCard(
-                title: "Agriculture Science",
+                title: "Agriculture and Environmental ",
                 imagePath: "assets/images/agriculture_vector.jpg",
               ),
               CategoryCard(
@@ -498,7 +644,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/language_vector.jpg",
               ),
               CategoryCard(
-                title: "Robotics",
+                title: "Robotics and Automation",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
               CategoryCard(
@@ -506,7 +652,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/food_vector.jpg",
               ),
               CategoryCard(
-                title: "Ethnic ",
+                title: "Ethnic and Philosphy",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
               CategoryCard(

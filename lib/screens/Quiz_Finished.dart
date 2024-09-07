@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:majorwhisper/screens/MajorRecom.dart';
+import 'package:majorwhisper/screens/MajorRecommendation.dart';
 
 class QuizFinished extends StatefulWidget {
   @override

@@ -59,7 +59,7 @@ class _QuizState extends State<Quiz> {
     try {
       // Make a POST request to the API
       final response = await http.post(
-        Uri.parse('http://10.1.90.31:5000/question-generation'),
+        Uri.parse('http://192.168.0.102:5000/question-generation'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'uuid': userUUID}),
       );
@@ -267,7 +267,7 @@ class _QuizState extends State<Quiz> {
             children: [
               Lottie.asset(
                 'assets/icon/quiz_loading.json', // Path to your Lottie animation file
-                width: 800,
+                width: 300,
                 height: 300,
                 fit: BoxFit.fill,
               ),
