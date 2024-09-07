@@ -120,6 +120,9 @@ flutter:
   - assets/images/Active_vector.png
   - assets/images/Ai_vector.png
   - assets/icon/arrow_up.png
+  - assets/images/sql_vector.png
+  - assets/icon/card_membership.png
+  - assets/icon/Pencil_Edit.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
