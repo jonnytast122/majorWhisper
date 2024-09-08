@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:majorwhisper/screens/Chatbot.dart';
+import 'package:majorwhisper/screens/CourseLayout.dart';
+import 'package:majorwhisper/screens/MyHistory.dart';
 import 'package:majorwhisper/screens/Onboarding.dart'; 
 import 'package:majorwhisper/screens/Home.dart'; // Correct import for OnboardingScreen
+import 'package:majorwhisper/screens/RecommendedMajorHistory.dart';
 import 'package:majorwhisper/screens/auth/Login.dart';
 import 'package:majorwhisper/screens/auth/Signup.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home:  Login(), // Use OnboardingScreen instead of Onboarding
+      home:  Home(), // Use OnboardingScreen instead of Onboarding
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }
