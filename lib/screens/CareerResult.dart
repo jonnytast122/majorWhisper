@@ -25,7 +25,7 @@ class _CareerResultState extends State<CareerResult> {
 
   Future<Map<String, dynamic>> fetchCareerPath(String majorName) async {
     try {
-      final String url = "http://192.168.0.102:5000/";
+      final String url = "http://192.168.234.231:5000/";
       final String api = url + "career-path-" + widget.country.toLowerCase();
       print("api : " + api);
       final response = await http.post(
@@ -54,13 +54,13 @@ class _CareerResultState extends State<CareerResult> {
 
   @override
   Widget build(BuildContext context) {
-    String capitalize(String text) {
-      return text
-          .split(' ')
-          .map(
-              (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-          .join(' ');
-    }
+    // String capitalize(String text) {
+    //   return text
+    //       .split(' ')
+    //       .map(
+    //           (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+    //       .join(' ');
+    // }
 
     return Scaffold(
       body: FutureBuilder<Map<String, dynamic>>(
@@ -134,7 +134,7 @@ class _CareerResultState extends State<CareerResult> {
                         },
                       ),
                       title: Text(
-                        capitalize(widget.majorName),
+                        widget.majorName,
                         style: TextStyle(
                           fontSize: 30, // Increase font size
                           fontWeight: FontWeight.bold,

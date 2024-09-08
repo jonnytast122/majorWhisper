@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
+import 'package:majorwhisper/screens/MajorDetail.dart';
 
 class Majorrecom extends StatefulWidget {
   @override
@@ -25,7 +26,8 @@ class _MajorrecomState extends State<Majorrecom> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       userId = user.uid;
-      requestMajorRecommendation(userId!); // Call the API with the current user ID
+      requestMajorRecommendation(
+          userId!); // Call the API with the current user ID
     } else {
       print('No user is currently signed in.');
     }
@@ -33,7 +35,7 @@ class _MajorrecomState extends State<Majorrecom> {
 
   // Step 2: Request major recommendation from the API
   Future<void> requestMajorRecommendation(String userId) async {
-    final url = Uri.parse('http://192.168.0.102:5000/major-recommendation');
+    final url = Uri.parse('http://10.1.87.197:5000/major-recommendation');
     try {
       final response = await http.post(
         url,
@@ -43,13 +45,16 @@ class _MajorrecomState extends State<Majorrecom> {
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
-        if (responseBody['message'] == "Majore successfully recommended and saved.") {
-          fetchLatestQuizFromFirestore(userId); // Fetch latest quiz data from Firestore
+        if (responseBody['message'] ==
+            "Major successfully recommended and saved.") {
+          fetchLatestQuizFromFirestore(
+              userId); // Fetch latest quiz data from Firestore
         } else {
           print("Unexpected response from API: ${responseBody['message']}");
         }
       } else {
-        print('Failed to fetch major recommendation. Status code: ${response.statusCode}');
+        print(
+            'Failed to fetch major recommendation. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error generating quiz: $e');
@@ -88,10 +93,12 @@ class _MajorrecomState extends State<Majorrecom> {
 
         if (quizzes.isNotEmpty) {
           final latestQuiz = quizzes.first['data']; // Get the latest quiz data
-          final List<dynamic> recommendedMajorsList = latestQuiz['recommended_major'];
+          final List<dynamic> recommendedMajorsList =
+              latestQuiz['recommended_major'];
 
           // Step 4: Extract majors and reasons and display them
-          List<Map<String, dynamic>> majors = recommendedMajorsList.map((majorData) {
+          List<Map<String, dynamic>> majors =
+              recommendedMajorsList.map((majorData) {
             return {
               'major': majorData['major'],
               'reason': majorData['reason'],
@@ -256,7 +263,13 @@ class _MajorrecomState extends State<Majorrecom> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Add your onPressed logic here
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            Majordetail(majorName: major),
+                                      ),
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
