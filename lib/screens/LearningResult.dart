@@ -7,48 +7,19 @@ class LearningResult extends StatelessWidget {
   final String degree;
   final Map<String, dynamic> data;
 
-  LearningResult({required this.majorName, required this.degree});
+  LearningResult({
+    required this.majorName,
+    required this.degree,
+    required this.data,
+  });
 
-  @override
-  _LearningResultState createState() => _LearningResultState();
-}
-
-class _LearningResultState extends State<LearningResult> {
-  Future<Map<String, dynamic>>? _learningPathData;
-
-  @override
-  void initState() {
-    super.initState();
-    _learningPathData = fetchLearningPath(widget.majorName);
-  }
-
-  Future<Map<String, dynamic>> fetchLearningPath(String majorName) async {
-    try {
-      final String url = "http://192.168.216.231:5000/";
-      final String api =
-          url + widget.degree.toLowerCase() + "-degree-learning-path";
-      print("api : " + api);
-      final response = await http.post(
-        Uri.parse(api),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'major_name': majorName,
-        }),
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        return {
-          'error': 'Failed to load learning path'
-        }; // Error message if API call fails
-      }
-    } catch (e) {
-      return {
-        'error': 'An error occurred'
-      }; // Error message if exception occurs
-    }
+  String toTitleCase(String text) {
+    return text
+        .toLowerCase()
+        .split(' ')
+        .map((word) =>
+            word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1))
+        .join(' ');
   }
 
   @override
