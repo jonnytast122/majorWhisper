@@ -22,17 +22,30 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const HomeContent(), // Separate the home content
-    Learning(), // Placeholder for Explore screen
-    Career(),
-    Chatbot(),
-    MyProfile(),
-  ];
+  static List<Widget> _widgetOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      HomeContent(
+          navigateToProfile: _navigateToProfile), // Separate the home content
+      Learning(), // Placeholder for Explore screen
+      Career(),
+      Chatbot(),
+      MyProfile(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _navigateToProfile() {
+    setState(() {
+      _selectedIndex = 4; // Assuming 4 is the index for MyProfile
     });
   }
 
@@ -49,7 +62,10 @@ class _HomeState extends State<Home> {
 }
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({Key? key}) : super(key: key);
+  const HomeContent({Key? key, required this.navigateToProfile})
+      : super(key: key);
+
+  final void Function() navigateToProfile;
 
   Future<String?> _getUsername() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -79,7 +95,11 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DetailMajor(getUsername: _getUsername, getProfile: _getProfile),
+        DetailMajor(
+          getUsername: _getUsername,
+          getProfile: _getProfile,
+          onProfileTap: navigateToProfile,
+        ),
         const Expanded(child: ExploreCategory()),
       ],
     );
@@ -89,9 +109,14 @@ class HomeContent extends StatelessWidget {
 class DetailMajor extends StatelessWidget {
   final Future<String?> Function() getUsername;
   final Future<String?> Function() getProfile;
+  final void Function() onProfileTap;
   final TextEditingController _searchController = TextEditingController();
 
-  DetailMajor({Key? key, required this.getUsername, required this.getProfile})
+  DetailMajor(
+      {Key? key,
+      required this.getUsername,
+      required this.getProfile,
+      required this.onProfileTap})
       : super(key: key);
 
   void _showOptionsDialog(BuildContext context) {
@@ -202,13 +227,7 @@ class DetailMajor extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MyProfile()),
-                        );
-                      },
+                      onTap: onProfileTap,
                       child: FutureBuilder<String?>(
                         future: getProfile(),
                         builder: (context, snapshot) {
