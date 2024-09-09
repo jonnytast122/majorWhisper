@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +15,7 @@ import 'package:majorwhisper/screens/Quiz.dart';
 import 'package:majorwhisper/screens/Recent.dart';
 import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:majorwhisper/screens/Chatbot.dart';
+import 'package:lottie/lottie.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -196,6 +199,88 @@ class DetailMajor extends StatelessWidget {
     );
   }
 
+  void _showLoadingDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            height: 250,
+            width: 250,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  'assets/icon/learning_loading.json', // Path to your Lottie animation file
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.fill,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Major Detail is Generating\nAlmost Ready!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Inter-semibold',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+}
+
+void _fetchDataAndNavigate(BuildContext context, String majorName) async {
+  _showLoadingDialog(context);
+
+  try {
+    final response = await http.post(
+      Uri.parse("http://10.1.87.197:5000/major-detail"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'major_name': majorName,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      Navigator.of(context).pop(); // Close the loading dialog
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Majordetail(
+            majorName: majorName,
+            data: data, // Pass data to Majordetail
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).pop(); // Close the loading dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load data')),
+      );
+    }
+  } catch (e) {
+    Navigator.of(context).pop(); // Close the loading dialog
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred')),
+    );
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -370,13 +455,8 @@ class DetailMajor extends StatelessWidget {
                     vertical: 13.0), // Adjust the vertical padding
               ),
               onFieldSubmitted: (value) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Majordetail(majorName: value),
-                  ),
-                );
-              },
+            _fetchDataAndNavigate(context, value);
+          },
               onChanged: (value) {
                 // Optionally handle input changes
               },

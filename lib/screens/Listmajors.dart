@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/MajorDetail.dart';
+import 'package:lottie/lottie.dart';
 
 class Listmajors extends StatefulWidget {
   final String title;
@@ -41,6 +42,87 @@ class _ListmajorsState extends State<Listmajors> {
     } else {
       // Handle errors
       print('Failed to load majors');
+    }
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            height: 250,
+            width: 250,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  'assets/icon/learning_loading.json', // Path to your Lottie animation file
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.fill,
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Major Detail is Generating\nAlmost Ready!',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Inter-semibold',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _fetchDataAndNavigate(BuildContext context, String majorName) async {
+    _showLoadingDialog(context);
+
+    try {
+      final response = await http.post(
+        Uri.parse("http://10.1.87.197:5000/major-detail"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'major_name': majorName,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        Navigator.of(context).pop(); // Close the loading dialog
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Majordetail(
+              majorName: majorName,
+              data: data, // Pass data to Majordetail
+            ),
+          ),
+        );
+      } else {
+        Navigator.of(context).pop(); // Close the loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load data')),
+        );
+      }
+    } catch (e) {
+      Navigator.of(context).pop(); // Close the loading dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred')),
+      );
     }
   }
 
@@ -189,13 +271,7 @@ class _ListmajorsState extends State<Listmajors> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Majordetail(majorName: majorNames[index]),
-                                ),
-                              );
+                              _fetchDataAndNavigate(context, majorNames[index]);
                             },
                             child: Image.asset(
                               'assets/icon/arrow.png', // Path to your custom icon

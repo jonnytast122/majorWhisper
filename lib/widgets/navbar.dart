@@ -52,7 +52,7 @@ class BottomNavBar extends StatelessWidget {
                 label: 'Course',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.school_rounded),
+                icon: Icon(Icons.business),
                 label: 'University',
               ),
               BottomNavigationBarItem(
