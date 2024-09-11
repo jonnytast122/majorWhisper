@@ -142,7 +142,10 @@ class DetailMajor extends StatelessWidget {
                 trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   // Handle Quiz History option tap
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Myhistory()),
+                  );	
                 },
               ),
               ListTile(
@@ -169,7 +172,10 @@ class DetailMajor extends StatelessWidget {
                 trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   // Handle Saved Career Path option tap
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Career()),
+                  );
                 },
               ),
             ],
