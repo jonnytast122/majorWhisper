@@ -151,7 +151,7 @@ class _LearningState extends State<Learning> {
 
   Future<Map<String, dynamic>> fetchLearningPath(
       String majorName, String degree) async {
-    final String url = "http://10.1.87.197:5000/";
+    final String url = "http://192.168.1.5:5000/";
     final String api = url + degree.toLowerCase() + "-degree-learning-path";
     print("api: $api");
 

@@ -117,9 +117,9 @@ class DetailMajor extends StatelessWidget {
 
   DetailMajor(
       {Key? key,
-      required this.getUsername,
-      required this.getProfile,
-      required this.onProfileTap})
+        required this.getUsername,
+        required this.getProfile,
+        required this.onProfileTap})
       : super(key: key);
 
   void _showOptionsDialog(BuildContext context) {
@@ -128,7 +128,7 @@ class DetailMajor extends StatelessWidget {
       isScrollControlled: true, // Allows for scrollable content if needed
       shape: RoundedRectangleBorder(
         borderRadius:
-            BorderRadius.vertical(top: Radius.circular(15)), // Smaller radius
+        BorderRadius.vertical(top: Radius.circular(15)), // Smaller radius
       ),
       builder: (BuildContext context) {
         return Container(
@@ -145,7 +145,7 @@ class DetailMajor extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Myhistory()),
-                  );	
+                  );
                 },
               ),
               ListTile(
@@ -206,7 +206,7 @@ class DetailMajor extends StatelessWidget {
   }
 
   void _showLoadingDialog(BuildContext context) {
-  showDialog(
+    showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => Center(
@@ -243,48 +243,48 @@ class DetailMajor extends StatelessWidget {
         ),
       ),
     );
-}
+  }
 
-void _fetchDataAndNavigate(BuildContext context, String majorName) async {
-  _showLoadingDialog(context);
+  void _fetchDataAndNavigate(BuildContext context, String majorName) async {
+    _showLoadingDialog(context);
 
-  try {
-    final response = await http.post(
-      Uri.parse("http://10.1.87.197:5000/major-detail"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'major_name': majorName,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      Navigator.of(context).pop(); // Close the loading dialog
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Majordetail(
-            majorName: majorName,
-            data: data, // Pass data to Majordetail
-          ),
-        ),
+    try {
+      final response = await http.post(
+        Uri.parse("http://192.168.1.5:5000/major-detail"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'major_name': majorName,
+        }),
       );
-    } else {
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        Navigator.of(context).pop(); // Close the loading dialog
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Majordetail(
+              majorName: majorName,
+              data: data, // Pass data to Majordetail
+            ),
+          ),
+        );
+      } else {
+        Navigator.of(context).pop(); // Close the loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load data')),
+        );
+      }
+    } catch (e) {
       Navigator.of(context).pop(); // Close the loading dialog
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load data')),
+        SnackBar(content: Text('An error occurred')),
       );
     }
-  } catch (e) {
-    Navigator.of(context).pop(); // Close the loading dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('An error occurred')),
-    );
   }
-}
 
 
   @override
@@ -461,8 +461,8 @@ void _fetchDataAndNavigate(BuildContext context, String majorName) async {
                     vertical: 13.0), // Adjust the vertical padding
               ),
               onFieldSubmitted: (value) {
-            _fetchDataAndNavigate(context, value);
-          },
+                _fetchDataAndNavigate(context, value);
+              },
               onChanged: (value) {
                 // Optionally handle input changes
               },
@@ -630,7 +630,7 @@ class ExploreCategory extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         bool? shouldNavigate =
-                            await Quizpopscreen(context); // Show the dialog
+                        await Quizpopscreen(context); // Show the dialog
 
                         if (shouldNavigate == true) {
                           // Navigate to Quiz if confirmed

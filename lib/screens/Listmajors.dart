@@ -25,7 +25,7 @@ class _ListmajorsState extends State<Listmajors> {
 
   Future<void> fetchMajors() async {
     final response = await http.post(
-      Uri.parse('http://192.168.234.231:5000/major-base-on-category'),
+      Uri.parse('http://192.168.0.103:5000/major-base-on-category'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'category': widget.title}),
     );
