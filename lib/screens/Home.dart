@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:majorwhisper/screens/MyHistory.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
-import 'package:majorwhisper/screens/QuizHistory.dart';
 import 'package:majorwhisper/screens/Roadmap.dart';
 import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
 import 'package:majorwhisper/screens/Career.dart';
 import 'package:majorwhisper/screens/Quiz.dart';
-import 'package:majorwhisper/screens/Recent.dart';
 import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:majorwhisper/screens/Chatbot.dart';
 import 'package:lottie/lottie.dart';
+import 'package:majorwhisper/screens/SaveMajor.dart';
+import 'package:majorwhisper/screens/CourseGen.dart';
+import 'package:majorwhisper/screens/SaveCareer.dart';
+import 'package:majorwhisper/screens/SaveLearning.dart';
+import 'package:majorwhisper/screens/University.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -33,8 +36,8 @@ class _HomeState extends State<Home> {
     _widgetOptions = <Widget>[
       HomeContent(
           navigateToProfile: _navigateToProfile), // Separate the home content
-      Learning(), // Placeholder for Explore screen
-      Career(),
+      CourseGen(), // Placeholder for Explore screen
+      University(),
       Chatbot(),
       MyProfile(),
     ];
@@ -117,9 +120,9 @@ class DetailMajor extends StatelessWidget {
 
   DetailMajor(
       {Key? key,
-        required this.getUsername,
-        required this.getProfile,
-        required this.onProfileTap})
+      required this.getUsername,
+      required this.getProfile,
+      required this.onProfileTap})
       : super(key: key);
 
   void _showOptionsDialog(BuildContext context) {
@@ -128,7 +131,7 @@ class DetailMajor extends StatelessWidget {
       isScrollControlled: true, // Allows for scrollable content if needed
       shape: RoundedRectangleBorder(
         borderRadius:
-        BorderRadius.vertical(top: Radius.circular(15)), // Smaller radius
+            BorderRadius.vertical(top: Radius.circular(15)), // Smaller radius
       ),
       builder: (BuildContext context) {
         return Container(
@@ -137,7 +140,7 @@ class DetailMajor extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.history, color: Colors.blue),
+                leading: Icon(Icons.history, color: Color(0xFF006FFD)),
                 title: Text('Quiz History'),
                 trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
@@ -149,32 +152,36 @@ class DetailMajor extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.bookmark, color: Colors.blue),
+                leading: Icon(Icons.bookmark, color: Color(0xFF006FFD)),
                 title: Text('Saved Major Detail'),
                 trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
-                  // Handle Saved Major Detail option tap
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SaveMajor()),
+                  );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.school, color: Colors.blue),
+                leading: Icon(Icons.school, color: Color(0xFF006FFD)),
                 title: Text('Saved Learning Path'),
                 trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
-                  // Handle Saved Learning Path option tap
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SaveLearning()),
+                  );
                 },
               ),
               ListTile(
-                leading: Icon(Icons.business_center, color: Colors.blue),
+                leading: Icon(Icons.business_center, color: Color(0xFF006FFD)),
                 title: Text('Saved Career Path'),
                 trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   // Handle Saved Career Path option tap
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Career()),
+                    MaterialPageRoute(builder: (context) => SaveCareer()),
                   );
                 },
               ),
@@ -286,9 +293,39 @@ class DetailMajor extends StatelessWidget {
     }
   }
 
+  Map<String, dynamic> getTimeBasedGreeting() {
+    // Get the current hour
+    final hour = DateTime.now().hour;
+    print(hour);
+    // Determine the greeting and icon based on the time of day
+    String greeting;
+    IconData greetingIcon;
+
+    if (hour >= 5 && hour < 12) {
+      greeting = "GOOD MORNING";
+      greetingIcon = Icons.wb_sunny;
+    } else if (hour >= 12 && hour < 17) {
+      greeting = "GOOD AFTERNOON";
+      greetingIcon = Icons.wb_sunny_outlined;
+    } else if (hour >= 17 && hour < 20) {
+      greeting = "GOOD EVENING";
+      greetingIcon = Icons.nights_stay;
+    } else {
+      greeting = "GOOD NIGHT";
+      greetingIcon = Icons.bedtime;
+    }
+
+    // Return the greeting text and icon
+    return {
+      'greeting': greeting,
+      'icon': greetingIcon,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
+    final greetingData = getTimeBasedGreeting();
+    print(greetingData);
     return Container(
       padding: const EdgeInsets.only(top: 0),
       height: 410,
@@ -364,24 +401,25 @@ class DetailMajor extends StatelessWidget {
                         SizedBox(
                           height: 10,
                         ),
-                        const Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.sunny,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              greetingData['icon'],
+                              color: Colors.white,
+                              size: 15,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              greetingData['greeting'],
+                              style: TextStyle(
                                 color: Colors.white,
-                                size: 15,
+                                fontSize: 10,
+                                fontFamily: 'Inter-regular',
                               ),
-                              SizedBox(width: 10),
-                              Text(
-                                "GOOD MORNING",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontFamily: 'Inter-regular',
-                                ),
-                              ),
-                            ]),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 5),
                         FutureBuilder<String?>(
                           future: getUsername(),
@@ -630,7 +668,7 @@ class ExploreCategory extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         bool? shouldNavigate =
-                        await Quizpopscreen(context); // Show the dialog
+                            await Quizpopscreen(context); // Show the dialog
 
                         if (shouldNavigate == true) {
                           // Navigate to Quiz if confirmed
