@@ -21,11 +21,13 @@ import 'package:majorwhisper/screens/SaveLearning.dart';
 import 'package:majorwhisper/screens/University.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = [];
@@ -39,8 +41,15 @@ class _HomeState extends State<Home> {
       CourseGen(), // Placeholder for Explore screen
       University(),
       Chatbot(),
-      MyProfile(),
+      const MyProfile(),
     ];
+  }
+
+  void updateSelectedIndex(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
   }
 
   void _onItemTapped(int index) {
@@ -68,8 +77,7 @@ class _HomeState extends State<Home> {
 }
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({Key? key, required this.navigateToProfile})
-      : super(key: key);
+  const HomeContent({super.key, required this.navigateToProfile});
 
   final void Function() navigateToProfile;
 
@@ -119,17 +127,16 @@ class DetailMajor extends StatelessWidget {
   final TextEditingController _searchController = TextEditingController();
 
   DetailMajor(
-      {Key? key,
+      {super.key,
       required this.getUsername,
       required this.getProfile,
-      required this.onProfileTap})
-      : super(key: key);
+      required this.onProfileTap});
 
   void _showOptionsDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Allows for scrollable content if needed
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius:
             BorderRadius.vertical(top: Radius.circular(15)), // Smaller radius
       ),
@@ -140,9 +147,9 @@ class DetailMajor extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.history, color: Color(0xFF006FFD)),
-                title: Text('Quiz History'),
-                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                leading: const Icon(Icons.history, color: Color(0xFF006FFD)),
+                title: const Text('Quiz History'),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   // Handle Quiz History option tap
                   Navigator.push(
@@ -152,9 +159,9 @@ class DetailMajor extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.bookmark, color: Color(0xFF006FFD)),
-                title: Text('Saved Major Detail'),
-                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                leading: const Icon(Icons.bookmark, color: Color(0xFF006FFD)),
+                title: const Text('Saved Major Detail'),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -163,9 +170,9 @@ class DetailMajor extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.school, color: Color(0xFF006FFD)),
-                title: Text('Saved Learning Path'),
-                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                leading: const Icon(Icons.school, color: Color(0xFF006FFD)),
+                title: const Text('Saved Learning Path'),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -174,9 +181,9 @@ class DetailMajor extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.business_center, color: Color(0xFF006FFD)),
-                title: Text('Saved Career Path'),
-                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                leading: const Icon(Icons.business_center, color: Color(0xFF006FFD)),
+                title: const Text('Saved Career Path'),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
                   // Handle Saved Career Path option tap
                   Navigator.push(
@@ -235,8 +242,8 @@ class DetailMajor extends StatelessWidget {
                   height: 100,
                   fit: BoxFit.fill,
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Major Detail is Generating\nAlmost Ready!',
                   style: TextStyle(
                     fontSize: 16,
@@ -282,13 +289,13 @@ class DetailMajor extends StatelessWidget {
       } else {
         Navigator.of(context).pop(); // Close the loading dialog
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load data')),
+          const SnackBar(content: Text('Failed to load data')),
         );
       }
     } catch (e) {
       Navigator.of(context).pop(); // Close the loading dialog
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred')),
+        const SnackBar(content: Text('An error occurred')),
       );
     }
   }
@@ -325,7 +332,6 @@ class DetailMajor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final greetingData = getTimeBasedGreeting();
-    print(greetingData);
     return Container(
       padding: const EdgeInsets.only(top: 0),
       height: 410,
@@ -343,7 +349,7 @@ class DetailMajor extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Row(
@@ -398,7 +404,7 @@ class DetailMajor extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Row(
@@ -409,10 +415,10 @@ class DetailMajor extends StatelessWidget {
                               color: Colors.white,
                               size: 15,
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text(
                               greetingData['greeting'],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontFamily: 'Inter-regular',
@@ -520,9 +526,9 @@ class DetailMajor extends StatelessWidget {
                     minimumSize: const Size(
                         100, 100), // Set uniform size for all buttons
                   ),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.school, // Replace with your desired icon
                         color: Color(0xFF006FFD),
@@ -552,9 +558,9 @@ class DetailMajor extends StatelessWidget {
                     minimumSize: const Size(
                         100, 100), // Set uniform size for all buttons
                   ),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.business_center, // Replace with your desired icon
                         color: Color(0xFF006FFD),
@@ -562,7 +568,7 @@ class DetailMajor extends StatelessWidget {
                       ),
                       SizedBox(height: 8), // Add space between icon and text
                       Padding(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 7.0, vertical: 4.0),
                         child: Text(
                           'Career\nPath',
@@ -593,9 +599,9 @@ class DetailMajor extends StatelessWidget {
                     minimumSize: const Size(
                         100, 100), // Set uniform size for all buttons
                   ),
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.assistant, // Replace with your desired icon
                         color: Color(0xFF006FFD),

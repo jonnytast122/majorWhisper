@@ -6,7 +6,7 @@ import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:majorwhisper/screens/CourseLayout.dart';
+import 'package:majorwhisper/screens/CourseLayoutGen.dart';
 
 class CreateCourse extends StatefulWidget {
   @override
@@ -20,7 +20,6 @@ class _CreateCourseState extends State<CreateCourse> {
   final TextEditingController topicController = TextEditingController();
   String? selectedDifficulty;
   String? selectedDuration;
-  String? selectedVideoOption;
   String? selectedChapterCount;
   String? userUUID = FirebaseAuth.instance.currentUser?.uid;
   bool isLoading = true; // Add a loading flag
@@ -114,9 +113,7 @@ class _CreateCourseState extends State<CreateCourse> {
         Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Courselayout(
-            topicController: topicController.text,          
-          ),
+          builder: (context) => CourselayoutGen(),
         ),
       );
       } else {
@@ -372,19 +369,17 @@ class _CreateCourseState extends State<CreateCourse> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildDropdown(
-              'Difficulty Level',
+              '🎓 Difficulty Level',
               ['Beginner', 'Intermediate', 'Expert'],
               selectedDifficulty,
               (val) => setState(() => selectedDifficulty = val)),
           buildDropdown(
-              'Course Duration',
+              '🕰 Course Duration',
               ['1 hour', '2 hours', '3 hours', 'more than 3 hours'],
               selectedDuration,
               (val) => setState(() => selectedDuration = val)),
-          buildDropdown('Add Video', ['Yes', 'No'], selectedVideoOption,
-              (val) => setState(() => selectedVideoOption = val)),
           buildDropdown(
-              'Number of Chapters',
+              '✏️ Number of Chapters',
               ['5', '10', '15', '20'],
               selectedChapterCount,
               (val) => setState(() => selectedChapterCount = val))
