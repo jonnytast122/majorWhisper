@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:majorwhisper/screens/CourseLayout.dart';
 
 class CreateCourse extends StatefulWidget {
   @override
@@ -10,13 +15,15 @@ class CreateCourse extends StatefulWidget {
 
 class _CreateCourseState extends State<CreateCourse> {
   int currentStep = 1; // Tracks the current step in the process
-  int? selectedCategory; // Store the index of the selected category
+  int? selectedCategoryIndex;
+  String? selectedCategory; // Store the index of the selected category
   final TextEditingController topicController = TextEditingController();
-
   String? selectedDifficulty;
   String? selectedDuration;
   String? selectedVideoOption;
   String? selectedChapterCount;
+  String? userUUID = FirebaseAuth.instance.currentUser?.uid;
+  bool isLoading = true; // Add a loading flag
 
   // New function to show DelightfulToast notifications
   void showToast(String message) {
@@ -40,6 +47,86 @@ class _CreateCourseState extends State<CreateCourse> {
         ),
       ),
     ).show(context);
+  }
+
+  Future<void> submitCourse() async {
+    try {
+      // Show loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+          child: Dialog(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              height: 300,
+              width: 300,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/icon/learning_loading.json', // Path to your Lottie animation file
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.fill,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Career Path is Generating\nAlmost Ready!',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Inter-semibold',
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Prepare the request body
+      final body = jsonEncode({
+        "uuid": userUUID,
+        "category": selectedCategory,
+        "topic": topicController.text,
+        "level": selectedDifficulty,
+        "duration": selectedDuration,
+        "number_of_chapter": selectedChapterCount,
+      });
+      print(body);
+      // Send the API request
+      final response = await http.post(
+        Uri.parse('http://10.1.81.137:5000/content-layout-generation'),
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      // Check if the request was successful
+      if (response.statusCode == 200) {
+        // Parse the response if needed
+        // Navigate to Courselayout with the topic name
+        Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Courselayout(
+            topicController: topicController.text,          
+          ),
+        ),
+      );
+      } else {
+        Navigator.pop(context); // Close the loading dialog
+        showToast('Failed to create course. Please try again.');
+      }
+    } catch (e) {
+      Navigator.pop(context); // Close the loading dialog
+      showToast('An error occurred: $e');
+    }
   }
 
   @override
@@ -117,10 +204,10 @@ class _CreateCourseState extends State<CreateCourse> {
                       ? buildTextFields()
                       : buildOptionsDropdown()),
           Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(10.0),
             child: ElevatedButton(
-              onPressed: () {
-                if (currentStep == 1 && selectedCategory == null) {
+              onPressed: () async {
+                if (currentStep == 1 && selectedCategoryIndex == null) {
                   showToast("Please select one of the choices.");
                 } else if (currentStep == 2 && topicController.text.isEmpty) {
                   showToast("Please enter a topic.");
@@ -133,13 +220,15 @@ class _CreateCourseState extends State<CreateCourse> {
                     currentStep = 3;
                   });
                 } else {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Course Started!')));
+                  await submitCourse();
+
+                  // ScaffoldMessenger.of(context)
+                  //     .showSnackBar(SnackBar(content: Text('Course Started!')));
                 }
               },
               style: ElevatedButton.styleFrom(
                   padding:
-                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 40.0),
+                      EdgeInsets.symmetric(vertical: 14.0, horizontal: 40.0),
                   backgroundColor: Color(0xFF006FFD),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0))),
@@ -167,13 +256,12 @@ class _CreateCourseState extends State<CreateCourse> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.lightbulb_outline, color: Colors.amber),
                   SizedBox(width: 8), // Add space between icon and text
                   Text(
-                    'Write the topic for course generation (e.g Python...)',
+                    '💡Write the topic for course generation (e.g Python...)',
                     style: TextStyle(
                       fontFamily: "Inter-bold",
-                      fontSize: 14,
+                      fontSize: 13,
                       color: Colors.black,
                     ),
                   ),
@@ -191,14 +279,16 @@ class _CreateCourseState extends State<CreateCourse> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(255, 219, 219, 219), // Border color
+                      color: const Color.fromARGB(
+                          255, 219, 219, 219), // Border color
                       width: 2.0, // Width of the border
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(255, 219, 219, 219), // Border color for inactive state
+                      color: const Color.fromARGB(255, 219, 219,
+                          219), // Border color for inactive state
                       width: 2.0, // Border width
                     ),
                   ),
@@ -223,13 +313,12 @@ class _CreateCourseState extends State<CreateCourse> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.edit_note_outlined, color: Colors.orangeAccent),
                   SizedBox(width: 8),
                   Text(
-                    'Tell us more about your course (Optional)',
+                    '📝 Tell us more about your course (Optional)',
                     style: TextStyle(
                       fontFamily: "Inter-bold",
-                      fontSize: 14,
+                      fontSize: 13,
                       color: Colors.black,
                     ),
                   ),
@@ -246,14 +335,16 @@ class _CreateCourseState extends State<CreateCourse> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(255, 219, 219, 219), // Border color
+                      color: const Color.fromARGB(
+                          255, 219, 219, 219), // Border color
                       width: 2.0, // Width of the border
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(255, 219, 219, 219), // Border color for inactive state
+                      color: const Color.fromARGB(255, 219, 219,
+                          219), // Border color for inactive state
                       width: 2.0, // Border width
                     ),
                   ),
@@ -265,7 +356,7 @@ class _CreateCourseState extends State<CreateCourse> {
                     ),
                   ),
                 ),
-                maxLines: 20,
+                maxLines: 14,
               ),
             ],
           ),
@@ -429,22 +520,25 @@ class _CreateCourseState extends State<CreateCourse> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          selectedCategory = index;
+          selectedCategoryIndex = index;
+          selectedCategory = titles[index];
         });
       },
       child: Card(
-        color: selectedCategory == index ? Colors.blue[100] : Colors.white,
+        color: selectedCategoryIndex == index ? Colors.blue[100] : Colors.white,
         elevation: 2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icons[index],
                 size: 30,
-                color: selectedCategory == index ? Colors.blue : Colors.black),
+                color: selectedCategoryIndex == index
+                    ? Colors.blue
+                    : Colors.black),
             Text(titles[index],
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: selectedCategory == index
+                    color: selectedCategoryIndex == index
                         ? Colors.blue
                         : Colors.black)),
           ],
