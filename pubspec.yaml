@@ -200,5 +200,9 @@ flutter:
         fonts:
           - asset: assets/fonts/Inter/static/Inter_18pt-Extrabold.ttf
 
+      - family: Spacemono-Regular
+        fonts:
+          - asset: assets/fonts/SpaceMono/static/SpaceMono-Regular.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

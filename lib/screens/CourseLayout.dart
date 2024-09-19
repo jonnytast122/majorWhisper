@@ -240,7 +240,7 @@ class _CourselayoutState extends State<Courselayout> {
                       description,
                       style: TextStyle(
                         color: Color(0xFF989898),
-                        fontSize: 13.5,
+                        fontSize: 13,
                         fontFamily: "Inter-regular",
                       ),
                     ),
