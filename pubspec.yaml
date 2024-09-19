@@ -135,7 +135,12 @@ flutter:
   - assets/icon/book.png
   - assets/images/add_course.png
   - assets/images/select_file.png
-
+  - assets/images/rupp_logo.png
+  - assets/images/cadt_logo.png
+  - assets/icon/phone.png
+  - assets/icon/Location.png
+  - assets/icon/map.png
+  - assets/icon/facebook.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
