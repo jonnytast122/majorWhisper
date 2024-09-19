@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class University extends StatelessWidget {
+class University extends StatefulWidget {
+  @override
+  _UniversityState createState() => _UniversityState();
+}
+
+class _UniversityState extends State<University> {
+  TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Add a listener to update the search text when typing
+    _searchController.addListener(() {
+      setState(() {
+        _searchText = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Static list of university names and locations
-    final universityData = [
-      {
-        'name': 'Royal University of Phnom Penh',
-        'location':
-            'Royal University of Phnom Penh (RUPP) Russian Federation Boulevard, Toul Kork, Phnom Penh, Cambodia. Tel: 855-23-883-640',
-        'image': 'assets/images/rupp_logo.png',
-      },
-      {
-        'name': 'Cambodia Academy of Digital Technology',
-        'location':
-            'Bridge 2, National Road 6A, Sangkat Prek Leap, Khan Chroy Changva, Phnom Penh',
-        'image': 'assets/images/cadt_logo.png',
-      }
-    ];
-
     return Scaffold(
       body: Column(
         children: [
@@ -65,6 +75,7 @@ class University extends StatelessWidget {
                         children: [
                           Expanded(
                             child: TextField(
+                              controller: _searchController,
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
@@ -89,105 +100,138 @@ class University extends StatelessWidget {
               ),
             ),
           ),
-          // Body section for the list of universities (Static Information)
+          // Body section for the list of universities (Fetch from Firestore)
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 0.0),
-              child: ListView.builder(
-                itemCount:
-                    universityData.length, // Use the length of universityData
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 8.0), // Padding around the container
-                    child: GestureDetector(
-                      onTap: () {
-                        // Navigate to quiz history or desired page
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(15.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 70.0,
-                              height: 70.0,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
+            child: StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('universities')
+                  .doc('university_list')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error fetching data'));
+                }
+
+                if (!snapshot.hasData || snapshot.data!.data() == null) {
+                  return Center(child: Text('No data available'));
+                }
+
+                final universityData = snapshot.data!.data() as Map<String, dynamic>;
+                // Filter universities based on the search text
+                final filteredUniversities = universityData.keys.where((universityName) {
+                  return universityName
+                      .toLowerCase()
+                      .contains(_searchText.toLowerCase());
+                }).toList();
+
+                return ListView.builder(
+                  itemCount: filteredUniversities.length,
+                  itemBuilder: (context, index) {
+                    String universityName = filteredUniversities[index];
+                    Map<String, dynamic> universityInfo = universityData[universityName] ?? {};
+
+                    // Fetch address or set default
+                    String address = universityInfo['information']?['address'] ?? 'Address not available';
+                    
+                    // Fetch university logo URL or use placeholder
+                    String? universityLogoUrl = universityInfo['university_logo'];
+                    String placeholderImage = 'assets/icon/profile_holder.png';
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: Offset(0, 1),
                               ),
-                              child: Image.asset(
-                                universityData[index]
-                                    ['image']!, // Static image asset
-                                fit: BoxFit.cover,
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 70.0,
+                                height: 70.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: universityLogoUrl != null && universityLogoUrl.isNotEmpty
+                                      ? Image.network(
+                                          universityLogoUrl,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          placeholderImage,
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 10.0),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10.0),
-                                    child: Text(
-                                      universityData[index]
-                                          ['name']!, // University name
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: "Inter-semibold",
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0),
+                              const SizedBox(width: 10.0),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10.0),
+                                      child: Text(
+                                        universityName, // University name
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontFamily: "Inter-semibold",
+                                          color: const Color.fromARGB(255, 0, 0, 0),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 4.0),
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10.0),
-                                    child: Text(
-                                      universityData[index]
-                                          ['location']!, // University location
-                                      style: TextStyle(
-                                        fontSize: 9,
-                                        fontFamily: "Inter-regular",
-                                        color: const Color.fromARGB(
-                                            255, 117, 117, 117),
+                                    const SizedBox(height: 4.0),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10.0),
+                                      child: Text(
+                                        address, // University address
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontFamily: "Inter-regular",
+                                          color: const Color.fromARGB(255, 117, 117, 117),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                // Handle button press here
-                              },
-                              child: Image.asset(
-                                'assets/icon/arrow.png', // Path to your custom icon
-                                width: 40.0,
-                                height: 30.0,
+                              GestureDetector(
+                                onTap: () {
+                                  // Handle button press here
+                                },
+                                child: Image.asset(
+                                  'assets/icon/arrow.png', // Path to your custom icon
+                                  width: 40.0,
+                                  height: 30.0,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
