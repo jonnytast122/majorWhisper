@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:majorwhisper/screens/UniversityDetail.dart';
 
 class University extends StatefulWidget {
   @override
@@ -145,7 +146,14 @@ class _UniversityState extends State<University> {
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UniversityDetail(
+                                universityName: universityName,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(16.0),
@@ -193,7 +201,7 @@ class _UniversityState extends State<University> {
                                       child: Text(
                                         universityName, // University name
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontFamily: "Inter-semibold",
                                           color: const Color.fromARGB(255, 0, 0, 0),
                                         ),
@@ -205,7 +213,7 @@ class _UniversityState extends State<University> {
                                       child: Text(
                                         address, // University address
                                         style: TextStyle(
-                                          fontSize: 9,
+                                          fontSize: 8,
                                           fontFamily: "Inter-regular",
                                           color: const Color.fromARGB(255, 117, 117, 117),
                                         ),

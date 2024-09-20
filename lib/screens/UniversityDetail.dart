@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UniversityDetail extends StatelessWidget {
+  final String universityName;
+
+  UniversityDetail({required this.universityName});
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    String placeholderImage = 'assets/icon/profile_holder.png';
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF006FFD),
-          toolbarHeight: 100, // Increased height for the AppBar
+          toolbarHeight: 100,
           title: Text(
             'University Detail',
             style: TextStyle(
@@ -26,178 +32,227 @@ class UniversityDetail extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  height: screenHeight * 0.06,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF006FFD),
-                    borderRadius:
-                        BorderRadius.vertical(bottom: Radius.circular(30.0)),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.white,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment
-                            .start, // Align items to the start
-                        children: [
-                          SizedBox(
-                              height: 50), // Adjusts spacing below the logo
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 86.0),
-                            child: Text(
-                              'Royal University of Phnom Penh',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 24,
-                                fontFamily: 'Inter-bold',
-                              ),
-                            ),
-                          ),
-                          contactInfo(Icons.place,
-                              'Royal University of Phnom Penh (RUPP) Russian Federation Boulevard, Toul Kork, Phnom Penh, Cambodia.'),
-                          contactInfo(Icons.phone,
-                              'Tel: 855-23-883-640/ 855-23-884-154'),
-                          contactInfo(Icons.link,
-                              'https://www.facebook.com/rupp.edu.kh'),
-                          contactInfo(Icons.link, 'https://www.rupp.edu.kh/'),
+        body: FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('universities')
+              .doc('university_list')
+              .get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return Center(child: Text('No data available'));
+            }
 
-                          // New section for Majors
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 26.0, vertical: 4.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment
-                                  .start, // Align items to the left
-                              children: [
-                                Text(
-                                  'Majors',
+            var universityData = snapshot.data!.data() as Map<String, dynamic>;
+            var universityInfo = universityData[universityName] ?? {};
+            String universityLogoUrl = universityInfo['university_logo'] ?? '';
+            Map<String, dynamic> faculties = universityInfo['faculty'] ??
+                universityInfo['school'] ?? universityInfo['program'] ??
+                {}; // Fetch either faculties or schools
+            String address = universityInfo['information']?['address'] ??
+                'Address not available';
+            String phone = universityInfo['information']?['phone_number'] ??
+                'Phone number not available';
+            String website = universityInfo['information']?['website'] ??
+                'Website not available';
+            String facebook = universityInfo['information']?['social_media'] ??
+                'Facebook not available';
+
+            return Stack(
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      height: screenHeight * 0.06,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF006FFD),
+                        borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(30.0)),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 50),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 86.0),
+                                child: Text(
+                                  universityName,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Color(0xFF006FFD),
-                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontSize: 24,
                                     fontFamily: 'Inter-bold',
                                   ),
                                 ),
-                                SizedBox(height: 6),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 25.0, vertical: 4.0),
-                                  child: Text(
-                                    'Faculty of Social Science and Humanities',
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 0, 0, 0),
-                                      fontSize: 15,
-                                      fontFamily: 'Inter-medium',
+                              ),
+                              contactInfo(Icons.place, address),
+                              contactInfo(Icons.phone, phone),
+                              contactInfo(Icons.link, website),
+                              contactInfo(Icons.link, facebook),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 26.0, vertical: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Majors',
+                                      style: TextStyle(
+                                        color: Color(0xFF006FFD),
+                                        fontSize: 20,
+                                        fontFamily: 'Inter-bold',
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                SizedBox(height: 6),
-                                // GridView.builder for two-column layout with padding
-                                Container(
-                                  height: 300, // Set a height for the GridView
-                                  child: GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2, // Number of columns
-                                      crossAxisSpacing:
-                                          1.0, // Space between columns
-                                      mainAxisSpacing:
-                                          1.0, // Space between rows
-                                      childAspectRatio:
-                                          2.1, // Aspect ratio of each item
-                                    ),
-                                    itemCount: 5, // Number of items
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical:
-                                                8), // Padding around each container
-                                        child: SizedBox(
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 23),
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 255, 255, 255),
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Color.fromARGB(
-                                                          255, 51, 115, 255)
-                                                      .withOpacity(0.1),
-                                                  spreadRadius: 2,
-                                                  blurRadius: 2,
-                                                  offset: Offset(0, 1),
+                                    SizedBox(height: 6),
+                                    ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: faculties.keys.length,
+                                      itemBuilder: (context, index) {
+                                        // Get faculty name (key) and majors (value)
+                                        String facultyName =
+                                            faculties.keys.elementAt(index);
+                                        List<dynamic> majors =
+                                            faculties[facultyName] ?? [];
+
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 0, vertical: 15.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                facultyName, // Display faculty/school name
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontFamily: 'Inter-medium',
                                                 ),
-                                              ],
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.school,
-                                                  color: Colors.blue,
-                                                  size: 20,
-                                                ),
-                                                SizedBox(
-                                                    width:
-                                                        15), // Reduce spacing between icon and text
-                                                Expanded(
-                                                  child: Text(
-                                                    'Khmer Literature', // Replace with dynamic content as needed
-                                                    style: TextStyle(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255, 0, 0, 0),
-                                                      fontSize:
-                                                          14, // Reduce text size
-                                                      fontFamily: 'Inter-bold',
-                                                    ),
-                                                    textAlign: TextAlign.left,
+                                              ),
+                                              SizedBox(height: 10),
+                                              // Display majors in a GridView
+                                              Container(
+                                                child: GridView.builder(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  shrinkWrap:
+                                                      true, // Ensures the GridView takes only the needed height
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 2,
+                                                    crossAxisSpacing: 8.0,
+                                                    mainAxisSpacing: 8.0,
+                                                    childAspectRatio: 3.0,
                                                   ),
+                                                  itemCount: majors.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8.0),
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        51,
+                                                                        115,
+                                                                        255)
+                                                                .withOpacity(
+                                                                    0.1),
+                                                            spreadRadius: 2,
+                                                            blurRadius: 2,
+                                                            offset:
+                                                                Offset(0, 1),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons.school,
+                                                            color: Colors.blue,
+                                                            size: 20,
+                                                          ),
+                                                          SizedBox(width: 8),
+                                                          Expanded(
+                                                            child: Text(
+                                                              majors[index] ??
+                                                                  'Unknown Major',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 12,
+                                                                fontFamily:
+                                                                    'Inter-bold',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
-                                              ],
-                                            ),
+                                              )
+                                            ],
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
+                    ),
+                  ],
+                ),
+                Positioned(
+                  top: screenHeight * 0.08 - 70,
+                  left: (screenWidth - 100) / 2,
+                  child: Container(
+                    width: 100.0,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: universityLogoUrl.isNotEmpty
+                          ? Image.network(
+                              universityLogoUrl,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              placeholderImage,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                 ),
               ],
-            ),
-            Positioned(
-              top: screenHeight * 0.08 - 70, // Center logo on the boundary
-              left: (screenWidth - 100) / 2,
-              child: Container(
-                width: 100.0,
-                height: 100.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4.0),
-                ),
-                child: ClipOval(
-                  child: Image.asset('assets/images/rupp_logo.png',
-                      fit: BoxFit.cover),
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -209,13 +264,13 @@ class UniversityDetail extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Color.fromARGB(255, 179, 179, 179), size: 24),
+          Icon(icon, color: Color(0xFFB3B3B3), size: 24),
           SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
               style: TextStyle(
-                color: Color.fromARGB(255, 117, 117, 117),
+                color: Color(0xFF757575),
                 fontSize: 14,
                 fontFamily: 'Inter-regular',
               ),
