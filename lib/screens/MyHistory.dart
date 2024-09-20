@@ -61,13 +61,112 @@ class _MyhistoryState extends State<Myhistory> {
     return 'Q' + quizKey.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
+  Future<bool?> confirmDeleteDialog(BuildContext context) {
+    return showDialog<bool?>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/images/logout_illustration.png', // Replace with your image path
+                  height: 250,
+                ),
+              ),
+              const Text(
+                'Delete this quiz?',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontFamily: 'Inter-black',
+                  color: Color(0xFF2f3036),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Are you sure you want to delete this quiz?',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Inter-regular',
+                  color: Color(0xFF71727A),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF006FFD),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // Return true
+                  },
+                  child: const Text(
+                    'Yes',
+                    style: TextStyle(
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Return false
+                  },
+                  child: const Text(
+                    'No',
+                    style: TextStyle(
+                      color: Color(0xFF006FFD),
+                      fontFamily: 'Inter-semibold',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deleteQuiz(String quizKey) async {
+    if (userId == null) return;
+
+    try {
+      await _firestore.collection('user_answers').doc(userId).update({
+        quizKey: FieldValue.delete(),
+      });
+
+      setState(() {
+        quizzes.removeWhere((quiz) => quiz['key'] == quizKey);
+      });
+    } catch (e) {
+      print('Error deleting quiz: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Padding(
-          padding: EdgeInsets.only(
-              top: 22.0), // Adjust this value to move the title down
+          padding: EdgeInsets.only(top: 22.0),
           child: Text(
             'My History',
             style: TextStyle(
@@ -78,8 +177,7 @@ class _MyhistoryState extends State<Myhistory> {
           ),
         ),
         leading: Padding(
-          padding: const EdgeInsets.only(
-              top: 21.0), // Adjust this value to move the back arrow down
+          padding: const EdgeInsets.only(top: 21.0),
           child: IconButton(
             icon: const Icon(Icons.arrow_back_ios_rounded),
             color: const Color.fromARGB(255, 0, 0, 0),
@@ -93,137 +191,151 @@ class _MyhistoryState extends State<Myhistory> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 16.0), // Add space below AppBar
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView.builder(
-                    itemCount: quizzes.length, // Number of quizzes
-                    itemBuilder: (context, index) {
-                      var quizEntry = quizzes[index];
-                      String quizKey = quizEntry['key'];
-                      String quizTitle = formatQuizTitle(
-                          quizKey); // Format the title as 'Q' + number
-                      String formattedDate = '';
+        padding: const EdgeInsets.only(top: 30.0),
+        child: ListView.builder(
+          itemCount: quizzes.length,
+          itemBuilder: (context, index) {
+            var quizEntry = quizzes[index];
+            String quizKey = quizEntry['key'];
+            String quizTitle = formatQuizTitle(quizKey);
+            String formattedDate = '';
 
-                      // Extract timestamp and handle formatting
-                      var timestamp = quizEntry['timestamp'];
-                      DateTime quizDate;
+            var timestamp = quizEntry['timestamp'];
+            DateTime quizDate;
 
-                      if (timestamp is Timestamp) {
-                        quizDate = timestamp.toDate();
-                      } else if (timestamp is String) {
-                        quizDate = DateFormat('dd MMM yyyy').parse(timestamp);
-                      } else {
-                        quizDate =
-                            DateTime.now(); // Fallback to current date/time
+            if (timestamp is Timestamp) {
+              quizDate = timestamp.toDate();
+            } else if (timestamp is String) {
+              quizDate = DateFormat('dd MMM yyyy').parse(timestamp);
+            } else {
+              quizDate = DateTime.now();
+            }
+
+            formattedDate = DateFormat('dd-MMM-yyyy').format(quizDate);
+
+            return Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 16.0),
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      alignment: Alignment.centerRight,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 40.0,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Dismissible(
+                    key: Key(quizKey),
+                    direction: DismissDirection
+                        .endToStart, // Allow swipe only from right to left
+                    confirmDismiss: (direction) async {
+                      bool? confirmDelete = await confirmDeleteDialog(context);
+                      return confirmDelete ??
+                          false; // Handle null result properly
+                    },
+                    onDismissed: (direction) async {
+                      // If the user confirmed, delete the quiz
+                      if (direction == DismissDirection.endToStart) {
+                        deleteQuiz(quizKey);
                       }
-
-                      formattedDate =
-                          DateFormat('dd-MMM-yyyy').format(quizDate);
-
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Quizhistory(
-                                quizData: quizEntry['value'],
-                              ),
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Quizhistory(
+                              quizData: quizEntry['value'],
                             ),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 16.0),
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF006FFD),
-                            borderRadius: BorderRadius.circular(15.0),
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 70.0,
-                                height: 70.0,
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    quizTitle,
-                                    style: const TextStyle(
-                                      fontSize: 30,
-                                      color: Color(0xFF006FFD),
-                                      fontFamily: "Inter-black",
-                                    ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 16.0),
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF006FFD),
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 77, 124, 255)
+                                  .withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 15,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 70.0,
+                              height: 70.0,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  quizTitle,
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    color: Color(0xFF006FFD),
+                                    fontFamily: "Inter-black",
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 20.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Complete', // Placeholder for quiz status
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: "Inter-semibold",
-                                        color: Color.fromARGB(255, 255, 255, 255),
-                                      ),
+                            ),
+                            const SizedBox(width: 20.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Quiz Completed',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter-semibold',
+                                      fontSize: 20.0,
+                                      color: Colors.white,
                                     ),
-                                    const SizedBox(height: 8.0),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Icon(
-                                          size: 20.0,
-                                          Icons.calendar_today,
-                                          color:
-                                              Color.fromARGB(255, 255, 255, 255),
-                                        ),
-                                        const SizedBox(width: 10.0),
-                                        Expanded(
-                                          child: Text(
-                                            formattedDate,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xFFDFDFDF),
-                                              fontFamily: "Inter-regular",
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                  ),
+                                  const SizedBox(height: 8.0),
+                                  Text(
+                                    'Date: $formattedDate',
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter-regular',
+                                      fontSize: 12,
+                                      color: Color(0xFFD9D9D9),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  // Handle button press here
-                                },
-                                child: Image.asset(
-                                  'assets/icon/arrow.png', // Path to your custom icon
-                                  width: 40.0,
-                                  height: 30.0,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
