@@ -52,7 +52,8 @@ class UniversityDetail extends StatelessWidget {
             var universityInfo = universityData[universityName] ?? {};
             String universityLogoUrl = universityInfo['university_logo'] ?? '';
             Map<String, dynamic> faculties = universityInfo['faculty'] ??
-                universityInfo['school'] ?? universityInfo['program'] ??
+                universityInfo['school'] ??
+                universityInfo['program'] ??
                 {}; // Fetch either faculties or schools
             String address = universityInfo['information']?['address'] ??
                 'Address not available';
@@ -82,19 +83,19 @@ class UniversityDetail extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 50),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 86.0),
+                              SizedBox(height: 55),
+                              Center(
                                 child: Text(
                                   universityName,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 24,
+                                    fontSize: 20,
                                     fontFamily: 'Inter-bold',
                                   ),
                                 ),
                               ),
+                              SizedBox(height: 10),
                               contactInfo(Icons.place, address),
                               contactInfo(Icons.phone, phone),
                               contactInfo(Icons.link, website),
@@ -227,29 +228,33 @@ class UniversityDetail extends StatelessWidget {
                   ],
                 ),
                 Positioned(
-                  top: screenHeight * 0.08 - 70,
-                  left: (screenWidth - 100) / 2,
-                  child: Container(
-                    width: 100.0,
-                    height: 100.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4.0),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: universityLogoUrl.isNotEmpty
-                          ? Image.network(
-                              universityLogoUrl,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
-                              placeholderImage,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  ),
-                ),
+                    top: screenHeight * 0.08 - 70,
+                    left: (screenWidth - 100) / 2,
+                    child: Container(
+                      width: 100.0,
+                      height: 100.0,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey, // Color of the frame
+                          width: 2.0, // Thickness of the frame
+                        ),
+                        borderRadius:
+                            BorderRadius.circular(10.0), // Round the corners
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            10.0), // Match the border radius
+                        child: universityLogoUrl.isNotEmpty
+                            ? Image.network(
+                                universityLogoUrl,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                placeholderImage,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    )),
               ],
             );
           },

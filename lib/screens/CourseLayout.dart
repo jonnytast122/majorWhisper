@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:majorwhisper/screens/CourseDetail.dart';
 import 'package:path/path.dart';
 import 'package:majorwhisper/screens/CourseGen.dart';
 import 'package:majorwhisper/screens/Home.dart';
@@ -423,88 +424,103 @@ class _CourselayoutState extends State<Courselayout> {
                     itemCount: courses.length,
                     itemBuilder: (context, index) {
                       final course = courses[index];
-                      return Container(
-                        margin: const EdgeInsets.only(
-                            bottom: 16.0, left: 5, right: 5),
-                        padding: const EdgeInsets.all(14.0),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(20.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF000000).withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF006FFD), // Circle color
-                                shape: BoxShape.circle,
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigate to CourseDetail and pass the course['chapter_name']
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CourseDetail(
+                                courseName: topic,
+                                chapterName: course[
+                                    'chapter_name']!, // Pass the chapter name
                               ),
-                              child: Center(
-                                child: Text(
-                                  '${index + 1}', // Index starts at 0, so add 1
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontFamily: "Inter-bold",
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              bottom: 16.0, left: 5, right: 5),
+                          padding: const EdgeInsets.all(14.0),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF000000).withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF006FFD), // Circle color
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${index + 1}', // Index starts at 0, so add 1
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontFamily: "Inter-bold",
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                                width: 15), // Spacing between circle and text
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    course['chapter_name']!,
-                                    style: const TextStyle(
-                                      fontFamily: "Inter-semibold",
-                                      fontSize: 16.0,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Text(
-                                    course['about']!,
-                                    style: const TextStyle(
-                                      fontFamily: "Inter-regular",
-                                      fontSize: 12.0,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.schedule,
-                                        size: 14.0,
-                                        color: Color(0xFF006FFD),
+                              SizedBox(
+                                  width: 15), // Spacing between circle and text
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      course['chapter_name']!,
+                                      style: const TextStyle(
+                                        fontFamily: "Inter-semibold",
+                                        fontSize: 16.0,
+                                        color: Colors.black,
                                       ),
-                                      const SizedBox(width: 5.0),
-                                      Text(
-                                        course['duration']!,
-                                        style: const TextStyle(
-                                          fontFamily: "Inter-semibold",
-                                          fontSize: 10.0,
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Text(
+                                      course['about']!,
+                                      style: const TextStyle(
+                                        fontFamily: "Inter-regular",
+                                        fontSize: 12.0,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.schedule,
+                                          size: 14.0,
                                           color: Color(0xFF006FFD),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        const SizedBox(width: 5.0),
+                                        Text(
+                                          course['duration']!,
+                                          style: const TextStyle(
+                                            fontFamily: "Inter-semibold",
+                                            fontSize: 10.0,
+                                            color: Color(0xFF006FFD),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
