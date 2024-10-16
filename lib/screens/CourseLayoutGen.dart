@@ -10,6 +10,7 @@ import 'package:majorwhisper/screens/CourseLayout.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/Home.dart';
+import 'RouteHosting.dart';
 
 class CourselayoutGen extends StatefulWidget {
   @override
@@ -620,7 +621,7 @@ class _CourselayoutGenState extends State<CourselayoutGen> {
                 try {
                   // Make the API request
                   final response = await http.post(
-                    Uri.parse('http://10.1.81.137:5000/chapter-generation'),
+                    Uri.parse('${RouteHosting.baseUrl}chapter-generation'),
                     headers: {'Content-Type': 'application/json'},
                     body: json.encode({'uuid': userId}),
                   );

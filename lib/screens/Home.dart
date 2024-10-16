@@ -19,6 +19,7 @@ import 'package:majorwhisper/screens/CourseGen.dart';
 import 'package:majorwhisper/screens/SaveCareer.dart';
 import 'package:majorwhisper/screens/SaveLearning.dart';
 import 'package:majorwhisper/screens/University.dart';
+import 'RouteHosting.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -274,7 +275,7 @@ class DetailMajor extends StatelessWidget {
 
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.5:5000/major-detail"),
+        Uri.parse("${RouteHosting.baseUrl}/major-detail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
