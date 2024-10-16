@@ -32,7 +32,11 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
+<<<<<<< HEAD
       home:  RoadmapDisplay(), // Use OnboardingScreen instead of Onboarding
+=======
+      home: Login(), // Use OnboardingScreen instead of Onboarding
+>>>>>>> af9dbd80c9eca2a66da808b1d5f963d81eaddaf4
       // home: const Registration(), // Use Registration instead of Onboarding
     );
   }
