@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:majorwhisper/screens/CareerResult.dart';
+import 'package:majorwhisper/screens/RoadmapDisplay.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
+import 'RouteHosting.dart';
 
 class Roadmap extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class Roadmap extends StatefulWidget {
 }
 
 class _RoadmapState extends State<Roadmap> {
-  String selectedCountry = 'Cambodia'; // Default selected button
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -85,7 +85,7 @@ class _RoadmapState extends State<Roadmap> {
                       ),
                       onPressed: () {
                         // Add the action you want to perform when the send icon is pressed
-                        _search(_searchController.text, selectedCountry);
+                        _search(_searchController.text);
                       },
                     ),
                   ),
@@ -98,7 +98,7 @@ class _RoadmapState extends State<Roadmap> {
                                   contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
 
                 ),
-                onFieldSubmitted: (value) => _search(value, selectedCountry),
+                onFieldSubmitted: (value) => _search(value),
               ),
               const SizedBox(height: 20),
             ],
@@ -107,35 +107,10 @@ class _RoadmapState extends State<Roadmap> {
       );
 }
 
-  Widget buildCountryButton(String country) {
-    final isSelected = selectedCountry == country;
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          selectedCountry = country; // Update the selected country
-        });
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isSelected ? Colors.white : Colors.white.withOpacity(0.5),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      child: Text(
-        country,
-        style: TextStyle(
-          color: isSelected ? Color(0xFF006FFD) : Colors.white,
-          fontSize: 12,
-          fontFamily: 'Inter-semibold',
-        ),
-      ),
-    );
-  }
-
- Future<Map<String, dynamic>> fetchCareerPath(String majorName, String country) async {
+ Future<Map<String, dynamic>> fetchCareerPath(String majorName) async {
     try {
-      final String url = "http://192.168.1.5:5000/";
-      final String api = url + "career-path-" + country.toLowerCase();
+      final String url = "${RouteHosting.baseUrl}";
+      final String api = url + "/roadmap-generation";
       print("api : " + api);
       final response = await http.post(
         Uri.parse(api),
@@ -143,7 +118,7 @@ class _RoadmapState extends State<Roadmap> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'career_name': majorName,
+          'topic': majorName,
         }),
       );
 
@@ -161,7 +136,7 @@ class _RoadmapState extends State<Roadmap> {
     }
   }
 
-void _search(String majorName, String country) async {
+void _search(String majorName) async {
     // Show the loading dialog
     showDialog(
       context: context,
@@ -187,7 +162,7 @@ void _search(String majorName, String country) async {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'Career Path is Generating\nAlmost Ready!',
+                  'Roadmap is Generating\nAlmost Ready!',
                   style: TextStyle(
                     fontSize: 16,
                     fontFamily: 'Inter-semibold',
@@ -203,7 +178,7 @@ void _search(String majorName, String country) async {
 
     // Fetch data
     try {
-      final data = await fetchCareerPath(majorName, country);
+      final data = await fetchCareerPath(majorName);
 
       // Dismiss the loading dialog
       Navigator.of(context).pop();
@@ -233,9 +208,8 @@ void _search(String majorName, String country) async {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CareerResult(
+          builder: (context) => RoadmapDisplay(
             majorName: majorName,
-            country: country,
             data: data,
           ),
         ),

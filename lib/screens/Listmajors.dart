@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
+import 'RouteHosting.dart';
+
 
 class Listmajors extends StatefulWidget {
   final String title;
@@ -25,7 +27,7 @@ class _ListmajorsState extends State<Listmajors> {
 
   Future<void> fetchMajors() async {
     final response = await http.post(
-      Uri.parse('http://192.168.0.103:5000/major-base-on-category'),
+      Uri.parse('${RouteHosting.baseUrl}major-base-on-category'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'category': widget.title}),
     );

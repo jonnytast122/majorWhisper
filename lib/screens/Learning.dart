@@ -3,6 +3,8 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:majorwhisper/screens/LearningResult.dart';
 import 'package:http/http.dart' as http;
+import 'RouteHosting.dart';
+
 
 class Learning extends StatefulWidget {
   @override
@@ -151,7 +153,7 @@ class _LearningState extends State<Learning> {
 
   Future<Map<String, dynamic>> fetchLearningPath(
       String majorName, String degree) async {
-    final String url = "http://192.168.1.5:5000/";
+    final String url = "${RouteHosting.baseUrl}";
     final String api = url + degree.toLowerCase() + "-degree-learning-path";
     print("api: $api");
 

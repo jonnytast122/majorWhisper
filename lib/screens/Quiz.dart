@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http; // Import the HTTP package
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
-// Import for JSON encoding and decoding
+import 'RouteHosting.dart';
 
 String formatTimestamp(DateTime dateTime) {
   final DateFormat formatter = DateFormat('dd MMM yyyy');
@@ -59,7 +59,7 @@ class _QuizState extends State<Quiz> {
     try {
       // Make a POST request to the API
       final response = await http.post(
-        Uri.parse('http://10.1.87.197:5000/question-generation'),
+        Uri.parse('${RouteHosting.baseUrl}question-generation'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'uuid': userUUID}),
       );

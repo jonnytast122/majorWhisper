@@ -3,6 +3,8 @@ import 'package:majorwhisper/screens/CareerResult.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
+import 'RouteHosting.dart';
+
 
 class Career extends StatefulWidget {
   @override
@@ -155,7 +157,7 @@ class _CareerState extends State<Career> {
 
  Future<Map<String, dynamic>> fetchCareerPath(String majorName, String country) async {
     try {
-      final String url = "http://192.168.1.5:5000/";
+      final String url = "${RouteHosting.baseUrl}";
       final String api = url + "career-path-" + country.toLowerCase();
       print("api : " + api);
       final response = await http.post(

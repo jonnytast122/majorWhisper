@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
+import 'RouteHosting.dart';
+
 
 class Majorrecom extends StatefulWidget {
   @override
@@ -36,7 +38,7 @@ class _MajorrecomState extends State<Majorrecom> {
 
   // Step 2: Request major recommendation from the API
   Future<void> requestMajorRecommendation(String userId) async {
-    final url = Uri.parse('http://10.1.87.197:5000/major-recommendation');
+    final url = Uri.parse('${RouteHosting.baseUrl}major-recommendation');
     try {
       final response = await http.post(
         url,
