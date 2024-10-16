@@ -164,11 +164,11 @@ class CourseDetail extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8.0),
-                      Markdown(
+                      MarkdownBody(
                         data : content['explanation'],
                           styleSheet: MarkdownStyleSheet(
                           p: TextStyle(
-                            fontSize: 5,
+                            fontSize: 12,
                             fontFamily: 'Inter-regular',
                             color: Colors.black,
                           ),
@@ -179,7 +179,7 @@ class CourseDetail extends StatelessWidget {
                       //   style: const TextStyle(
                       //     fontSize: 13,
                       //     fontFamily: "Inter-regular",
-                      //     color: Color(0xFF989898),
+                      //     color: Color.fromARGB(255, 85, 85, 85),
                       //   ),
                       // ),
                       const SizedBox(height: 8.0),
