@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-
 
 class CourseDetail extends StatelessWidget {
   final String chapterName;
@@ -13,10 +11,8 @@ class CourseDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userId =
-        FirebaseAuth.instance.currentUser!.uid; // Fetch current user's ID
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Fetch the user's course data from Firestore
     Future<Map<String, dynamic>?> _fetchCourseContent() async {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot =
           await FirebaseFirestore.instance
@@ -29,13 +25,9 @@ class CourseDetail extends StatelessWidget {
       }
 
       final data = docSnapshot.data()!;
-      final chapters = data['chapters']; // Assuming 'chapters' is a map
-      print("Chapters: $chapters");
-
-      // Now, we need to loop through the chapters list to find the matching chapter
+      final chapters = data['chapters'];
       Map<String, dynamic>? matchingChapter;
 
-      // Assuming chapters map holds course names as keys and lists as values
       chapters.forEach((courseName, chapterList) {
         for (var chapter in chapterList) {
           if (chapter['chapter_name'] == chapterName) {
@@ -45,16 +37,11 @@ class CourseDetail extends StatelessWidget {
         }
       });
 
-      if (matchingChapter == null) {
-        print("No matching chapter found");
-        return null;
-      }
-
-      print("Chapter: $matchingChapter");
-      return matchingChapter; // Return the matching chapter's content
+      return matchingChapter;
     }
 
     return Scaffold(
+      backgroundColor: Colors.white, // Set the background color to white
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
@@ -62,7 +49,7 @@ class CourseDetail extends StatelessWidget {
             padding: const EdgeInsets.only(top: 21.0),
             child: IconButton(
               icon: const Icon(Icons.arrow_back_ios_rounded),
-              color: const Color.fromARGB(255, 0, 0, 0),
+              color: Colors.black,
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -72,7 +59,7 @@ class CourseDetail extends StatelessWidget {
           title: Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: Text(
-              chapterName, // Display the course name here
+              chapterName,
               style: TextStyle(
                 fontSize: 20,
                 fontFamily: "Inter-bold",
@@ -80,6 +67,7 @@ class CourseDetail extends StatelessWidget {
               ),
             ),
           ),
+          backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Set the AppBar background to white
         ),
       ),
       body: FutureBuilder<Map<String, dynamic>?>(
@@ -95,8 +83,7 @@ class CourseDetail extends StatelessWidget {
             return Center(child: Text('No content available.'));
           }
 
-          final chapterContent = snapshot.data!['content']
-              as List<dynamic>; // Fetch the content array
+          final chapterContent = snapshot.data!['content'] as List<dynamic>;
 
           return Padding(
             padding: const EdgeInsets.all(15.0),
@@ -105,7 +92,6 @@ class CourseDetail extends StatelessWidget {
               itemBuilder: (context, index) {
                 final content = chapterContent[index] as Map<String, dynamic>;
 
-                // Style the first content without code (use your example)
                 if (index == 0) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,7 +123,6 @@ class CourseDetail extends StatelessWidget {
                   );
                 }
 
-                // Style the rest of the content (may have code)
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16.0),
                   padding: const EdgeInsets.all(14.0),
@@ -166,8 +151,8 @@ class CourseDetail extends StatelessWidget {
                       ),
                       const SizedBox(height: 8.0),
                       MarkdownBody(
-                        data : content['explanation'],
-                          styleSheet: MarkdownStyleSheet(
+                        data: content['explanation'],
+                        styleSheet: MarkdownStyleSheet(
                           p: TextStyle(
                             fontSize: 12,
                             fontFamily: 'Inter-regular',
@@ -175,14 +160,6 @@ class CourseDetail extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Text(
-                      //   content['explanation'],
-                      //   style: const TextStyle(
-                      //     fontSize: 13,
-                      //     fontFamily: "Inter-regular",
-                      //     color: Color.fromARGB(255, 85, 85, 85),
-                      //   ),
-                      // ),
                       const SizedBox(height: 8.0),
                       if (content['code_example'] != null &&
                           content['code_example'].isNotEmpty)
@@ -190,6 +167,7 @@ class CourseDetail extends StatelessWidget {
                           margin: EdgeInsets.all(0.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
+                            color: const Color.fromRGBO(254,247,255,1.000),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -199,75 +177,36 @@ class CourseDetail extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 2.0, horizontal: 0.0),
-                                height: 34.0, // Set an explicit height
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[800],
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    topRight: Radius.circular(10.0),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Code Example",
+                                  style: TextStyle(
+                                    fontFamily: "Inter-semibold",
+                                    fontSize: 14.0,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.copy,
-                                          color: Colors.white, size: 10),
-                                      padding: EdgeInsets.zero,
-                                      constraints: BoxConstraints(),
-                                      onPressed: () {
-                                        Clipboard.setData(ClipboardData(
-                                            text: content['code_example']));
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                                "Code copied to clipboard!"),
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      },
+                                SizedBox(height: 8.0),
+                                MarkdownBody(
+                                  data: content['code_example'],
+                                  styleSheet: MarkdownStyleSheet(
+                                    p: TextStyle(
+                                      fontSize: 10,
+                                      fontFamily: "Spacemono-Regular",
+                                      color: Colors.black,
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 16.0, horizontal: 16.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(10.0),
-                                    bottomRight: Radius.circular(10.0),
+                                    code: TextStyle(
+                                      backgroundColor: const Color.fromRGBO(254,247,255,1.000),
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .start, // Aligns children to the start
-                                  children: [
-                                    Expanded(
-                                      // Makes the Container take up maximum width
-                                      child: Text(
-                                        content['code_example'],
-                                        style: TextStyle(
-                                          fontFamily: "Spacemono-Regular",
-                                          fontSize: 10.0,
-                                          color: Colors.white,
-                                        ),
-                                        softWrap:
-                                            true, // Allows text to wrap within the container
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                     ],
