@@ -5,6 +5,7 @@ import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
 import 'RouteHosting.dart';
 
+
 class Listmajors extends StatefulWidget {
   final String title;
 

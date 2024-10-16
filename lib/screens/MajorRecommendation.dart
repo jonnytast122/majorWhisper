@@ -8,6 +8,7 @@ import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
 import 'RouteHosting.dart';
 
+
 class Majorrecom extends StatefulWidget {
   @override
   _MajorrecomState createState() => _MajorrecomState();

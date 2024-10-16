@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/Home.dart';
 import 'RouteHosting.dart';
 
+
 class CourselayoutGen extends StatefulWidget {
   @override
   _CourselayoutGenState createState() => _CourselayoutGenState();
