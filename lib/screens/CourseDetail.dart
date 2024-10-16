@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
 
 class CourseDetail extends StatelessWidget {
   final String chapterName;
@@ -11,7 +13,8 @@ class CourseDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userId = FirebaseAuth.instance.currentUser!.uid; // Fetch current user's ID
+    final userId =
+        FirebaseAuth.instance.currentUser!.uid; // Fetch current user's ID
 
     // Fetch the user's course data from Firestore
     Future<Map<String, dynamic>?> _fetchCourseContent() async {
@@ -92,7 +95,8 @@ class CourseDetail extends StatelessWidget {
             return Center(child: Text('No content available.'));
           }
 
-          final chapterContent = snapshot.data!['content'] as List<dynamic>; // Fetch the content array
+          final chapterContent = snapshot.data!['content']
+              as List<dynamic>; // Fetch the content array
 
           return Padding(
             padding: const EdgeInsets.all(15.0),
@@ -161,14 +165,24 @@ class CourseDetail extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8.0),
-                      Text(
-                        content['explanation'],
-                        style: const TextStyle(
-                          fontFamily: "Inter-regular",
-                          fontSize: 13.0,
-                          color: Colors.black54,
+                      Markdown(
+                        data : content['explanation'],
+                          styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(
+                            fontSize: 5,
+                            fontFamily: 'Inter-regular',
+                            color: Colors.black,
+                          ),
                         ),
                       ),
+                      // Text(
+                      //   content['explanation'],
+                      //   style: const TextStyle(
+                      //     fontSize: 13,
+                      //     fontFamily: "Inter-regular",
+                      //     color: Color(0xFF989898),
+                      //   ),
+                      // ),
                       const SizedBox(height: 8.0),
                       if (content['code_example'] != null &&
                           content['code_example'].isNotEmpty)
@@ -233,13 +247,24 @@ class CourseDetail extends StatelessWidget {
                                     bottomRight: Radius.circular(10.0),
                                   ),
                                 ),
-                                child: Text(
-                                  content['code_example'],
-                                  style: TextStyle(
-                                    fontFamily: "Spacemono-Regular",
-                                    fontSize: 10.0,
-                                    color: Colors.white,
-                                  ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .start, // Aligns children to the start
+                                  children: [
+                                    Expanded(
+                                      // Makes the Container take up maximum width
+                                      child: Text(
+                                        content['code_example'],
+                                        style: TextStyle(
+                                          fontFamily: "Spacemono-Regular",
+                                          fontSize: 10.0,
+                                          color: Colors.white,
+                                        ),
+                                        softWrap:
+                                            true, // Allows text to wrap within the container
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

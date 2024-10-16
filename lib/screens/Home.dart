@@ -219,6 +219,16 @@ class DetailMajor extends StatelessWidget {
     );
   }
 
+    void _showRoadmapDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissal by tapping outside
+      builder: (BuildContext context) {
+        return Roadmap(); // Your Learning dialog widget
+      },
+    );
+  }
+
   void _showLoadingDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -585,12 +595,7 @@ class DetailMajor extends StatelessWidget {
                 ),
                 // Button 3
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Roadmap()),
-                    );
-                  },
+                  onPressed: () => _showRoadmapDialog(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
