@@ -67,7 +67,8 @@ class CourseDetail extends StatelessWidget {
               ),
             ),
           ),
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Set the AppBar background to white
+          backgroundColor: const Color.fromARGB(
+              255, 255, 255, 255), // Set the AppBar background to white
         ),
       ),
       body: FutureBuilder<Map<String, dynamic>?>(
@@ -165,9 +166,11 @@ class CourseDetail extends StatelessWidget {
                           content['code_example'].isNotEmpty)
                         Container(
                           margin: EdgeInsets.all(0.0),
+                          width: double
+                              .infinity, // Ensure the container takes up all available width
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
-                            color: const Color.fromRGBO(254,247,255,1.000),
+                            color: const Color.fromRGBO(254, 247, 255, 1.000),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -178,7 +181,8 @@ class CourseDetail extends StatelessWidget {
                             ],
                           ),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -200,7 +204,8 @@ class CourseDetail extends StatelessWidget {
                                       color: Colors.black,
                                     ),
                                     code: TextStyle(
-                                      backgroundColor: const Color.fromRGBO(254,247,255,1.000),
+                                      backgroundColor: const Color.fromRGBO(
+                                          254, 247, 255, 1.000),
                                       color: Colors.black,
                                     ),
                                   ),
