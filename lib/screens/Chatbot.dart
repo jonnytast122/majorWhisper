@@ -85,37 +85,38 @@ class _ChatbotState extends State<Chatbot> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+Widget build(BuildContext context) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                _buildAppBar(screenWidth, screenHeight),
-                Expanded(
-                  child: Container(
-                    color: Colors.white,
-                    child: ListView.builder(
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        return _buildMessageBubble(
-                            messages[index], screenWidth, screenHeight);
-                      },
-                    ),
-                  ),
-                ),
-              ],
+  return Scaffold(
+    backgroundColor: Colors.white,
+    body: SafeArea(
+      child: Column(
+        children: [
+          _buildAppBar(screenWidth, screenHeight),
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(
+                bottom: screenHeight * 0.01, // Add padding above the input field
+              ),
+              child: ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  return _buildMessageBubble(
+                      messages[index], screenWidth, screenHeight);
+                },
+              ),
             ),
-            _buildMessageInputField(screenWidth, screenHeight),
-          ],
-        ),
+          ),
+          _buildMessageInputField(screenWidth, screenHeight),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildAppBar(double screenWidth, double screenHeight) {
     return Column(
@@ -224,12 +225,12 @@ class _ChatbotState extends State<Chatbot> {
               ),
               child: isTypingMessage
                   ? Transform.translate(
-                      offset: Offset(0,
-                          -10), // Adjust the second value (Y-axis) to move up
+                      offset: Offset(-24,
+                          -32), // Adjust the second value (Y-axis) to move up
                       child: Lottie.asset(
                         'assets/icon/chat_typing.json', // Lottie animation
-                        width: 50,
-                        height: 50,
+                        width: 80,
+                        height: 90,
                       ),
                     )
                   : Text(
@@ -251,7 +252,7 @@ class _ChatbotState extends State<Chatbot> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.all(screenWidth * 0.04),
+        padding: EdgeInsets.all(screenWidth * 0.03),
         child: TextFormField(
           controller: _controller,
           onFieldSubmitted: _sendMessage,
