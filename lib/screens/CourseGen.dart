@@ -10,6 +10,7 @@ class CourseGen extends StatelessWidget {
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           // Top half (blue with bottom radius and search bar)

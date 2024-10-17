@@ -31,6 +31,7 @@ class _UniversityState extends State<University> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           // Top half (blue with bottom radius and search bar)

@@ -783,6 +783,7 @@ class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            backgroundColor: Colors.white,
       body: Column(
         children: [
           Container(
@@ -851,6 +852,7 @@ class _MyProfileState extends State<MyProfile> {
           ),
           const SizedBox(height: 20),
           Card(
+             color: Colors.white,     
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () {
@@ -896,6 +898,7 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
+            color: Colors.white,
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () => _editUsername(context),
@@ -938,6 +941,7 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
+            color: Colors.white,
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () => _changePassword(context),
@@ -980,6 +984,7 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
+            color: Colors.white,
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: _logout,
@@ -1022,6 +1027,7 @@ class _MyProfileState extends State<MyProfile> {
             ),
           ),
           Card(
+            color: Colors.white,
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
             child: InkWell(
               onTap: () => _deleteAccount(context),

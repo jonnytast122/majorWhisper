@@ -154,6 +154,7 @@ class _CourselayoutState extends State<Courselayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
@@ -184,6 +185,7 @@ class _CourselayoutState extends State<Courselayout> {
               ),
             ),
           ),
+          backgroundColor: Colors.white,
         ),
       ),
       body: Column(
