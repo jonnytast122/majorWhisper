@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:convert'; // For JSON encoding and decoding
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
+import 'RouteHosting.dart';
 
 class Chatbot extends StatefulWidget {
   @override
@@ -13,6 +17,7 @@ class _ChatbotState extends State<Chatbot> {
   late Timer _timer;
   TextEditingController _controller = TextEditingController();
   List<Map<String, String>> messages = []; // Stores conversation history
+  bool isTyping = false; // Flag to show typing indicator
 
   @override
   void initState() {
@@ -21,7 +26,7 @@ class _ChatbotState extends State<Chatbot> {
   }
 
   void _startTypingEffect() {
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _timer = Timer.periodic(Duration(milliseconds: 0), (timer) {
       setState(() {
         if (charIndex < fullMessage.length) {
           displayedMessage += fullMessage[charIndex];
@@ -34,15 +39,42 @@ class _ChatbotState extends State<Chatbot> {
     });
   }
 
-  void _sendMessage(String message) {
+  // Sends user input to the API and handles the response
+  Future<void> _sendMessage(String message) async {
     setState(() {
       messages.add({"sender": "user", "text": message}); // Add user message
       displayedMessage = ''; // Reset for new message typing effect
-      fullMessage = "You said: $message"; // Echo the user's message
-      charIndex = 0;
-      _startTypingEffect();
+      isTyping = true; // Show typing indicator
+      messages.add(
+          {"sender": "bot", "text": "typing"}); // Temporary typing indicator
     });
     _controller.clear(); // Clear the input field
+
+    // Make the API call
+    try {
+      var response = await http.post(
+        Uri.parse('${RouteHosting.baseUrl}/chatbot'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"questioning": message}),
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        fullMessage = data["answer"]; // Get the answer from the API response
+      } else {
+        fullMessage = "Sorry, something went wrong. Please try again.";
+      }
+    } catch (e) {
+      fullMessage = "Failed to connect to the server. Please try again later.";
+    }
+
+    // After getting the API response, remove the typing indicator
+    setState(() {
+      isTyping = false;
+      messages.removeLast(); // Remove the "typing" message
+      charIndex = 0;
+      _startTypingEffect(); // Start typing effect for the response
+    });
   }
 
   @override
@@ -63,7 +95,6 @@ class _ChatbotState extends State<Chatbot> {
           children: [
             Column(
               children: [
-                // Custom AppBar positioned within the body
                 _buildAppBar(screenWidth, screenHeight),
                 Expanded(
                   child: Container(
@@ -149,6 +180,7 @@ class _ChatbotState extends State<Chatbot> {
   Widget _buildMessageBubble(
       Map<String, String> message, double screenWidth, double screenHeight) {
     bool isUser = message["sender"] == "user";
+    bool isTypingMessage = message["text"] == "typing"; // Detect typing message
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: screenHeight * 0.01,
@@ -174,7 +206,11 @@ class _ChatbotState extends State<Chatbot> {
             child: Container(
               padding: EdgeInsets.all(screenWidth * 0.03),
               decoration: BoxDecoration(
-                color: isUser ? Colors.grey[300] : Color(0xFF006FFD),
+                color: isUser
+                    ? Colors.grey[300]
+                    : isTypingMessage
+                        ? Colors.transparent
+                        : Color(0xFF006FFD),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(screenWidth * 0.04),
                   topRight: Radius.circular(screenWidth * 0.04),
@@ -186,14 +222,24 @@ class _ChatbotState extends State<Chatbot> {
                       : Radius.circular(screenWidth * 0.04),
                 ),
               ),
-              child: Text(
-                message["text"]!,
-                style: TextStyle(
-                  color: isUser ? Colors.black : Colors.white,
-                  fontSize: screenWidth * 0.04,
-                  fontFamily: 'Inter-regular',
-                ),
-              ),
+              child: isTypingMessage
+                  ? Transform.translate(
+                      offset: Offset(0,
+                          -10), // Adjust the second value (Y-axis) to move up
+                      child: Lottie.asset(
+                        'assets/icon/chat_typing.json', // Lottie animation
+                        width: 50,
+                        height: 50,
+                      ),
+                    )
+                  : Text(
+                      message["text"]!,
+                      style: TextStyle(
+                        color: isUser ? Colors.black : Colors.white,
+                        fontSize: screenWidth * 0.04,
+                        fontFamily: 'Inter-regular',
+                      ),
+                    ),
             ),
           ),
         ],
