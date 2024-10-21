@@ -10,7 +10,7 @@ import 'package:majorwhisper/screens/CourseLayout.dart';
 import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/Home.dart';
-import 'RouteHosting.dart';
+import 'routes/RouteHosting.dart';
 
 
 class CourselayoutGen extends StatefulWidget {

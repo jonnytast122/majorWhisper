@@ -3,7 +3,7 @@ import 'package:majorwhisper/screens/CareerResult.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
-import 'RouteHosting.dart';
+import 'routes/RouteHosting.dart';
 
 
 class Career extends StatefulWidget {

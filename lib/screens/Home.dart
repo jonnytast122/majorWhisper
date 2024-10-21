@@ -19,7 +19,7 @@ import 'package:majorwhisper/screens/CourseGen.dart';
 import 'package:majorwhisper/screens/SaveCareer.dart';
 import 'package:majorwhisper/screens/SaveLearning.dart';
 import 'package:majorwhisper/screens/University.dart';
-import 'RouteHosting.dart';
+import 'routes/RouteHosting.dart';
 
 
 class Home extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
-import 'RouteHosting.dart';
+import 'routes/RouteHosting.dart';
 
 
 class Listmajors extends StatefulWidget {

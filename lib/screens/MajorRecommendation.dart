@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
-import 'RouteHosting.dart';
+import 'routes/RouteHosting.dart';
 
 
 class Majorrecom extends StatefulWidget {
