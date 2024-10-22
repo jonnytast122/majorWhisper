@@ -5,7 +5,6 @@ import 'package:majorwhisper/screens/MajorDetail.dart';
 import 'package:lottie/lottie.dart';
 import 'routes/RouteHosting.dart';
 
-
 class Listmajors extends StatefulWidget {
   final String title;
 
@@ -18,6 +17,7 @@ class Listmajors extends StatefulWidget {
 class _ListmajorsState extends State<Listmajors> {
   List<String> majorNames = [];
   List<String> majorDescriptions = [];
+  bool isLoading = true; // Track loading state
 
   @override
   void initState() {
@@ -26,6 +26,10 @@ class _ListmajorsState extends State<Listmajors> {
   }
 
   Future<void> fetchMajors() async {
+    setState(() {
+      isLoading = true; // Start loading
+    });
+
     final response = await http.post(
       Uri.parse('${RouteHosting.baseUrl}major-base-on-category'),
       headers: {'Content-Type': 'application/json'},
@@ -38,11 +42,13 @@ class _ListmajorsState extends State<Listmajors> {
       setState(() {
         majorNames = List<String>.from(data['major_name']);
         majorDescriptions = List<String>.from(data['major_description']);
-        print(majorNames);
-        print(majorDescriptions);
+        isLoading = false; // Stop loading after data is fetched
       });
     } else {
       // Handle errors
+      setState(() {
+        isLoading = false; // Stop loading even if there's an error
+      });
       print('Failed to load majors');
     }
   }
@@ -70,8 +76,8 @@ class _ListmajorsState extends State<Listmajors> {
                   height: 100,
                   fit: BoxFit.fill,
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   'Major Detail is Generating\nAlmost Ready!',
                   style: TextStyle(
                     fontSize: 16,
@@ -92,7 +98,7 @@ class _ListmajorsState extends State<Listmajors> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://10.1.87.197:5000/major-detail"),
+        Uri.parse("${RouteHosting.baseUrl}major-detail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -132,8 +138,7 @@ class _ListmajorsState extends State<Listmajors> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize:
-            Size.fromHeight(kToolbarHeight), // Use default toolbar height
+        preferredSize: Size.fromHeight(kToolbarHeight), // Use default toolbar height
         child: AppBar(
           backgroundColor: const Color(0xFF006FFD), // Blue background color
           elevation: 0,
@@ -141,8 +146,7 @@ class _ListmajorsState extends State<Listmajors> {
             color: Colors.white, // Set the icon color to white
           ),
           title: Padding(
-            padding: const EdgeInsets.only(
-                top: 0), // Add padding to the top of the title
+            padding: const EdgeInsets.only(top: 0), // Add padding to the top of the title
             child: Text(
               widget.title, // Use the title passed from the CategoryCard
               style: const TextStyle(
@@ -199,8 +203,7 @@ class _ListmajorsState extends State<Listmajors> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height *
-                  0.75, // Height of the white container
+              height: MediaQuery.of(context).size.height * 0.75, // Height of the white container
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -208,85 +211,92 @@ class _ListmajorsState extends State<Listmajors> {
                   topRight: Radius.circular(40.0),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  itemCount: majorNames.length, // Number of items
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 111, 174, 255),
-                        borderRadius: BorderRadius.circular(15.0),
+              child: isLoading
+                  ? Center(
+                      child: Lottie.asset(
+                        'assets/icon/learning_loading.json', // Path to your Lottie animation file
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fill,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 60.0,
-                            height: 60.0,
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ListView.builder(
+                        itemCount: majorNames.length, // Number of items
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 16.0),
+                            padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              image: const DecorationImage(
-                                image: AssetImage(
-                                    'assets/images/box.png'), // Path to your image
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
+                              color: const Color.fromARGB(255, 111, 174, 255),
+                              borderRadius: BorderRadius.circular(15.0),
                             ),
-                            child: Center(
-                              child: Text(
-                                '${index + 1}',
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontFamily: "Inter-black",
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  majorNames[index], // Major name from API
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontFamily: "Inter-semibold",
-                                    color: Colors.black,
+                                Container(
+                                  width: 60.0,
+                                  height: 60.0,
+                                  decoration: BoxDecoration(
+                                    image: const DecorationImage(
+                                      image: AssetImage('assets/images/box.png'), // Path to your image
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${index + 1}',
+                                      style: const TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.white,
+                                        fontFamily: "Inter-black",
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  majorDescriptions[
-                                      index], // Description from API
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black54,
-                                    fontFamily: "Inter-regular",
+                                const SizedBox(width: 20.0),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        majorNames[index], // Major name from API
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: "Inter-semibold",
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4.0),
+                                      Text(
+                                        majorDescriptions[index], // Description from API
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.black54,
+                                          fontFamily: "Inter-regular",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _fetchDataAndNavigate(context, majorNames[index]);
+                                  },
+                                  child: Image.asset(
+                                    'assets/icon/arrow.png', // Path to your custom icon
+                                    width: 40.0,
+                                    height: 30.0,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _fetchDataAndNavigate(context, majorNames[index]);
-                            },
-                            child: Image.asset(
-                              'assets/icon/arrow.png', // Path to your custom icon
-                              width: 40.0,
-                              height: 30.0,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ),
             ),
           ),
         ],

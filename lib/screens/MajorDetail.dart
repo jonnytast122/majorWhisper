@@ -84,13 +84,13 @@ class _MajordetailState extends State<Majordetail> {
 
   @override
   Widget build(BuildContext context) {
-    String capitalize(String text) {
-      return text
-          .split(' ')
-          .map(
-              (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-          .join(' ');
-    }
+    // String capitalize(String text) {
+    //   return text
+    //       .split(' ')
+    //       .map(
+    //           (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+    //       .join(' ');
+    // }
 
     final imageUrl = widget.data['image_url'];
     final majorDetail = widget.data['major_detail'] ?? 'No data available';
@@ -125,9 +125,9 @@ class _MajordetailState extends State<Majordetail> {
                   },
                 ),
                 title: Text(
-                  capitalize(widget.majorName),
+                  widget.majorName,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

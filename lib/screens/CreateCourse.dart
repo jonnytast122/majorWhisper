@@ -7,6 +7,7 @@ import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:majorwhisper/screens/CourseLayoutGen.dart';
+import 'routes/RouteHosting.dart';
 
 class CreateCourse extends StatefulWidget {
   @override
@@ -75,7 +76,7 @@ class _CreateCourseState extends State<CreateCourse> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Career Path is Generating\nAlmost Ready!',
+                    'Course Layout is Generating\nAlmost Ready!',
                     style: TextStyle(
                       fontSize: 16,
                       fontFamily: 'Inter-semibold',
@@ -101,7 +102,7 @@ class _CreateCourseState extends State<CreateCourse> {
       print(body);
       // Send the API request
       final response = await http.post(
-        Uri.parse('http://10.1.81.137:5000/content-layout-generation'),
+        Uri.parse('${RouteHosting.baseUrl}content-layout-generation'),
         headers: {'Content-Type': 'application/json'},
         body: body,
       );
@@ -111,11 +112,11 @@ class _CreateCourseState extends State<CreateCourse> {
         // Parse the response if needed
         // Navigate to Courselayout with the topic name
         Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CourselayoutGen(),
-        ),
-      );
+          context,
+          MaterialPageRoute(
+            builder: (context) => CourselayoutGen(),
+          ),
+        );
       } else {
         Navigator.pop(context); // Close the loading dialog
         showToast('Failed to create course. Please try again.');
@@ -136,7 +137,7 @@ class _CreateCourseState extends State<CreateCourse> {
             'Create Course',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 30,
+              fontSize: 25,
               fontFamily: "Inter-semibold",
             ),
           ),
@@ -150,14 +151,16 @@ class _CreateCourseState extends State<CreateCourse> {
             onPressed: () => Navigator.pop(context),
           ),
         ),
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
                   onTap: () => setState(() {
@@ -195,48 +198,45 @@ class _CreateCourseState extends State<CreateCourse> {
           ),
           SizedBox(height: 20),
           Expanded(
-              child: currentStep == 1
-                  ? buildCategorySelection()
-                  : currentStep == 2
-                      ? buildTextFields()
-                      : buildOptionsDropdown()),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                if (currentStep == 1 && selectedCategoryIndex == null) {
-                  showToast("Please select one of the choices.");
-                } else if (currentStep == 2 && topicController.text.isEmpty) {
-                  showToast("Please enter a topic.");
-                } else if (currentStep == 1) {
-                  setState(() {
-                    currentStep = 2;
-                  });
-                } else if (currentStep == 2) {
-                  setState(() {
-                    currentStep = 3;
-                  });
-                } else {
-                  await submitCourse();
-
-                  // ScaffoldMessenger.of(context)
-                  //     .showSnackBar(SnackBar(content: Text('Course Started!')));
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 14.0, horizontal: 40.0),
-                  backgroundColor: Color(0xFF006FFD),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0))),
-              child: Text(currentStep == 3 ? 'Next' : 'Next',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: "Inter-semibold",
-                      fontSize: 16)),
-            ),
+            child: currentStep == 1
+                ? buildCategorySelection()
+                : currentStep == 2
+                    ? buildTextFields()
+                    : buildOptionsDropdown(),
           ),
         ],
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ElevatedButton(
+          onPressed: () async {
+            if (currentStep == 1 && selectedCategoryIndex == null) {
+              showToast("Please select one of the choices.");
+            } else if (currentStep == 2 && topicController.text.isEmpty) {
+              showToast("Please enter a topic.");
+            } else if (currentStep == 1) {
+              setState(() {
+                currentStep = 2;
+              });
+            } else if (currentStep == 2) {
+              setState(() {
+                currentStep = 3;
+              });
+            } else {
+              await submitCourse();
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 40.0),
+              backgroundColor: Color(0xFF006FFD),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0))),
+          child: Text('Next',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: "Inter-semibold",
+                  fontSize: 16)),
+        ),
       ),
     );
   }
@@ -258,7 +258,7 @@ class _CreateCourseState extends State<CreateCourse> {
                     '💡Write the topic for course generation (e.g Python...)',
                     style: TextStyle(
                       fontFamily: "Inter-bold",
-                      fontSize: 13,
+                      fontSize: 11,
                       color: Colors.black,
                     ),
                   ),
@@ -315,7 +315,7 @@ class _CreateCourseState extends State<CreateCourse> {
                     '📝 Tell us more about your course (Optional)',
                     style: TextStyle(
                       fontFamily: "Inter-bold",
-                      fontSize: 13,
+                      fontSize: 11,
                       color: Colors.black,
                     ),
                   ),
@@ -353,7 +353,7 @@ class _CreateCourseState extends State<CreateCourse> {
                     ),
                   ),
                 ),
-                maxLines: 14,
+                maxLines: 7,
               ),
             ],
           ),
@@ -375,7 +375,14 @@ class _CreateCourseState extends State<CreateCourse> {
               (val) => setState(() => selectedDifficulty = val)),
           buildDropdown(
               '🕰 Course Duration',
-              ['1 hour', '2 hours', '3 hours', 'more than 3 hours'],
+              [
+                '1 hour',
+                '2 hours',
+                '3 hours',
+                "4 hours",
+                "5 hours",
+                'more than 5 hours'
+              ],
               selectedDuration,
               (val) => setState(() => selectedDuration = val)),
           buildDropdown(
@@ -480,13 +487,13 @@ class _CreateCourseState extends State<CreateCourse> {
           padding: const EdgeInsets.only(
               left: 18.0,
               top: 8.0,
-              bottom: 8.0), // Adjusted for better vertical and left alignment
+              bottom: 10.0), // Adjusted for better vertical and left alignment
           child: Align(
             alignment: Alignment.centerLeft, // Align text to the left
             child: Text(
               'Please Select a Category',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontFamily: "Inter-medium",
               ),
             ),
@@ -548,9 +555,9 @@ class _CreateCourseState extends State<CreateCourse> {
       children: [
         CircleAvatar(
           backgroundColor: isActive ? Color(0xFF006FFD) : Colors.grey[300],
-          radius: 25,
+          radius: 20,
           child: Icon(icon,
-              color: isActive ? Colors.white : Colors.grey, size: 28),
+              color: isActive ? Colors.white : Colors.grey, size: 23),
         ),
         SizedBox(height: 8),
         Text(
@@ -558,6 +565,7 @@ class _CreateCourseState extends State<CreateCourse> {
           style: TextStyle(
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
             color: isActive ? Colors.black : Colors.grey,
+            fontSize: 12,
           ),
         ),
       ],

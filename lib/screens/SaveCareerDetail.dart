@@ -21,13 +21,13 @@ class SaveCareerDetail extends StatefulWidget {
 class _SaveCareerDetailState extends State<SaveCareerDetail> {
   @override
   Widget build(BuildContext context) {
-    String capitalize(String text) {
-      return text
-          .split(' ')
-          .map(
-              (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
-          .join(' ');
-    }
+    // String capitalize(String text) {
+    //   return text
+    //       .split(' ')
+    //       .map(
+    //           (word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+    //       .join(' ');
+    // }
 
     final imageUrl = widget.imageUrl;
     final country = widget.country;
@@ -69,7 +69,7 @@ class _SaveCareerDetailState extends State<SaveCareerDetail> {
                   },
                 ),
                 title: Text(
-                  capitalize(widget.majorName),
+                  widget.majorName,
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,

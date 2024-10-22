@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import 'package:majorwhisper/screens/Home.dart';
 import 'routes/RouteHosting.dart';
 
-
 class CourselayoutGen extends StatefulWidget {
   @override
   _CourselayoutGenState createState() => _CourselayoutGenState();
@@ -159,80 +158,84 @@ class _CourselayoutGenState extends State<CourselayoutGen> {
           leading: Padding(
             padding: const EdgeInsets.only(top: 21.0),
             child: IconButton(
-  icon: const Icon(Icons.arrow_back_ios_rounded),
-  color: const Color.fromARGB(255, 0, 0, 0),
-  onPressed: () {
-    // Show confirmation dialog
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirm Exit'),
-        content: Text(
-          'If you go back now, the current course will not be saved. Do you want to proceed?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: Text('No'),
-          ),
-          TextButton(
-            onPressed: () async {
-              // Delete the last course in Firestore
-              try {
-                final userId = FirebaseAuth.instance.currentUser?.uid;
+              icon: const Icon(Icons.arrow_back_ios_rounded),
+              color: const Color.fromARGB(255, 0, 0, 0),
+              onPressed: () {
+                // Show confirmation dialog
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Confirm Exit'),
+                    content: Text(
+                      'If you go back now, the current course will not be saved. Do you want to proceed?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          // Delete the last course in Firestore
+                          try {
+                            final userId =
+                                FirebaseAuth.instance.currentUser?.uid;
 
-                if (userId != null) {
-                  // Fetch the document
-                  DocumentSnapshot<Map<String, dynamic>> snapshot =
-                      await FirebaseFirestore.instance
-                          .collection('course_layout_generated')
-                          .doc(userId)
-                          .get();
+                            if (userId != null) {
+                              // Fetch the document
+                              DocumentSnapshot<Map<String, dynamic>> snapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection('course_layout_generated')
+                                      .doc(userId)
+                                      .get();
 
-                  if (snapshot.exists) {
-                    final data = snapshot.data();
-                    if (data != null && data.containsKey('course_layouts')) {
-                      List<dynamic> courseLayouts = data['course_layouts'];
+                              if (snapshot.exists) {
+                                final data = snapshot.data();
+                                if (data != null &&
+                                    data.containsKey('course_layouts')) {
+                                  List<dynamic> courseLayouts =
+                                      data['course_layouts'];
 
-                      if (courseLayouts.isNotEmpty) {
-                        // Remove the last course
-                        courseLayouts.removeLast();
+                                  if (courseLayouts.isNotEmpty) {
+                                    // Remove the last course
+                                    courseLayouts.removeLast();
 
-                        // Update Firestore with the new course list
-                        await FirebaseFirestore.instance
-                            .collection('course_layout_generated')
-                            .doc(userId)
-                            .update({'course_layouts': courseLayouts});
-                      }
-                    }
-                  }
-                }
-              } catch (e) {
-                print('Error deleting the last course: $e');
-              }
+                                    // Update Firestore with the new course list
+                                    await FirebaseFirestore.instance
+                                        .collection('course_layout_generated')
+                                        .doc(userId)
+                                        .update(
+                                            {'course_layouts': courseLayouts});
+                                  }
+                                }
+                              }
+                            }
+                          } catch (e) {
+                            print('Error deleting the last course: $e');
+                          }
 
-              // Close the dialog and navigate back
-              Navigator.of(context).pop(); // Close the dialog
-              
-                // Use updateSelectedIndex to change to the CourseGen tab
-                context
-                    .findAncestorStateOfType<HomeState>()
-                    ?.updateSelectedIndex(1);
+                          // Close the dialog and navigate back
+                          Navigator.of(context).pop(); // Close the dialog
 
-                // Pop the current screen (e.g., dialog or overlay)
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              }, // Go back to the previous screen
-            
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    );
-  },
-),
+                          // Use updateSelectedIndex to change to the CourseGen tab
+                          context
+                              .findAncestorStateOfType<HomeState>()
+                              ?.updateSelectedIndex(1);
 
+                          // Pop the current screen (e.g., dialog or overlay)
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                        }, // Go back to the previous screen
+
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
           centerTitle: true,
           title: Padding(

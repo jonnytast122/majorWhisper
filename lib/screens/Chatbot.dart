@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert'; // For JSON encoding and decoding
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+import 'package:flutter/services.dart'; // For SystemChrome
 import 'routes/RouteHosting.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Chatbot extends StatefulWidget {
   @override
@@ -18,10 +21,20 @@ class _ChatbotState extends State<Chatbot> {
   TextEditingController _controller = TextEditingController();
   List<Map<String, String>> messages = []; // Stores conversation history
   bool isTyping = false; // Flag to show typing indicator
+  final userId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   void initState() {
     super.initState();
+
+    // Set the status bar to have grey text and a transparent background
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent, // Transparent background
+        statusBarIconBrightness: Brightness.dark, // Grey (dark) icons
+      ),
+    );
+
     _startTypingEffect();
   }
 
@@ -45,17 +58,16 @@ class _ChatbotState extends State<Chatbot> {
       messages.add({"sender": "user", "text": message}); // Add user message
       displayedMessage = ''; // Reset for new message typing effect
       isTyping = true; // Show typing indicator
-      messages.add(
-          {"sender": "bot", "text": "typing"}); // Temporary typing indicator
+      messages.add({"sender": "bot", "text": "typing"}); // Temporary typing indicator
     });
     _controller.clear(); // Clear the input field
 
     // Make the API call
     try {
       var response = await http.post(
-        Uri.parse('${RouteHosting.baseUrl}/chatbot'),
+        Uri.parse('${RouteHosting.baseUrl}chatbot'),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"questioning": message}),
+        body: jsonEncode({"questioning": message, "uuid": userId}),
       );
 
       if (response.statusCode == 200) {
@@ -85,38 +97,37 @@ class _ChatbotState extends State<Chatbot> {
   }
 
   @override
-Widget build(BuildContext context) {
-  double screenWidth = MediaQuery.of(context).size.width;
-  double screenHeight = MediaQuery.of(context).size.height;
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
-  return Scaffold(
-    backgroundColor: Colors.white,
-    body: SafeArea(
-      child: Column(
-        children: [
-          _buildAppBar(screenWidth, screenHeight),
-          Expanded(
-            child: Container(
-              color: Colors.white,
-              padding: EdgeInsets.only(
-                bottom: screenHeight * 0.01, // Add padding above the input field
-              ),
-              child: ListView.builder(
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return _buildMessageBubble(
-                      messages[index], screenWidth, screenHeight);
-                },
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(screenWidth, screenHeight),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(
+                  bottom: screenHeight * 0.01, // Add padding above the input field
+                ),
+                child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return _buildMessageBubble(
+                        messages[index], screenWidth, screenHeight);
+                  },
+                ),
               ),
             ),
-          ),
-          _buildMessageInputField(screenWidth, screenHeight),
-        ],
+            _buildMessageInputField(screenWidth, screenHeight),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildAppBar(double screenWidth, double screenHeight) {
     return Column(
@@ -178,6 +189,15 @@ Widget build(BuildContext context) {
     );
   }
 
+  Future<void> _launchURL(String url) async {
+  Uri uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
   Widget _buildMessageBubble(
       Map<String, String> message, double screenWidth, double screenHeight) {
     bool isUser = message["sender"] == "user";
@@ -237,7 +257,7 @@ Widget build(BuildContext context) {
                       message["text"]!,
                       style: TextStyle(
                         color: isUser ? Colors.black : Colors.white,
-                        fontSize: screenWidth * 0.04,
+                        fontSize: screenWidth * 0.03,
                         fontFamily: 'Inter-regular',
                       ),
                     ),
@@ -260,7 +280,7 @@ Widget build(BuildContext context) {
             hintText: "Message MajorWhisper",
             hintStyle: TextStyle(
               color: Colors.black.withOpacity(0.6),
-              fontSize: screenWidth * 0.04,
+              fontSize: screenWidth * 0.035,
               fontFamily: 'Inter-regular',
             ),
             suffixIcon: GestureDetector(

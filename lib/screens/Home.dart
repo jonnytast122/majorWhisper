@@ -277,7 +277,7 @@ class DetailMajor extends StatelessWidget {
 
     try {
       final response = await http.post(
-        Uri.parse("${RouteHosting.baseUrl}/major-detail"),
+        Uri.parse("${RouteHosting.baseUrl}major-detail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -289,7 +289,7 @@ class DetailMajor extends StatelessWidget {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         Navigator.of(context).pop(); // Close the loading dialog
-
+        // print("data: " + data);
         Navigator.push(
           context,
           MaterialPageRoute(

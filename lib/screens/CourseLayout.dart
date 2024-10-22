@@ -164,12 +164,12 @@ class _CourselayoutState extends State<Courselayout> {
               icon: const Icon(Icons.arrow_back_ios_rounded),
               color: const Color.fromARGB(255, 0, 0, 0),
               onPressed: () {
-                // Use updateSelectedIndex to change to the CourseGen tab
-                context
-                    .findAncestorStateOfType<HomeState>()
-                    ?.updateSelectedIndex(1);
-                // Pop the current screen (e.g., dialog or overlay)
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Home(),
+                  ),
+                );
               },
             ),
           ),

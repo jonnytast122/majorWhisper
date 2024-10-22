@@ -17,6 +17,7 @@ class Majorrecom extends StatefulWidget {
 class _MajorrecomState extends State<Majorrecom> {
   List<Map<String, dynamic>> recommendedMajors = [];
   String? userId; // To store the current user ID
+    bool isLoading = true; // Add loading state
 
   @override
   void initState() {
@@ -37,7 +38,11 @@ class _MajorrecomState extends State<Majorrecom> {
   }
 
   // Step 2: Request major recommendation from the API
-  Future<void> requestMajorRecommendation(String userId) async {
+Future<void> requestMajorRecommendation(String userId) async {
+    setState(() {
+      isLoading = true; // Set loading state to true when starting the request
+    });
+
     final url = Uri.parse('${RouteHosting.baseUrl}major-recommendation');
     try {
       final response = await http.post(
@@ -48,19 +53,20 @@ class _MajorrecomState extends State<Majorrecom> {
 
       if (response.statusCode == 200) {
         final responseBody = jsonDecode(response.body);
-        if (responseBody['message'] ==
-            "Major successfully recommended and saved.") {
-          fetchLatestQuizFromFirestore(
-              userId); // Fetch latest quiz data from Firestore
+        if (responseBody['message'] == "Major successfully recommended and saved.") {
+          fetchLatestQuizFromFirestore(userId); // Fetch latest quiz data from Firestore
         } else {
           print("Unexpected response from API: ${responseBody['message']}");
         }
       } else {
-        print(
-            'Failed to fetch major recommendation. Status code: ${response.statusCode}');
+        print('Failed to fetch major recommendation. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error generating quiz: $e');
+    } finally {
+      setState(() {
+        isLoading = false; // Hide loading animation after fetching the data
+      });
     }
   }
 
@@ -166,7 +172,7 @@ class _MajorrecomState extends State<Majorrecom> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://10.1.87.197:5000/major-detail"),
+        Uri.parse("${RouteHosting.baseUrl}major-detail"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -255,28 +261,6 @@ class _MajorrecomState extends State<Majorrecom> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Add your onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Color(0xFF006FFD),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 24.0, vertical: 12.0),
-                    ),
-                    child: const Text(
-                      '........................',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Inter-semibold',
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -294,86 +278,95 @@ class _MajorrecomState extends State<Majorrecom> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: ListView.builder(
-                  itemCount: recommendedMajors.length,
-                  itemBuilder: (context, index) {
-                    final major = recommendedMajors[index]['major']!;
-                    final reason = recommendedMajors[index]['reason']!;
-                    final imageUrl = recommendedMajors[index]['image_url']!;
+                child: isLoading
+                    ? Center(
+                        child: Lottie.asset(
+                          'assets/icon/learning_loading.json', // Path to your Lottie animation file
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.fill,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: recommendedMajors.length,
+                        itemBuilder: (context, index) {
+                          final major = recommendedMajors[index]['major']!;
+                          final reason = recommendedMajors[index]['reason']!;
+                          final imageUrl = recommendedMajors[index]['image_url']!;
 
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      padding: const EdgeInsets.all(14.0),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 120.0,
-                            height: 150.0,
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 16.0),
+                            padding: const EdgeInsets.all(14.0),
                             decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(imageUrl),
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
-                          ),
-                          const SizedBox(width: 20.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  major, // Major name from Firestore
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: "Inter-bold",
-                                    color: Colors.black,
+                                Container(
+                                  width: 120.0,
+                                  height: 150.0,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(imageUrl),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
-                                const SizedBox(height: 8.0),
-                                Text(
-                                  reason, // Major description from Firestore
-                                  style: const TextStyle(
-                                    fontSize: 9,
-                                    fontFamily: "Inter-regular",
-                                    color: Color(0xFF898A8D),
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _fetchDataAndNavigate(context, major);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Color(0xFF006FFD),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size(60, 23),
-                                  ),
-                                  child: const Text(
-                                    'Learn More',
-                                    style: TextStyle(
-                                      fontSize: 7,
-                                      fontFamily: 'Inter-semibold',
-                                    ),
+                                const SizedBox(width: 20.0),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        major, // Major name from Firestore
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: "Inter-bold",
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        reason, // Major description from Firestore
+                                        style: const TextStyle(
+                                          fontSize: 9.5,
+                                          fontFamily: "Inter-regular",
+                                          color: Color(0xFF898A8D),
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _fetchDataAndNavigate(context, major);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          backgroundColor: Color(0xFF006FFD),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0),
+                                          ),
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size(70, 30),
+                                        ),
+                                        child: const Text(
+                                          'Learn More',
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            fontFamily: 'Inter-semibold',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ),
           ),

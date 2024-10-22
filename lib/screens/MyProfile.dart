@@ -539,10 +539,6 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  void _myHistory() {
-    // Implement the logic to view the user's history
-  }
-
   void _deleteAccount(BuildContext context) {
     showDialog(
       context: context,
