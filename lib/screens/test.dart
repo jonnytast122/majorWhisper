@@ -18,53 +18,84 @@ class MindMapScreen extends StatelessWidget {
               ),
               SizedBox(height: 30),
               CustomPaint(
-                size: Size(MediaQuery.of(context).size.width,
-                    500), // Adjusted height for larger map
+                size: Size(MediaQuery.of(context).size.width, 500), // Adjusted height for larger map
                 painter: MindMapPainter(),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     children: [
-                      // Centered Main Node for "Mathematics in AI"
+                      // Dynamically building node groups
                       buildNodeGroup(["Mathematics in AI"], [], true),
-
-                      // Left and Right Child Nodes
                       buildNodeGroup(
-                        ["Linear Algebra", "Calculus", "Probability", "sds"],
-                        [
-                          "Statistics",
-                          "Optimization In",
-                          "Graph Theory",
-                          "dasdas"
-                        ],
+                        ["Linear Algebra", "Calculus", "Probability", "SDS"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas"],
                         false,
                       ),
-
-                      buildNodeGroup(["Mathematics in AI2"], [], true),
-
-                      // Left and Right Child Nodes
+                      buildNodeGroup(["Mathematics in AI"], [], true),
                       buildNodeGroup(
-                        ["Linear Algebra", "Calculus", "Probability", "sds"],
-                        [
-                          "Statistics",
-                          "Optimization In",
-                          "Graph Theory",
-                          "dasdas"
-                        ],
+                        ["Linear Algebra", "Calculus", "Probability", "SDS"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas"],
                         false,
                       ),
-
-                      buildNodeGroup(["Mathematics in AI3"], [], true),
-
-                      // Left and Right Child Nodes
+                      buildNodeGroup(["Mathematics in AI"], [], true),
                       buildNodeGroup(
-                        ["Linear Algebra", "Calculus", "Probability", "sds"],
-                        [
-                          "Statistics",
-                          "Optimization In",
-                          "Graph Theory",
-                          "dasdas"
-                        ],
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      // Dynamically building node groups
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
+                        false,
+                      ),
+                      buildNodeGroup(["Mathematics in AI"], [], true),
+                      buildNodeGroup(
+                        ["Linear Algebra", "Calculus", "Probability", "SDS1"],
+                        ["Statistics", "Optimization", "Graph Theory", "Dasdas2"],
                         false,
                       ),
                     ],
@@ -79,8 +110,7 @@ class MindMapScreen extends StatelessWidget {
   }
 
   // Function to build node groups dynamically
-  Widget buildNodeGroup(
-      List<String> leftNodes, List<String> rightNodes, bool isCentered) {
+  Widget buildNodeGroup(List<String> leftNodes, List<String> rightNodes, bool isCentered) {
     return Row(
       mainAxisAlignment: isCentered
           ? MainAxisAlignment.center
@@ -88,8 +118,7 @@ class MindMapScreen extends StatelessWidget {
       children: [
         if (!isCentered)
           Column(
-            children:
-                leftNodes.map((label) => NodeWidget(label: label)).toList(),
+            children: leftNodes.map((label) => NodeWidget(label: label)).toList(),
           ),
         if (isCentered)
           NodeWidget(
@@ -98,8 +127,7 @@ class MindMapScreen extends StatelessWidget {
           ),
         if (!isCentered)
           Column(
-            children:
-                rightNodes.map((label) => NodeWidget(label: label)).toList(),
+            children: rightNodes.map((label) => NodeWidget(label: label)).toList(),
           ),
       ],
     );
@@ -141,8 +169,7 @@ class NodeWidget extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                     maxLines: 3, // Allow up to 2 lines
-                    overflow:
-                        TextOverflow.ellipsis, // Show ellipsis for overflow
+                    overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
                   ),
                 ),
               ],
@@ -155,6 +182,10 @@ class NodeWidget extends StatelessWidget {
 }
 
 class MindMapPainter extends CustomPainter {
+  // Data for left and right nodes to avoid hardcoding
+  final List<String> leftNodes = ["Linear Algebra", "Calculus", "Probability", "SDS"];
+  final List<String> rightNodes = ["Statistics", "Optimization", "Graph Theory", "Dasdas"];
+
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
@@ -169,89 +200,36 @@ class MindMapPainter extends CustomPainter {
       Offset(size.width / 2, size.height),
       paint,
     );
+    
+    // Initial vertical shift values for node groups
+    double verticalShift = 0;
+    double verticalStep = 270; // This controls the gap between node groups
 
-    // First Node Group
-    // Left Side Flipped L-Shaped Lines (move down, then left, with a slight horizontal shift)
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 - 40, 10),
-        Offset(size.width / 3, 80)); // Linear Algebra
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 - 35, 10),
-        Offset(size.width / 3, 130)); // Calculus
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 - 30, 10),
-        Offset(size.width / 3, 190)); // Probability
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 - 25, 10),
-        Offset(size.width / 3, 240)); // SDS
+    // Loop through as many groups as needed
+    for (int groupIndex = 0; groupIndex < 12; groupIndex++) {
+      // Apply vertical shift for each new group of nodes
+      double groupShift = verticalShift + groupIndex * verticalStep;
 
-    // Right Side Flipped L-Shaped Lines (move down, then right, with a slight horizontal shift)
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 + 40, 10),
-        Offset(2 * size.width / 3, 80)); // Statistics
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 + 35, 10),
-        Offset(2 * size.width / 3, 130)); // Optimization
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 + 30, 10),
-        Offset(2 * size.width / 3, 190)); // Graph Theory
-    _drawFlippedLLine(canvas, paint, Offset(size.width / 2 + 25, 10),
-        Offset(2 * size.width / 3, 240)); // Dasdas
+      // Left Side Nodes (move down, then left)
+      for (int i = 0; i < leftNodes.length; i++) {
+        double horizontalShift = 30 - (i * 5); // Adjust horizontal shift slightly for each node
+        _drawFlippedLLine(
+          canvas, paint,
+          Offset(size.width / 2 - horizontalShift, 30 + groupShift),
+          Offset(size.width / 3, 85 + i * 50 + groupShift)  // Adjust vertical position per node
+        );
+      }
 
-    // Second Node Group (shifted down by 300px to avoid overlap)
-    double verticalShift = 270;
-
-    // Left Side Flipped L-Shaped Lines for second node group
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 40, 10 + verticalShift),
-        Offset(size.width / 3, 80 + verticalShift)); // Linear Algebra
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 35, 10 + verticalShift),
-        Offset(size.width / 3, 130 + verticalShift)); // Calculus
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 30, 10 + verticalShift),
-        Offset(size.width / 3, 190 + verticalShift)); // Probability
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 25, 10 + verticalShift),
-        Offset(size.width / 3, 240 + verticalShift)); // SDS
-
-    // Right Side Flipped L-Shaped Lines for second node group
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 40, 10 + verticalShift),
-        Offset(2 * size.width / 3, 80 + verticalShift)); // Statistics
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 35, 10 + verticalShift),
-        Offset(2 * size.width / 3, 130 + verticalShift)); // Optimization
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 30, 10 + verticalShift),
-        Offset(2 * size.width / 3, 190 + verticalShift)); // Graph Theory
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 25, 10 + verticalShift),
-        Offset(2 * size.width / 3, 240 + verticalShift)); // Dasdas
-
-    // Second Node Group (shifted down by 300px to avoid overlap)
-    double verticalShift2 = 570;
-
-    // Left Side Flipped L-Shaped Lines for second node group
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 40, 10 + verticalShift2),
-        Offset(size.width / 3, 80 + verticalShift2)); // Linear Algebra
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 35, 10 + verticalShift2),
-        Offset(size.width / 3, 130 + verticalShift2)); // Calculus
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 30, 10 + verticalShift2),
-        Offset(size.width / 3, 190 + verticalShift2)); // Probability
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 - 25, 10 + verticalShift2),
-        Offset(size.width / 3, 240 + verticalShift2)); // SDS
-
-    // Right Side Flipped L-Shaped Lines for second node group
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 40, 10 + verticalShift2),
-        Offset(2 * size.width / 3, 80 + verticalShift2)); // Statistics
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 35, 10 + verticalShift2),
-        Offset(2 * size.width / 3, 130 + verticalShift2)); // Optimization
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 30, 10 + verticalShift2),
-        Offset(2 * size.width / 3, 190 + verticalShift2)); // Graph Theory
-    _drawFlippedLLine(
-        canvas, paint, Offset(size.width / 2 + 25, 10 + verticalShift2),
-        Offset(2 * size.width / 3, 240 + verticalShift2)); // Dasdas
+      // Right Side Nodes (move down, then right)
+      for (int i = 0; i < rightNodes.length; i++) {
+        double horizontalShift = 30 - (i * 5); // Adjust horizontal shift slightly for each node
+        _drawFlippedLLine(
+          canvas, paint,
+          Offset(size.width / 2 + horizontalShift, 30 + groupShift),
+          Offset(2 * size.width / 3, 85 + i * 50 + groupShift)  // Adjust vertical position per node
+        );
+      }
+    }
   }
 
   void _drawFlippedLLine(Canvas canvas, Paint paint, Offset start, Offset end) {
@@ -259,23 +237,18 @@ class MindMapPainter extends CustomPainter {
 
     // Draw the vertical part of the L
     path.moveTo(start.dx, start.dy);
-    path.lineTo(start.dx,
-        end.dy); // Move down vertically to the same Y-level as the end point
+    path.lineTo(start.dx, end.dy); // Move down vertically to the same Y-level as the end point
 
     // Draw the horizontal part of the L
-    path.lineTo(
-        end.dx, end.dy); // Move horizontally to the end point (left or right)
+    path.lineTo(end.dx, end.dy); // Move horizontally to the end point (left or right)
 
     // Dash settings
-    double dashWidth = 1.0,
-        dashSpace = 5.0; // Adjusted values for better visibility
+    double dashWidth = 1.0, dashSpace = 5.0;
     bool draw = true;
 
     // Create dashed effect by iterating through the path's metrics
     for (PathMetric pathMetric in path.computeMetrics()) {
-      for (double distance = 0.0;
-          distance < pathMetric.length;
-          distance += dashWidth + dashSpace) {
+      for (double distance = 0.0; distance < pathMetric.length; distance += dashWidth + dashSpace) {
         final segment = pathMetric.extractPath(
             distance, distance + (draw ? dashWidth : dashSpace));
         canvas.drawPath(segment, paint);
@@ -286,6 +259,6 @@ class MindMapPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false; // You can return true if you want to trigger a repaint
+    return false;
   }
 }
