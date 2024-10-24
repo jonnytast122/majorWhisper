@@ -34,7 +34,6 @@ class _CareerState extends State<Career> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min, // Ensures dialog size fits content
-
             children: [
               const SizedBox(height: 20),
               const Padding(

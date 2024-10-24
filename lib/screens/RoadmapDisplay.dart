@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:delightful_toast/delight_toast.dart';
-import 'package:delightful_toast/toast/components/toast_card.dart';
-import 'package:delightful_toast/toast/utils/enums.dart';
+import 'package:widget_arrows/widget_arrows.dart';
 
 class RoadmapDisplay extends StatefulWidget {
   final String majorName;
@@ -19,138 +15,31 @@ class RoadmapDisplay extends StatefulWidget {
 }
 
 class _RoadmapDisplayState extends State<RoadmapDisplay> {
-  bool isSaved = false;
-
-  Future<void> saveToFirestore() async {
-    try {
-      final userId = FirebaseAuth.instance.currentUser?.uid;
-
-      if (userId != null) {
-        final userDoc = FirebaseFirestore.instance
-            .collection('career_paths')
-            .doc(userId);
-
-        await userDoc.update({
-          'data': FieldValue.arrayUnion([{
-            'major_name': widget.majorName,
-            'career_path': widget.data,
-          }])
-        }).catchError((error) async {
-          await userDoc.set({
-            'data': [{
-              'major_name': widget.majorName,
-              'career_path': widget.data,
-            }]
-          });
-        });
-
-        setState(() {
-          isSaved = true;
-        });
-
-        DelightToastBar(
-          position: DelightSnackbarPosition.top,
-          autoDismiss: true,
-          snackbarDuration: Duration(seconds: 2),
-          builder: (context) => const ToastCard(
-            leading: Icon(
-              Icons.check_circle,
-              size: 28,
-              color: Colors.green,
-            ),
-            title: Text(
-              "Career path saved successfully!",
-              style: TextStyle(
-                fontFamily: "Inter-semibold",
-                fontSize: 14,
-                color: Colors.green,
-              ),
-            ),
-          ),
-        ).show(context);
-      } else {
-        print('No user logged in');
-      }
-    } catch (e) {
-      print('Error saving career path: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final major = widget.data['goal']; // Accessing the 'goal' in the data
-    final milestones = widget.data['roadmap']; // Accessing the roadmap list
-
-    if (milestones == null || milestones.isEmpty) {
-      return Center(child: Text('No roadmap available.'));
-    }
-
     return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: SingleChildScrollView(
+      backgroundColor: Colors.grey[200],
+      body: SingleChildScrollView(
+        child: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Header section
-              Container(
-                padding: const EdgeInsets.only(top: 0),
-                height: 150,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF4A90E2), // Blue color
-                      Color(0xFF006FFD), // White color
-                    ],
-                    stops: [0.3, 1],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 60),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back_ios_rounded),
-                            color: Colors.white,
-                            onPressed: () {
-                              Navigator.pop(context); // Navigates back to the previous screen
-                            },
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            "$major Roadmap",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: 'Inter-semibold',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+              SizedBox(height: 50),
+              Text(
+                widget.majorName,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              
-              // Content section with milestones
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (var milestone in milestones)
-                      MilestoneCard(milestone: milestone),
-                  ],
+              SizedBox(height: 30),
+              ArrowContainer(
+                child: CustomPaint(
+                  size: Size(MediaQuery.of(context).size.width, 800),
+                  painter: MindMapPainter(),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: _buildRoadmapNodes(),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -159,43 +48,136 @@ class _RoadmapDisplayState extends State<RoadmapDisplay> {
       ),
     );
   }
-}
 
-// Widget for rendering a Milestone
-class MilestoneCard extends StatelessWidget {
-  final Map<String, dynamic> milestone;
+  // Method to build roadmap nodes from the data map
+List<Widget> _buildRoadmapNodes() {
+  List<Widget> nodes = [];
 
-  MilestoneCard({required this.milestone});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              milestone['milestone_name'],
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            for (String topic in milestone['topics'])
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
-                child: Row(
-                  children: [
-                    const Icon(Icons.check_circle, color: Colors.blue, size: 16),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(topic)),
-                  ],
-                ),
-              ),
-          ],
+  // Loop through the milestones in the data map
+  for (var milestone in widget.data['roadmap']) {
+    // Add milestone title node
+    var milestoneKey = milestone['milestone_name'];
+    
+    nodes.add(
+      ArrowElement(
+        id: milestoneKey, // Unique ID for milestone
+        child: NodeWidget(
+          label: milestone['milestone_name'],
+          color: Color(0xFF006FFD),
         ),
       ),
     );
+
+    // Create a row for topics
+    nodes.add(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          children: (milestone['topics'] as List<dynamic>)
+              .sublist(0, 4)
+              .map((topic) {
+            var topicKey = topic.toString();
+            return Column(
+              children: [
+                // Connect arrow from milestone to the topic
+                ArrowElement(
+                  id: topicKey, // Unique ID for the arrow connection
+                  targetId: milestoneKey, // ID for the topic
+                  sourceAnchor: Alignment.centerRight, // Anchor at the bottom of the milestone
+                  targetAnchor: Alignment.bottomCenter, // Anchor at the top of the topic
+                  child: NodeWidget(label: topic.toString()),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+        Column(
+          children: (milestone['topics'] as List<dynamic>)
+              .sublist(4)
+              .map((topic) {
+            var topicKey = topic.toString();
+            return Column(
+              children: [
+                // Connect arrow from milestone to the topic
+                ArrowElement(
+                  id: topicKey, // Unique ID for the arrow connection
+                  targetId: milestoneKey, // ID for the topic
+                  sourceAnchor: Alignment.centerLeft, // Anchor at the bottom of the milestone
+                  targetAnchor: Alignment.bottomCenter, // Anchor at the top of the topic
+                  child: NodeWidget(label: topic.toString()),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
+      ],
+    ));
+  }
+
+  return nodes;
+}
+
+
+
+}
+
+class NodeWidget extends StatelessWidget {
+  final String label;
+  final Color color;
+
+  const NodeWidget({
+    required this.label,
+    this.color = const Color.fromARGB(255, 124, 181, 255), // Default color
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 4.0),
+      padding: EdgeInsets.symmetric(horizontal: 0),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 100,
+          maxWidth: 150,
+          minHeight: 30,
+        ),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          color: color,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MindMapPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint linePaint = Paint()
+      ..color = Color(0xFF006FFD)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+
+    // Draw central vertical line
+    canvas.drawLine(
+      Offset(size.width / 2, 0),
+      Offset(size.width / 2, size.height),
+      linePaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

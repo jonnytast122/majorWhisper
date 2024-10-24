@@ -51,6 +51,8 @@ dependencies:
   path: ^1.9.0
   http: ^1.2.2
   url_launcher: ^6.3.1
+  widget_arrows: ^0.6.0
+  syncfusion_flutter_gauges: ^27.1.56
 
 dev_dependencies:
   flutter_test:

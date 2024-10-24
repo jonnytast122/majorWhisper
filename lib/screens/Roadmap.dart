@@ -110,7 +110,7 @@ class _RoadmapState extends State<Roadmap> {
  Future<Map<String, dynamic>> fetchCareerPath(String majorName) async {
     try {
       final String url = "${RouteHosting.baseUrl}";
-      final String api = url + "/roadmap-generation";
+      final String api = url + "roadmap-generation";
       print("api : " + api);
       final response = await http.post(
         Uri.parse(api),
@@ -126,7 +126,7 @@ class _RoadmapState extends State<Roadmap> {
         return jsonDecode(response.body);
       } else {
         return {
-          'error': 'Failed to load Career path'
+          'error': 'Failed to load Roadmap path'
         }; // Error message if API call fails
       }
     } catch (e) {

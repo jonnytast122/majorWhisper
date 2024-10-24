@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         fontFamily: 'Inter',
         primarySwatch: Colors.blue,
       ),
-      home: Onboarding(),
+      home: Home(),
       debugShowCheckedModeBanner: false,
     );
   }
