@@ -242,8 +242,12 @@ class _CreateCourseState extends State<CreateCourse> {
   }
 
   Widget buildTextFields() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Align headers to the left
+  return SingleChildScrollView(
+    padding: EdgeInsets.only(
+      bottom: MediaQuery.of(context).viewInsets.bottom,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Topic TextField with custom label and hint
         Padding(
@@ -253,9 +257,9 @@ class _CreateCourseState extends State<CreateCourse> {
             children: [
               Row(
                 children: [
-                  SizedBox(width: 8), // Add space between icon and text
+                  SizedBox(width: 8),
                   Text(
-                    '💡Write the topic for course generation (e.g Python...)',
+                    '💡Write the topic for course generation (e.g., Python...)',
                     style: TextStyle(
                       fontFamily: "Inter-bold",
                       fontSize: 11,
@@ -264,36 +268,34 @@ class _CreateCourseState extends State<CreateCourse> {
                   ),
                 ],
               ),
-              SizedBox(height: 8), // Space between label and TextField
+              SizedBox(height: 8),
               TextField(
                 controller: topicController,
                 decoration: InputDecoration(
                   hintText: 'Topic',
                   hintStyle: TextStyle(
-                    color: Colors.grey, // Custom color for the hint text
-                    fontSize: 14, // Font size for hint text
+                    color: Colors.grey,
+                    fontSize: 14,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(
-                          255, 219, 219, 219), // Border color
-                      width: 2.0, // Width of the border
+                      color: const Color.fromARGB(255, 219, 219, 219),
+                      width: 2.0,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(255, 219, 219,
-                          219), // Border color for inactive state
-                      width: 2.0, // Border width
+                      color: const Color.fromARGB(255, 219, 219, 219),
+                      width: 2.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: Colors.blue, // Border color when focused
-                      width: 2.0, // Border width when focused
+                      color: Colors.blue,
+                      width: 2.0,
                     ),
                   ),
                 ),
@@ -301,7 +303,6 @@ class _CreateCourseState extends State<CreateCourse> {
             ],
           ),
         ),
-
         // Description TextField with custom label and hint
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -326,30 +327,28 @@ class _CreateCourseState extends State<CreateCourse> {
                 decoration: InputDecoration(
                   hintText: 'About your course',
                   hintStyle: TextStyle(
-                    color: Colors.grey, // Custom color for the hint text
-                    fontSize: 14, // Font size for hint text
+                    color: Colors.grey,
+                    fontSize: 14,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(
-                          255, 219, 219, 219), // Border color
-                      width: 2.0, // Width of the border
+                      color: const Color.fromARGB(255, 219, 219, 219),
+                      width: 2.0,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: const Color.fromARGB(255, 219, 219,
-                          219), // Border color for inactive state
-                      width: 2.0, // Border width
+                      color: const Color.fromARGB(255, 219, 219, 219),
+                      width: 2.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
                     borderSide: BorderSide(
-                      color: Colors.blue, // Border color when focused
-                      width: 2.0, // Border width when focused
+                      color: Colors.blue,
+                      width: 2.0,
                     ),
                   ),
                 ),
@@ -359,8 +358,10 @@ class _CreateCourseState extends State<CreateCourse> {
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
+
 
   // Step 3: Options dropdown
   Widget buildOptionsDropdown() {

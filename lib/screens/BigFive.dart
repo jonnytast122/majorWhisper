@@ -99,99 +99,96 @@ class _BigfiveState extends State<Bigfive> {
                 child: Column(
                   children: [
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: widget.personalityTraits.length,
-                        itemBuilder: (context, index) {
-                          final trait = widget.personalityTraits[index];
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 16.0),
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 32.0),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 255, 255),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 15.0),
-                                Text(
-                                  trait[
-                                      'trait'], // Display the trait name dynamically
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontFamily: "Inter-bold",
-                                    color: Colors.black,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(
-                                  // Adjust this height to make the gauge smaller
-                                  child: SfRadialGauge(
-                                    axes: <RadialAxis>[
-                                      RadialAxis(
-                                        startAngle: 180,
-                                        endAngle: 0,
-                                        minimum: 0,
-                                        maximum: 100,
-                                        showLabels: false,
-                                        showTicks: false,
-                                        axisLineStyle: AxisLineStyle(
-                                          thickness: 0.3,
-                                          thicknessUnit: GaugeSizeUnit.factor,
-                                          color: Colors.grey.withOpacity(0.3),
-                                          cornerStyle: CornerStyle.bothCurve,
-                                        ),
-                                        pointers: <GaugePointer>[
-                                          RangePointer(
-                                            value:
-                                                trait['percentage'].toDouble(),
-                                            width: 0.3,
-                                            sizeUnit: GaugeSizeUnit.factor,
-                                            color: traitColors[index %
-                                                traitColors
-                                                    .length], // Assign color based on index
-                                            cornerStyle: CornerStyle.bothCurve,
-                                          ),
-                                        ],
-                                        annotations: <GaugeAnnotation>[
-                                          GaugeAnnotation(
-                                            widget: Text(
-                                              '${trait['percentage']}',
-                                              style: TextStyle(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            angle: 90,
-                                            positionFactor: 0.00001,
-                                          ),
-                                          GaugeAnnotation(
-                                            widget: Text(
-                                              trait[
-                                                  'reasoning'], // Use the reasoning dynamically
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color.fromARGB(
-                                                    255, 93, 93, 93),
-                                                fontFamily: "Inter-regular",
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            angle: 90,
-                                            positionFactor: 0.6,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+child: ListView.builder(
+  itemCount: widget.personalityTraits.length,
+  itemBuilder: (context, index) {
+    final trait = widget.personalityTraits[index];
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 255, 255, 255),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // Allow height to be flexible
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 15.0),
+          Text(
+            trait['trait'], // Display the trait name dynamically
+            style: const TextStyle(
+              fontSize: 24,
+              fontFamily: "Inter-bold",
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 15.0), // Add spacing between text and gauge
+          SizedBox(
+            // Remove fixed height; allow gauge to dictate size
+            child: SfRadialGauge(
+              axes: <RadialAxis>[
+                RadialAxis(
+                  startAngle: 180,
+                  endAngle: 0,
+                  minimum: 0,
+                  maximum: 100,
+                  showLabels: false,
+                  showTicks: false,
+                  axisLineStyle: AxisLineStyle(
+                    thickness: 0.3,
+                    thicknessUnit: GaugeSizeUnit.factor,
+                    color: Colors.grey.withOpacity(0.3),
+                    cornerStyle: CornerStyle.bothCurve,
+                  ),
+                  pointers: <GaugePointer>[
+                    RangePointer(
+                      value: trait['percentage'].toDouble(),
+                      width: 0.3,
+                      sizeUnit: GaugeSizeUnit.factor,
+                      color: traitColors[index % traitColors.length], // Assign color based on index
+                      cornerStyle: CornerStyle.bothCurve,
+                    ),
+                  ],
+                  annotations: <GaugeAnnotation>[
+                    GaugeAnnotation(
+                      widget: Text(
+                        '${trait['percentage']}',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
+                      angle: 90,
+                      positionFactor: 0.000001,
+                    ),
+                    GaugeAnnotation(
+                      widget: Text(
+                        trait['reasoning'], // Use the reasoning dynamically
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color.fromARGB(255, 93, 93, 93),
+                          fontFamily: "Inter-regular",
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      angle: 90,
+                      positionFactor: 0.8,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 60.0), // Optional spacing at the bottom
+        ],
+      ),
+    );
+  },
+),
+
                     ),
 //                     const SizedBox(height: 16.0), // Add some spacing
 //                     // Elevated button to fetch Holland Code

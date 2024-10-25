@@ -26,7 +26,7 @@ class _MajordetailState extends State<Majordetail> {
 
       if (userId != null) {
         final userDoc =
-        FirebaseFirestore.instance.collection('major_detail').doc(userId);
+            FirebaseFirestore.instance.collection('major_detail').doc(userId);
 
         // Append new major details to the existing data array
         await userDoc.update({
@@ -109,7 +109,7 @@ class _MajordetailState extends State<Majordetail> {
                   image: imageUrl != null && imageUrl.isNotEmpty
                       ? NetworkImage(imageUrl)
                       : AssetImage('assets/icon/profile_holder.png')
-                  as ImageProvider,
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -117,7 +117,7 @@ class _MajordetailState extends State<Majordetail> {
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios_rounded,
-                    color: Colors.white,
+                    color: Color(0xFF006FFD),
                     size: 30,
                   ),
                   onPressed: () {
@@ -127,10 +127,27 @@ class _MajordetailState extends State<Majordetail> {
                 title: Text(
                   widget.majorName,
                   style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF006FFD),
+                      shadows: [
+                        Shadow(
+                            // bottomLeft
+                            offset: Offset(-1.5, -1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // bottomRight
+                            offset: Offset(1.5, -1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // topRight
+                            offset: Offset(1.5, 1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // topLeft
+                            offset: Offset(-1.5, 1.5),
+                            color: Colors.white),
+                      ]),
                 ),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -184,7 +201,7 @@ class _MajordetailState extends State<Majordetail> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         padding:
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       ),
                       onPressed: isSaved
                           ? null // Disable button if already saved
