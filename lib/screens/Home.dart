@@ -852,7 +852,7 @@ Future<bool?> Quizpopscreen(BuildContext context) {
             ),
             const SizedBox(height: 10),
             const Text(
-              'You have to complete 10 questions',
+              'You have to complete 21 questions',
               style: TextStyle(
                 fontSize: 16,
                 fontFamily: 'Inter-regular',

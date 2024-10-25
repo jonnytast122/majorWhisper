@@ -10,6 +10,7 @@ class _QuizFinishedState extends State<QuizFinished> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // Center items vertically
         crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally

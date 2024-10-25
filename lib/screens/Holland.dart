@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:majorwhisper/screens/Home.dart';
 
-class Holland extends StatefulWidget {
-  @override
-  _HollandState createState() => _HollandState();
-}
+class Holland extends StatelessWidget {
+  final List<Map<String, dynamic>> hollandData; // Accept the Holland data as a List
 
-class _HollandState extends State<Holland> {
+  Holland({required this.hollandData});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,11 +19,35 @@ class _HollandState extends State<Holland> {
               icon: const Icon(Icons.arrow_back_ios_rounded),
               color: const Color.fromARGB(255, 0, 0, 0),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Home()),
-                );
+                Navigator.of(context).pop();
               },
+            ),
+          ),
+          title: Align(
+            alignment: Alignment.topCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Holland Code',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontFamily: "Inter-semibold",
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                const SizedBox(height: 1.0),
+                const Text(
+                  'Discover Your Personality Traits',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: "Inter-medium",
+                    color: Color.fromARGB(255, 100, 100, 100),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
         ),
@@ -34,36 +56,6 @@ class _HollandState extends State<Holland> {
         children: [
           Container(
             color: Colors.white,
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Holland Code',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontFamily: "Inter-semibold",
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
-                  ),
-                  const SizedBox(height: 1.0),
-                  const Text(
-                    'Discover Your Personality Traits',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontFamily: "Inter-medium",
-                      color: Color.fromARGB(255, 100, 100, 100),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -79,8 +71,13 @@ class _HollandState extends State<Holland> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ListView.builder(
-                  itemCount: 1, // Update based on your list length
+                  itemCount: hollandData.length,
                   itemBuilder: (context, index) {
+                    final trait = hollandData[index];
+                    final traitName = trait['holland_code_name'];
+                    final percentage = trait['percentage'];
+                    final reasoning = trait['reasoning'];
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16.0),
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -93,7 +90,7 @@ class _HollandState extends State<Holland> {
                         children: [
                           const SizedBox(height: 10.0),
                           Text(
-                            "Social (S)", // Replace with dynamic data
+                            '$traitName (${percentage.toStringAsFixed(0)}%)', // Display trait name and its percentage
                             style: const TextStyle(
                               fontSize: 24,
                               fontFamily: "Inter-bold",
@@ -104,7 +101,7 @@ class _HollandState extends State<Holland> {
                           SizedBox(height: 10),
                           // Wrap the gauge in a SizedBox to control its size
                           SizedBox(
-                            height: 160, // Adjust this value to make the gauge smaller
+                            height: 160,
                             child: SfRadialGauge(
                               axes: <RadialAxis>[
                                 RadialAxis(
@@ -122,18 +119,18 @@ class _HollandState extends State<Holland> {
                                   ),
                                   pointers: <GaugePointer>[
                                     RangePointer(
-                                      value: 70,
+                                      value: percentage.toDouble(),
                                       width: 0.3,
                                       sizeUnit: GaugeSizeUnit.factor,
-                                      color: Color(0xFF805FDD),
+                                      color: Color(0xFF805FDD), // Change color dynamically if needed
                                       cornerStyle: CornerStyle.bothCurve,
                                     ),
                                   ],
                                   annotations: <GaugeAnnotation>[
-                                    // Annotation for the percentage value (70)
+                                    // Annotation for the percentage value
                                     GaugeAnnotation(
                                       widget: Text(
-                                        '70',
+                                        '${percentage.toStringAsFixed(0)}%', // Show percentage without decimal
                                         style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold,
@@ -148,18 +145,16 @@ class _HollandState extends State<Holland> {
                                         ),
                                       ),
                                       angle: 90,
-                                      positionFactor: 0.1, // Position closer to the center
+                                      positionFactor: 0.1,
                                     ),
-                                    // Additional annotation for the text below the percentage
                                   ],
                                 ),
                               ],
                             ),
                           ),
-                          // Text under the gauge chart
-                          const SizedBox(height: 10.0), // Space between gauge and text
+                          const SizedBox(height: 10.0),
                           Text(
-                            'You scored high on agreeableness (helping others frequently without expecting anything in return, Q6) and prefer collaborating in group projects (Q9). Even though you may not seek out social interaction (Q3), your strong desire to help and collaborate indicates a Social orientation.',
+                            reasoning,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: 12,
