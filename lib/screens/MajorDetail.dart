@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
+import 'package:majorwhisper/screens/University.dart';
 
 class Majordetail extends StatefulWidget {
   final String majorName;
@@ -94,6 +95,7 @@ class _MajordetailState extends State<Majordetail> {
 
     final imageUrl = widget.data['image_url'];
     final majorDetail = widget.data['major_detail'] ?? 'No data available';
+    final university = widget.data['university'] ?? 'No university data available';
 
     return Scaffold(
       body: Stack(
@@ -177,46 +179,46 @@ class _MajordetailState extends State<Majordetail> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Markdown(
-                        data: majorDetail,
-                        styleSheet: MarkdownStyleSheet(
-                          p: TextStyle(
-                            fontSize: 13,
-                            fontFamily: 'Inter-regular',
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(250, 50),
-                        backgroundColor: isSaved
-                            ? Colors.green // Change to green after saving
-                            : Color(0xFF006FFD), // Blue before saving
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                      ),
-                      onPressed: isSaved
-                          ? null // Disable button if already saved
-                          : saveToFirestore,
-                      child: Text(
-                        isSaved ? 'Saved' : 'Save', // Change text after saving
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontFamily: "Inter-semibold",
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+child: Column(
+  children: [
+    Expanded(
+      child: Markdown(
+        data: "$majorDetail\n\n$university", // Concatenate both texts
+        styleSheet: MarkdownStyleSheet(
+          p: TextStyle(
+            fontSize: 13,
+            fontFamily: 'Inter-regular',
+          ),
+        ),
+      ),
+    ),
+    SizedBox(height: 20),
+    ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(250, 50),
+        backgroundColor: isSaved
+            ? Colors.green // Change to green after saving
+            : Color(0xFF006FFD), // Blue before saving
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      ),
+      onPressed: isSaved
+          ? null // Disable button if already saved
+          : saveToFirestore,
+      child: Text(
+        isSaved ? 'Saved' : 'Save', // Change text after saving
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          fontFamily: "Inter-semibold",
+        ),
+      ),
+    ),
+  ],
+),
+
               ),
             ),
           ),

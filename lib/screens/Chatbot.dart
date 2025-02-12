@@ -14,7 +14,7 @@ class Chatbot extends StatefulWidget {
 }
 
 class _ChatbotState extends State<Chatbot> {
-  String fullMessage = "How may I help you?";
+  String fullMessage = "Hello, I'm MajorMentor. How may I help you?";
   String displayedMessage = "";
   int charIndex = 0;
   late Timer _timer;
@@ -72,7 +72,7 @@ class _ChatbotState extends State<Chatbot> {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        fullMessage = data["answer"]; // Get the answer from the API response
+        fullMessage = data["answer"].replaceAll("\n", ""); // Get the answer from the API response
       } else {
         fullMessage = "Sorry, something went wrong. Please try again.";
       }

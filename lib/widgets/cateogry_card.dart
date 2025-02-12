@@ -23,62 +23,64 @@ class CategoryCard extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.6),
-              spreadRadius: .05,
-              blurRadius: 4.0,
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 100, // Set a fixed height for the image
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
+      child: SizedBox( // Ensures a fixed size
+        width: 180, // Set width explicitly
+        height: 240, // Set height explicitly
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 75, 75, 75).withOpacity(0.15),
+                blurRadius: 8,
+                spreadRadius: 3,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded( // Allows image to fill available space
                 child: Image.asset(
                   imagePath,
-                  fit: BoxFit.cover,
+                  width: 140,
+                  height: 140,
+                  fit: BoxFit.contain,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, top: 6, right: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontFamily: 'Inter-black',
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    "See Majors",
-                    style: TextStyle(
-                      color: const Color(0xFF727272),
-                      fontSize: 10,
-                      fontFamily: 'Inter-regular',
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ],
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Inter-bold',
+                  color: Colors.black,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Listmajors(title: title),
+                    ),
+                  );
+                },
+                child: Text(
+                  "See Majors",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 86, 86, 86),
+                    fontSize: 10,
+                    fontFamily: 'Inter-regular',
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

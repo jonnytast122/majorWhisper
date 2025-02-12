@@ -145,6 +145,13 @@ flutter:
   - assets/icon/map.png
   - assets/icon/facebook.png
   - assets/icon/chat_typing.json
+  - assets/images/learning_path.png
+  - assets/images/career_path.png
+  - assets/images/career.png
+  - assets/images/start_quiz.png
+  - assets/images/Business.png
+  - assets/images/Science.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

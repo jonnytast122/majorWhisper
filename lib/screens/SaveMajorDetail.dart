@@ -26,6 +26,7 @@ class _SaveMajorDetailState extends State<SaveMajorDetail> {
 
     final imageUrl = widget.imageUrl;
     final majorDetail = widget.data['major_detail'] ?? 'No data available';
+    final university = widget.data['university'] ?? 'No university data available';
 
     return Scaffold(
       body: Stack(
@@ -101,7 +102,7 @@ class _SaveMajorDetailState extends State<SaveMajorDetail> {
                   children: [
                     Expanded(
                       child: Markdown(
-                        data: majorDetail,
+                        data: "$majorDetail\n\n$university",
                         styleSheet: MarkdownStyleSheet(
                           p: TextStyle(
                             fontSize: 13,

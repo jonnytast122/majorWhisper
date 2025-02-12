@@ -20,7 +20,7 @@ import 'package:majorwhisper/screens/SaveCareer.dart';
 import 'package:majorwhisper/screens/SaveLearning.dart';
 import 'package:majorwhisper/screens/University.dart';
 import 'routes/RouteHosting.dart';
-
+import 'package:majorwhisper/screens/Explore.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -40,7 +40,7 @@ class HomeState extends State<Home> {
     _widgetOptions = <Widget>[
       HomeContent(
           navigateToProfile: _navigateToProfile), // Separate the home content
-      CourseGen(), // Placeholder for Explore screen
+      const Explore(), // Placeholder for Explore screen
       University(),
       Chatbot(),
       const MyProfile(),
@@ -51,7 +51,6 @@ class HomeState extends State<Home> {
     setState(() {
       _selectedIndex = index;
     });
-
   }
 
   void _onItemTapped(int index) {
@@ -184,7 +183,8 @@ class DetailMajor extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.business_center, color: Color(0xFF006FFD)),
+                leading:
+                    const Icon(Icons.business_center, color: Color(0xFF006FFD)),
                 title: const Text('Saved Career Path'),
                 trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
                 onTap: () {
@@ -222,7 +222,7 @@ class DetailMajor extends StatelessWidget {
     );
   }
 
-    void _showRoadmapDialog(BuildContext context) {
+  void _showRoadmapDialog(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: true, // Allows dismissal by tapping outside
@@ -345,294 +345,213 @@ class DetailMajor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final greetingData = getTimeBasedGreeting();
-    return Container(
-      padding: const EdgeInsets.only(top: 0),
-      height: 410,
-      width: double.infinity,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Color(0xFF006FFD),
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Column(
+      children: [
+        // Profile and Name Holder
+        Column(
           children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: onProfileTap,
-                      child: FutureBuilder<String?>(
-                        future: getProfile(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator(); // Loading indicator
-                          } else if (snapshot.hasError) {
-                            return Image.asset(
-                              'assets/icon/profile_holder.png', // Fallback image on error
-                              width: 75,
-                              height: 75,
-                            );
-                          } else if (snapshot.hasData) {
-                            String? imagePath = snapshot.data;
-                            if (imagePath != null) {
+            const SizedBox(height: 60), // Adjust profile position downward
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: onProfileTap,
+                        child: FutureBuilder<String?>(
+                          future: getProfile(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
                               return Image.asset(
-                                imagePath, // Use network image if URL is provided
+                                'assets/icon/profile_holder.png',
+                                width: 75,
+                                height: 75,
+                              );
+                            } else if (snapshot.hasData) {
+                              String? imagePath = snapshot.data;
+                              return Image.asset(
+                                imagePath ?? 'assets/icon/profile_holder.png',
                                 width: 75,
                                 height: 75,
                                 fit: BoxFit.cover,
                               );
                             } else {
                               return Image.asset(
-                                'assets/icon/profile_holder.png', // Fallback image if no path is returned
+                                'assets/icon/profile_holder.png',
                                 width: 75,
                                 height: 75,
                               );
                             }
-                          } else {
-                            return Image.asset(
-                              'assets/icon/profile_holder.png', // Fallback image if no data
-                              width: 75,
-                              height: 75,
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
+                          },
                         ),
-                        Row(
+                      ),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                greetingData['icon'],
+                                color: Colors.black,
+                                size: 15,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                greetingData['greeting'],
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                  fontFamily: 'Inter-regular',
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          FutureBuilder<String?>(
+                            future: getUsername(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return const Text('Error loading username');
+                              } else if (snapshot.hasData) {
+                                return Text(
+                                  "${snapshot.data},",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontFamily: 'Inter-black',
+                                  ),
+                                );
+                              } else {
+                                return const Text(
+                                  "John Doe,",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontFamily: 'Inter-medium',
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () => _showOptionsDialog(context),
+                    icon: const Icon(
+                      Icons.dehaze_rounded,
+                      color: Colors.black,
+                    ),
+                    iconSize: 35,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+                height: 16), // Controlled spacing before the blue container
+          ],
+        ),
+        // Blue Background Container
+        
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF006FFD),
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              greetingData['icon'],
-                              color: Colors.white,
-                              size: 15,
-                            ),
-                            const SizedBox(width: 10),
                             Text(
-                              greetingData['greeting'],
-                              style: const TextStyle(
+                              "Discover and \nFind Your Future",
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 10,
+                                fontSize:
+                                    screenWidth * 0.05, // Responsive font size
+                                fontFamily: 'Inter-bold',
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Take the quiz and let us match you with your perfect majors!",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 207, 207, 207),
+                                fontSize:
+                                    screenWidth * 0.03, // Responsive font size
                                 fontFamily: 'Inter-regular',
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 5),
-                        FutureBuilder<String?>(
-                          future: getUsername(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return const Text('Error loading username');
-                            } else if (snapshot.hasData) {
-                              return Text(
-                                "${snapshot.data},",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'Inter-black',
-                                ),
-                              );
-                            } else {
-                              return const Text(
-                                "John Doe,",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: 'Inter-medium',
-                                ),
-                              );
-                            }
-                          },
-                        ),
-                      ],
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/start_quiz.png',
+                      width: screenWidth * 0.4, // Responsive image width
+                      height: screenWidth * 0.4, // Responsive image height
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: () => _showOptionsDialog(context),
-                  icon: const Icon(
-                    Icons
-                        .dehaze_rounded, // Use an appropriate icon from Icons or a custom one
-                    color: Colors.white,
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      bool? shouldNavigate = await Quizpopscreen(context);
+                      if (shouldNavigate == true) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Quiz()),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: Text(
+                      'Start Quiz',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04, // Responsive font size
+                        fontFamily: 'Inter-bold',
+                        color: const Color(0xFF006FFD),
+                      ),
+                    ),
                   ),
-                  iconSize: 35, // Adjust the icon size as needed
-                  padding: const EdgeInsets.all(8.0), // Add padding if needed
                 ),
               ],
             ),
-            const SizedBox(height: 30), // Space between Row and TextFormField
-            const Text(
-              "Discover and Find Your Future",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontFamily: 'Inter-semibold',
-              ),
-            ),
-            const SizedBox(height: 5),
-            TextFormField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: "Search Major",
-                hintStyle: TextStyle(
-                  color: Colors.black.withOpacity(0.6),
-                  fontSize: 15,
-                  fontFamily: 'Inter-regular',
-                ),
-                prefixIcon: const Icon(
-                  Icons.search_rounded,
-                  color: Color(0xFF000000),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: const Color(0xFFEDEDED),
-                contentPadding: const EdgeInsets.symmetric(
-                    vertical: 13.0), // Adjust the vertical padding
-              ),
-              onFieldSubmitted: (value) {
-                _fetchDataAndNavigate(context, value);
-              },
-              onChanged: (value) {
-                // Optionally handle input changes
-              },
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Button 1
-                ElevatedButton(
-                  onPressed: () => _showLearningDialog(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    minimumSize: const Size(
-                        100, 100), // Set uniform size for all buttons
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.school, // Replace with your desired icon
-                        color: Color(0xFF006FFD),
-                        size: 30,
-                      ),
-                      SizedBox(height: 8), // Add space between icon and text
-                      Text(
-                        'Learning\nPath',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF006FFD),
-                          fontSize: 12,
-                          fontFamily: 'Inter-semibold',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Button 2
-                ElevatedButton(
-                  onPressed: () => _showCareerDialog(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    minimumSize: const Size(
-                        100, 100), // Set uniform size for all buttons
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.business_center, // Replace with your desired icon
-                        color: Color(0xFF006FFD),
-                        size: 30,
-                      ),
-                      SizedBox(height: 8), // Add space between icon and text
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 7.0, vertical: 4.0),
-                        child: Text(
-                          'Career\nPath',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Color(0xFF006FFD),
-                            fontSize: 12,
-                            fontFamily: 'Inter-semibold',
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                // Button 3
-                ElevatedButton(
-                  onPressed: () => _showRoadmapDialog(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    minimumSize: const Size(
-                        100, 100), // Set uniform size for all buttons
-                  ),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.assistant, // Replace with your desired icon
-                        color: Color(0xFF006FFD),
-                        size: 30,
-                      ),
-                      SizedBox(height: 8), // Add space between icon and text
-                      Text(
-                        'Generate\nRoadmap',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF006FFD),
-                          fontSize: 12,
-                          fontFamily: 'Inter-semibold',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -643,179 +562,105 @@ class ExploreCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: const Color(0xFF006FFD),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Discover your Future",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'Inter-black',
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    const Text(
-                      "take the quiz and let us match\nyou with your perfect majors!",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontFamily: 'Inter-regular',
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () async {
-                        bool? shouldNavigate =
-                            await Quizpopscreen(context); // Show the dialog
-
-                        if (shouldNavigate == true) {
-                          // Navigate to Quiz if confirmed
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => Quiz()),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Start Quiz',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontFamily: 'Inter-semibold',
-                          color: Color(0xFF006FFD),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Image.asset(
-                  'assets/images/cloud_illustration.png',
-                  width: 150,
-                  height: 110,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 15),
           const Text(
-            "Explore Categories",
+            'Explore Categories',
             style: TextStyle(
-              color: Colors.black,
-              fontSize: 25,
-              fontFamily: 'Inter-semibold',
+              fontSize: 20,
+              fontFamily: 'Inter-bold',
+              color: Color(0xFF2f3036),
             ),
           ),
           GridView.count(
             crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 20,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: const [
               CategoryCard(
                 title: "Business",
-                imagePath: "assets/images/business_vector.jpg",
+                imagePath: "assets/images/Business.png",
               ),
               CategoryCard(
                 title: "Science",
-                imagePath: "assets/images/science_vector.jpg",
+                imagePath: "assets/images/Science.png",
               ),
               CategoryCard(
                 title: "Engineering",
                 imagePath: "assets/images/engineering_vector.jpg",
               ),
-              CategoryCard(
-                title: "Art",
-                imagePath: "assets/images/art_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Humanity",
-                imagePath: "assets/images/humanity_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Technology",
-                imagePath: "assets/images/technology_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Natural Science",
-                imagePath: "assets/images/natural_science_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Social Science",
-                imagePath: "assets/images/social_science_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Education",
-                imagePath: "assets/images/education_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Law",
-                imagePath: "assets/images/law_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Health Science",
-                imagePath: "assets/images/health_science_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Sport Science",
-                imagePath: "assets/images/sport_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Agriculture and Environmental ",
-                imagePath: "assets/images/agriculture_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Architecture",
-                imagePath: "assets/images/architect_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Media",
-                imagePath: "assets/images/media_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Linguistics",
-                imagePath: "assets/images/language_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Robotics and Automation",
-                imagePath: "assets/images/robotic_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Food Technology",
-                imagePath: "assets/images/food_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Ethnic and Philosphy",
-                imagePath: "assets/images/ethnic_vector.jpg",
-              ),
-              CategoryCard(
-                title: "Religious Studies",
-                imagePath: "assets/images/religion_vector.jpg",
-              ),
+              // CategoryCard(
+              //   title: "Art",
+              //   imagePath: "assets/images/art_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Humanity",
+              //   imagePath: "assets/images/humanity_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Technology",
+              //   imagePath: "assets/images/technology_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Natural Science",
+              //   imagePath: "assets/images/natural_science_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Social Science",
+              //   imagePath: "assets/images/social_science_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Education",
+              //   imagePath: "assets/images/education_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Law",
+              //   imagePath: "assets/images/law_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Health Science",
+              //   imagePath: "assets/images/health_science_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Sport Science",
+              //   imagePath: "assets/images/sport_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Agriculture and Environmental ",
+              //   imagePath: "assets/images/agriculture_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Architecture",
+              //   imagePath: "assets/images/architect_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Media",
+              //   imagePath: "assets/images/media_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Linguistics",
+              //   imagePath: "assets/images/language_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Robotics and Automation",
+              //   imagePath: "assets/images/robotic_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Food Technology",
+              //   imagePath: "assets/images/food_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Ethnic and Philosphy",
+              //   imagePath: "assets/images/ethnic_vector.jpg",
+              // ),
+              // CategoryCard(
+              //   title: "Religious Studies",
+              //   imagePath: "assets/images/religion_vector.jpg",
+              // ),
             ],
           ),
         ],

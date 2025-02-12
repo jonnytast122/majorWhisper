@@ -47,9 +47,13 @@ class BottomNavBar extends StatelessWidget {
                 icon: Icon(Icons.home_rounded),
                 label: 'Home',
               ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.video_library),
+              //   label: 'Course',
+              // ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.video_library),
-                label: 'Course',
+                icon: Icon(Icons.search),
+                label: 'Explore',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.business),
@@ -59,10 +63,10 @@ class BottomNavBar extends StatelessWidget {
                 icon: Icon(Icons.chat),
                 label: 'Chatbot',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.person),
+              //   label: 'Profile',
+              // ),
             ],
           ),
         ),
