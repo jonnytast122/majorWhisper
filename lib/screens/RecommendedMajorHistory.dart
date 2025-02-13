@@ -31,11 +31,11 @@ class _RecommendedMajorHistoryState extends State<RecommendedMajorHistory> {
           ),
           centerTitle: true,
           title: Padding(
-            padding: const EdgeInsets.only(top: 20.0),
+            padding: const EdgeInsets.only(top: 25.0),
             child: const Text(
               'Recommended Major',
               style: TextStyle(
-                fontSize: 30,
+                fontSize: 20,
                 fontFamily: "Inter-bold",
                 color: Colors.black,
               ),

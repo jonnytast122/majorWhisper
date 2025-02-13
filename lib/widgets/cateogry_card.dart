@@ -53,7 +53,7 @@ class CategoryCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, top: 6, right: 15),
+              padding: const EdgeInsets.only(left: 15, top: 8, right: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -61,11 +61,11 @@ class CategoryCard extends StatelessWidget {
                     title,
                     style: const TextStyle(
                       color: Colors.black,
-                      fontSize: 16,
+                      fontSize: 14,
                       fontFamily: 'Inter-black',
                     ),
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 8),
                   Text(
                     "See Majors",
                     style: TextStyle(

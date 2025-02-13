@@ -171,7 +171,7 @@ class _MyhistoryState extends State<Myhistory> {
             'My History',
             style: TextStyle(
               color: Color.fromARGB(255, 0, 0, 0),
-              fontSize: 30,
+              fontSize: 25,
               fontFamily: 'Inter-semibold',
             ),
           ),

@@ -447,7 +447,7 @@ class _QuizState extends State<Quiz> {
                       child: Text(
                         question['question_text'],
                         style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             color: Colors.black,
                             fontFamily: "Inter-Extrabold"),
                         textAlign: TextAlign.center,
@@ -503,7 +503,7 @@ class _QuizState extends State<Quiz> {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontFamily: "Inter-medium",
                   color: Color(0xFF5B1CAE), // Purple for label
                 ),
@@ -513,7 +513,7 @@ class _QuizState extends State<Quiz> {
                 child: Text(
                   text,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontFamily: "Inter-semibold",
                   ),
                   textAlign: TextAlign.left,

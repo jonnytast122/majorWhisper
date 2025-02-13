@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:majorwhisper/screens/MyHistory.dart';
 import 'package:majorwhisper/screens/MyProfile.dart';
 import 'package:majorwhisper/screens/Roadmap.dart';
+import 'package:majorwhisper/screens/auth/Login.dart';
 import 'package:majorwhisper/widgets/cateogry_card.dart';
 import 'package:majorwhisper/widgets/navbar.dart';
 import 'package:majorwhisper/screens/Learning.dart';
@@ -189,6 +190,21 @@ class DetailMajor extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => SaveCareer()),
+                  );
+                },
+              ),
+              ListTile(
+                leading:
+                    const Icon(Icons.logout_rounded, color: Color(0xFF006FFD)),
+                title: const Text('Sign out'),
+                trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                onTap: () {
+                  // Handle Saved Career Path option tap
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Login()), // Replace `HomeScreen()` with your actual home screen widget
                   );
                 },
               ),
@@ -561,7 +577,7 @@ class ExploreCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -629,7 +645,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/sport_vector.jpg",
               ),
               CategoryCard(
-                title: "Agriculture and Environmental ",
+                title: "Agriculture ",
                 imagePath: "assets/images/agriculture_vector.jpg",
               ),
               CategoryCard(
@@ -645,7 +661,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/language_vector.jpg",
               ),
               CategoryCard(
-                title: "Robotics and Automation",
+                title: "Robotics",
                 imagePath: "assets/images/robotic_vector.jpg",
               ),
               CategoryCard(
@@ -653,7 +669,7 @@ class ExploreCategory extends StatelessWidget {
                 imagePath: "assets/images/food_vector.jpg",
               ),
               CategoryCard(
-                title: "Ethnic and Philosphy",
+                title: "Philosphy",
                 imagePath: "assets/images/ethnic_vector.jpg",
               ),
               CategoryCard(
@@ -667,7 +683,7 @@ class ExploreCategory extends StatelessWidget {
     );
   }
 }
-
+ 
 Future<String?> showLevelSelectionDialog(BuildContext context) async {
   return await showDialog<String>(
     context: context,
@@ -742,4 +758,3 @@ Future<String?> showLevelSelectionDialog(BuildContext context) async {
     },
   );
 }
-

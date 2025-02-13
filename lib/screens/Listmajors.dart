@@ -138,7 +138,8 @@ class _ListmajorsState extends State<Listmajors> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight), // Use default toolbar height
+        preferredSize:
+            Size.fromHeight(kToolbarHeight), // Use default toolbar height
         child: AppBar(
           backgroundColor: const Color(0xFF006FFD), // Blue background color
           elevation: 0,
@@ -146,7 +147,8 @@ class _ListmajorsState extends State<Listmajors> {
             color: Colors.white, // Set the icon color to white
           ),
           title: Padding(
-            padding: const EdgeInsets.only(top: 0), // Add padding to the top of the title
+            padding: const EdgeInsets.only(
+                top: 0), // Add padding to the top of the title
             child: Text(
               widget.title, // Use the title passed from the CategoryCard
               style: const TextStyle(
@@ -203,7 +205,8 @@ class _ListmajorsState extends State<Listmajors> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.75, // Height of the white container
+              height: MediaQuery.of(context).size.height *
+                  0.75, // Height of the white container
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -225,73 +228,79 @@ class _ListmajorsState extends State<Listmajors> {
                       child: ListView.builder(
                         itemCount: majorNames.length, // Number of items
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 16.0),
-                            padding: const EdgeInsets.all(16.0),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 111, 174, 255),
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 60.0,
-                                  height: 60.0,
-                                  decoration: BoxDecoration(
-                                    image: const DecorationImage(
-                                      image: AssetImage('assets/images/box.png'), // Path to your image
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${index + 1}',
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        color: Colors.white,
-                                        fontFamily: "Inter-black",
+                          return GestureDetector(
+                            // Wrap the entire card in GestureDetector
+                            onTap: () {
+                              _fetchDataAndNavigate(context, majorNames[index]);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 16.0),
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 111, 174, 255),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 60.0,
+                                    height: 60.0,
+                                    decoration: BoxDecoration(
+                                      image: const DecorationImage(
+                                        image: AssetImage(
+                                            'assets/images/box.png'), // Path to your image
+                                        fit: BoxFit.cover,
                                       ),
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(width: 20.0),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        majorNames[index], // Major name from API
+                                    child: Center(
+                                      child: Text(
+                                        '${index + 1}',
                                         style: const TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: "Inter-semibold",
-                                          color: Colors.black,
+                                          fontSize: 25,
+                                          color: Colors.white,
+                                          fontFamily: "Inter-black",
                                         ),
                                       ),
-                                      const SizedBox(height: 4.0),
-                                      Text(
-                                        majorDescriptions[index], // Description from API
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.black54,
-                                          fontFamily: "Inter-regular",
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    _fetchDataAndNavigate(context, majorNames[index]);
-                                  },
-                                  child: Image.asset(
+                                  const SizedBox(width: 20.0),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          majorNames[
+                                              index], // Major name from API
+                                          style: const TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "Inter-semibold",
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4.0),
+                                        Text(
+                                          majorDescriptions[
+                                              index], // Description from API
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.black54,
+                                            fontFamily: "Inter-regular",
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Image.asset(
                                     'assets/icon/arrow.png', // Path to your custom icon
                                     width: 40.0,
                                     height: 30.0,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },

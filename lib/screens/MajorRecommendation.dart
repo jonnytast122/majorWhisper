@@ -661,97 +661,11 @@ class _MajorrecomState extends State<Majorrecom> {
                     // Display the button only when the loading is complete
                     if (!isLoading)
                       ElevatedButton(
-                        onPressed: () async {
-                          // Show loading dialog
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return Dialog(
-                                child: Container(
-                                  padding: const EdgeInsets.all(16),
-                                  height: 300,
-                                  width: 300,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Lottie.asset(
-                                        'assets/icon/learning_loading.json', // Path to your Lottie animation file
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.fill,
-                                      ),
-                                      const SizedBox(height: 20),
-                                      const Text(
-                                        'Personalized is Generating\nAlmost Ready!',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: 'Inter-semibold',
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
+                        onPressed: () {
+                          _showRatingDialog(
+                            context,
+                            user!,
                           );
-
-                          try {
-                            // Make the API request
-                            final response = await http.post(
-                              Uri.parse(
-                                  '${RouteHosting.baseUrl}big-five-personality-traits'),
-                              headers: {'Content-Type': 'application/json'},
-                              body: jsonEncode({'uuid': userId}),
-                            );
-
-                            if (response.statusCode == 200) {
-                              // Parse the response
-                              final data = jsonDecode(response.body);
-                              List<dynamic> personalityTraits =
-                                  data['personality_traits'];
-
-                              // Navigate to BigFive, passing the data
-                              Navigator.of(context)
-                                  .pop(); // Close the loading dialog
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => Bigfive(
-                                    personalityTraits: personalityTraits,
-                                  ),
-                                ),
-                              );
-                            } else {
-                              throw Exception(
-                                  'Failed to load personality traits');
-                            }
-                          } catch (e) {
-                            // Handle errors (e.g., show a Snackbar or AlertDialog)
-                            Navigator.of(context)
-                                .pop(); // Close the loading dialog
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Error'),
-                                  content: const Text(
-                                      'Failed to fetch personality traits. Please try again later.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Color(0xFF006FFD),
@@ -763,7 +677,7 @@ class _MajorrecomState extends State<Majorrecom> {
                           ),
                         ),
                         child: const Text(
-                          'Personality Traits',
+                          'Back Home',
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: "Inter-semibold",
