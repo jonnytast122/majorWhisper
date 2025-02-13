@@ -20,6 +20,11 @@ String formatTimestamp(DateTime dateTime) {
 String timestamp = formatTimestamp(DateTime.now());
 
 class Quiz extends StatefulWidget {
+
+  final String level;
+
+  Quiz({required this.level});
+
   @override
   _QuizState createState() => _QuizState();
 }
@@ -59,7 +64,7 @@ class _QuizState extends State<Quiz> {
     try {
       // Make a POST request to the API
       final response = await http.post(
-        Uri.parse('${RouteHosting.baseUrl}question-generation'),
+        Uri.parse('${RouteHosting.baseUrl}question-generation-for-'+widget.level),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'uuid': userUUID}),
       );

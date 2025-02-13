@@ -43,7 +43,6 @@ class HomeState extends State<Home> {
       const Explore(), // Placeholder for Explore screen
       University(),
       Chatbot(),
-      const MyProfile(),
     ];
   }
 
@@ -60,9 +59,7 @@ class HomeState extends State<Home> {
   }
 
   void _navigateToProfile() {
-    setState(() {
-      _selectedIndex = 4; // Assuming 4 is the index for MyProfile
-    });
+    MyProfile();
   }
 
   @override
@@ -464,9 +461,9 @@ class DetailMajor extends StatelessWidget {
           ],
         ),
         // Blue Background Container
-        
+
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -520,11 +517,13 @@ class DetailMajor extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      bool? shouldNavigate = await Quizpopscreen(context);
-                      if (shouldNavigate == true) {
+                      String? selectedLevel =
+                          await showLevelSelectionDialog(context);
+                      if (selectedLevel != null) {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => Quiz()),
+                          MaterialPageRoute(
+                              builder: (context) => Quiz(level: selectedLevel)),
                         );
                       }
                     },
@@ -569,7 +568,7 @@ class ExploreCategory extends StatelessWidget {
           const Text(
             'Explore Categories',
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 28,
               fontFamily: 'Inter-bold',
               color: Color(0xFF2f3036),
             ),
@@ -583,84 +582,84 @@ class ExploreCategory extends StatelessWidget {
             children: const [
               CategoryCard(
                 title: "Business",
-                imagePath: "assets/images/Business.png",
+                imagePath: "assets/images/business_vector.jpg",
               ),
               CategoryCard(
                 title: "Science",
-                imagePath: "assets/images/Science.png",
+                imagePath: "assets/images/science_vector.jpg",
               ),
               CategoryCard(
                 title: "Engineering",
                 imagePath: "assets/images/engineering_vector.jpg",
               ),
-              // CategoryCard(
-              //   title: "Art",
-              //   imagePath: "assets/images/art_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Humanity",
-              //   imagePath: "assets/images/humanity_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Technology",
-              //   imagePath: "assets/images/technology_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Natural Science",
-              //   imagePath: "assets/images/natural_science_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Social Science",
-              //   imagePath: "assets/images/social_science_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Education",
-              //   imagePath: "assets/images/education_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Law",
-              //   imagePath: "assets/images/law_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Health Science",
-              //   imagePath: "assets/images/health_science_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Sport Science",
-              //   imagePath: "assets/images/sport_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Agriculture and Environmental ",
-              //   imagePath: "assets/images/agriculture_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Architecture",
-              //   imagePath: "assets/images/architect_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Media",
-              //   imagePath: "assets/images/media_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Linguistics",
-              //   imagePath: "assets/images/language_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Robotics and Automation",
-              //   imagePath: "assets/images/robotic_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Food Technology",
-              //   imagePath: "assets/images/food_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Ethnic and Philosphy",
-              //   imagePath: "assets/images/ethnic_vector.jpg",
-              // ),
-              // CategoryCard(
-              //   title: "Religious Studies",
-              //   imagePath: "assets/images/religion_vector.jpg",
-              // ),
+              CategoryCard(
+                title: "Art",
+                imagePath: "assets/images/art_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Humanity",
+                imagePath: "assets/images/humanity_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Technology",
+                imagePath: "assets/images/technology_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Natural Science",
+                imagePath: "assets/images/natural_science_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Social Science",
+                imagePath: "assets/images/social_science_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Education",
+                imagePath: "assets/images/education_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Law",
+                imagePath: "assets/images/law_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Health Science",
+                imagePath: "assets/images/health_science_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Sport Science",
+                imagePath: "assets/images/sport_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Agriculture and Environmental ",
+                imagePath: "assets/images/agriculture_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Architecture",
+                imagePath: "assets/images/architect_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Media",
+                imagePath: "assets/images/media_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Linguistics",
+                imagePath: "assets/images/language_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Robotics and Automation",
+                imagePath: "assets/images/robotic_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Food Technology",
+                imagePath: "assets/images/food_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Ethnic and Philosphy",
+                imagePath: "assets/images/ethnic_vector.jpg",
+              ),
+              CategoryCard(
+                title: "Religious Studies",
+                imagePath: "assets/images/religion_vector.jpg",
+              ),
             ],
           ),
         ],
@@ -669,86 +668,78 @@ class ExploreCategory extends StatelessWidget {
   }
 }
 
-Future<bool?> Quizpopscreen(BuildContext context) {
-  return showDialog<bool?>(
+Future<String?> showLevelSelectionDialog(BuildContext context) async {
+  return await showDialog<String>(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/images/logout_illustration.png', // Replace with your image path
-                height: 250,
-              ),
-            ),
-            const Text(
-              'You\'re about to start the quiz. Are you sure?',
-              style: TextStyle(
-                fontSize: 24,
-                fontFamily: 'Inter-black',
-                color: Color(0xFF2f3036),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'You have to complete 21 questions',
-              style: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Inter-regular',
-                color: Color(0xFF71727A),
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF006FFD),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(true); // Return true
-                },
-                child: const Text(
-                  'Yes',
-                  style: TextStyle(
-                    fontFamily: 'Inter-semibold',
+              Text(
+                "Please choose the answer that best describes you",
+                style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context, "high-school");
+                },
+                child: Container(
+                  width: 300,
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Column(
+                    children: [
+                      Text("High School",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 15),
+                      Image.asset("assets/images/highschool.png", height: 70),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false); // Return false
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context, "university");
                 },
-                child: const Text(
-                  'No',
-                  style: TextStyle(
-                    color: Color(0xFF006FFD),
-                    fontFamily: 'Inter-semibold',
-                    fontSize: 16,
+                child: Container(
+                  width: 300,
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Column(
+                    children: [
+                      Text("University",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10),
+                      Image.asset("assets/images/university.png", height: 70),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
-        ],
+        ),
       );
     },
   );
 }
+

@@ -14,6 +14,7 @@ import 'package:majorwhisper/screens/auth/Login.dart';
 import 'package:majorwhisper/screens/auth/Signup.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:majorwhisper/screens/test.dart';
+import 'package:majorwhisper/screens/MajorRecommendation.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
